@@ -1,8 +1,12 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import os from 'os'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import todoMngr from './database/todoManager'
+import { FindManyOptions } from 'typeorm'
 import icon from '../../resources/icon.png?asset'
+import { findUsers } from './database/controller'
+import { countUsers } from './database/controller/user'
+import AppSource from './database/data-source'
 
 function createWindow(): void {
   // Create the browser window.
@@ -14,11 +18,13 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      contextIsolation: true
     }
   })
 
   mainWindow.on('ready-to-show', () => {
+    //mainWindow.webContents.send('sendUser', os.userInfo())
     mainWindow.show()
   })
 
@@ -50,11 +56,17 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   // IPC insert todo
-  ipcMain.on('insertTodo', () => todoMngr.insertTodo('test', 'encours'))
+  //ipcMain.on('insertTodo', () => todoMngr.insertTodo('test', 'encours'))
+
+  AppSource.initialize()
+    .then(() => {
+      console.log('connection à la base de données initialisée')
+      ipcMain.handle('user.logged', () => findUsers({ where: { login: os.userInfo().username } }))
+      ipcMain.handle('user.all', (_event, filter?: FindManyOptions) => findUsers(filter))
+      ipcMain.handle('user.count', (_event, filter?: FindManyOptions) => countUsers(filter))
+    })
+    .catch((err) => console.log(err))
 
   createWindow()
 

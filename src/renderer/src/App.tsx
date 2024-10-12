@@ -1,34 +1,57 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { Box, CssBaseline, Typography } from '@mui/material'
+import Admin from '@renderer/components/Admin'
+import DrawerHeader from '@renderer/components/DrawerHeader'
+import DrawerMenu from '@renderer/components/DrawerMenu'
+import Home from '@renderer/components/Home'
+import MainMenu from '@renderer/components/MainMenu'
+import { routeAtom, userAtom } from '@renderer/store/index'
+import { useAtomValue } from 'jotai'
+import { useCallback, useState } from 'react'
+import Forbidden from './components/Forbidden'
 
-function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('insertTodo')
+const App = () => {
+  // etat de gestion du statut du drawer
+  const [open, setOpen] = useState(false)
+  // route sélectionnée
+  const route = useAtomValue(routeAtom)
+  // utilisateur connecté
+  const user = useAtomValue(userAtom)
+
+  // ouverture du drawer
+  const handleDrawerOpen = () => {
+    setOpen(true)
+  }
+
+  // fermeture du drawer
+  const handleDrawerClose = () => {
+    setOpen(false)
+  }
+
+  // définition du composant à afficher en fonction de la route
+  const setRoute = useCallback(() => {
+    const rte = route.split['.'] !== undefined ? route.split['.'][0] : route
+    switch (rte) {
+      case 'HOME':
+        return <Home />
+      case 'ADMIN':
+        return <Admin />
+      case 'FORBIDDEN':
+        return <Forbidden />
+      default:
+        return <Home />
+    }
+  }, [route])
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite 2</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <MainMenu onDrawerOpen={handleDrawerOpen} drawerStatus={open} />
+      {user && <DrawerMenu onDrawerClose={handleDrawerClose} drawerStatus={open} />}
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+        <Typography sx={{ marginBottom: 2 }}>{setRoute()}</Typography>
+      </Box>
+    </Box>
   )
 }
 

@@ -1,5 +1,7 @@
-import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { User } from '@entity/*'
+import { contextBridge, ipcRenderer } from 'electron'
+import { FindManyOptions } from 'typeorm'
 
 // Custom APIs for renderer
 const api = {}
@@ -11,6 +13,16 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('electronAPI', {
+      readUsers: (filtre: string | null, size: number | undefined) =>
+        ipcRenderer.invoke('user.all', [filtre, size]),
+      getLogged: () => ipcRenderer.invoke('user.logged'),
+      getUsers: (filtre?: FindManyOptions<User>) => ipcRenderer.invoke('user.all', filtre),
+      countUsers: (filtre?: FindManyOptions<User>) => ipcRenderer.invoke('user.count', filtre),
+      onUserReceived: (callback) => {
+        ipcRenderer.on('sendUser', (_event, value) => callback(value))
+      }
+    })
   } catch (error) {
     console.error(error)
   }
