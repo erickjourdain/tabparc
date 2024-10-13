@@ -1,12 +1,13 @@
-import { Box, CssBaseline, Typography } from '@mui/material'
+import { Box, CssBaseline } from '@mui/material'
 import DrawerHeader from '@renderer/components/DrawerHeader'
 import DrawerMenu from '@renderer/components/DrawerMenu'
 import MainMenu from '@renderer/components/MainMenu'
+import { userAtom } from '@renderer/store'
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { useAtomValue } from 'jotai'
 import { useState } from 'react'
-import { userAtom } from './store'
 
-const App = () => {
+const Root = () => {
   // etat de gestion du statut du drawer
   const [open, setOpen] = useState(false)
   // utilisateur connecté
@@ -29,10 +30,12 @@ const App = () => {
       {user && <DrawerMenu onDrawerClose={handleDrawerClose} drawerStatus={open} />}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography sx={{ marginBottom: 2 }}>Hello</Typography>
+        <Outlet />
       </Box>
     </Box>
   )
 }
 
-export default App
+export const Route = createRootRoute({
+  component: Root
+})

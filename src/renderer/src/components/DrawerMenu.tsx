@@ -14,9 +14,9 @@ interface DrawerMenuProps {
 }
 
 // Liste des entrées du menu standard
-const itemsMenu = [{ label: 'accueil', icon: <HomeIcon />, route: 'HOME' }]
+const itemsMenu = [{ label: 'accueil', icon: <HomeIcon />, route: '/' }]
 // Liste des entrées du meny administration
-const itemsAdmin = [{ label: 'administration', icon: <SettingsIcon />, route: 'ADMIN' }]
+const itemsAdmin = [{ label: 'administration', icon: <SettingsIcon />, route: '/admin' }]
 
 // style css pour l'ouverture du drawer
 const openedMixin = (theme: Theme): CSSObject => ({

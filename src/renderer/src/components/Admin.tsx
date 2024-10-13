@@ -7,25 +7,32 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material'
-import Users from '@renderer/components/admin/Users'
+import { Outlet, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 interface Type {
   label: string
-  element: JSX.Element
+  route: string
 }
 
 const DONNEES = [
-  { label: 'utilisateurs', element: <Users /> },
-  { label: 'sections', element: <>sections</> }
+  { label: 'utilisateurs', route: '/admin/users' },
+  { label: 'contacts', route: '/admin/contacts' }
 ]
 
 const Admin = () => {
+  // Hook de navigation
+  const navigate = useNavigate()
+  // Etat local représentant la liste des élements de configuration
   const [element, setElement] = useState<Type>(DONNEES[0])
 
+  // Changement de la sélection
   const handleChange = (event: SelectChangeEvent) => {
     const selected = DONNEES.findIndex((d) => d.label === event.target.value)
-    if (selected >= 0) setElement(DONNEES[selected])
+    if (selected >= 0) {
+      setElement(DONNEES[selected])
+      navigate({ to: DONNEES[selected].route })
+    }
   }
 
   return (
@@ -49,7 +56,7 @@ const Admin = () => {
           ))}
         </Select>
       </FormControl>
-      {element.element}
+      <Outlet />
     </Box>
   )
 }

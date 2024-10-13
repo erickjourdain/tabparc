@@ -1,6 +1,5 @@
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { routeAtom } from '@renderer/store/index'
-import { useSetAtom } from 'jotai'
+import { useNavigate } from '@tanstack/react-router'
 
 interface MenuListProps {
   drawerStatus: boolean
@@ -12,7 +11,7 @@ interface MenuListProps {
 }
 
 const MenuList = ({ drawerStatus, items }: MenuListProps) => {
-  const setRoute = useSetAtom(routeAtom)
+  const navigate = useNavigate()
 
   return (
     <List>
@@ -21,7 +20,7 @@ const MenuList = ({ drawerStatus, items }: MenuListProps) => {
           key={item.label}
           disablePadding
           sx={{ display: 'block' }}
-          onClick={() => setRoute(item.route)}
+          onClick={() => navigate({ to: item.route })}
         >
           <ListItemButton
             sx={[
