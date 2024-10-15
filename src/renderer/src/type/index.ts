@@ -1,5 +1,7 @@
-import { User, UserRole } from './User'
+import { Alerte } from './alerte'
+import { FindAndCount } from './findAndCount'
+import { User, UserRole } from './user'
 
 export { UserRole }
 
-export type { User }
+export type { Alerte, FindAndCount, User }

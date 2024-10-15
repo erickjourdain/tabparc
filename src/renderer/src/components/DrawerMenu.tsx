@@ -4,7 +4,9 @@ import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Divider, IconButton, Drawer as MuiDrawer } from '@mui/material'
 import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles'
+import { userAtom } from '@renderer/store'
 import settings from '@renderer/utils/settings'
+import { useAtomValue } from 'jotai'
 import DrawerHeader from './DrawerHeader'
 import MenuList from './MenuList'
 
@@ -68,6 +70,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const DrawerMenu = ({ onDrawerClose, drawerStatus }: DrawerMenuProps) => {
   const theme = useTheme()
 
+  // Utilisateur connecté
+  const user = useAtomValue(userAtom)
+
   return (
     <Drawer variant="permanent" open={drawerStatus}>
       <DrawerHeader>
@@ -78,7 +83,7 @@ const DrawerMenu = ({ onDrawerClose, drawerStatus }: DrawerMenuProps) => {
       <Divider />
       <MenuList drawerStatus={drawerStatus} items={itemsMenu} />
       <Divider />
-      <MenuList drawerStatus={drawerStatus} items={itemsAdmin} />
+      {user?.role === 'ADMIN' && <MenuList drawerStatus={drawerStatus} items={itemsAdmin} />}
     </Drawer>
   )
 }

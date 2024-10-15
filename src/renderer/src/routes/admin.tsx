@@ -1,4 +1,4 @@
-import Admin from '@renderer/components/Admin'
+import Admin from '@renderer/components/admin/Index'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin')({

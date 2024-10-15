@@ -1,11 +1,11 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { User } from '@entity/*'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import os from 'os'
 import { join } from 'path'
 import { FindManyOptions } from 'typeorm'
 import icon from '../../resources/icon.png?asset'
-import { findUsers } from './database/controller'
-import { countUsers } from './database/controller/user'
+import userController from './database/controller/user'
 import AppSource from './database/data-source'
 
 function createWindow(): void {
@@ -62,9 +62,13 @@ app.whenReady().then(() => {
   AppSource.initialize()
     .then(() => {
       console.log('connection à la base de données initialisée')
-      ipcMain.handle('user.logged', () => findUsers({ where: { login: os.userInfo().username } }))
-      ipcMain.handle('user.all', (_event, filter?: FindManyOptions) => findUsers(filter))
-      ipcMain.handle('user.count', (_event, filter?: FindManyOptions) => countUsers(filter))
+      ipcMain.handle('user.logged', () => userController.findByName(os.userInfo().username))
+      ipcMain.handle('user.all', (_event, filter?: FindManyOptions) =>
+        userController.findAll(filter)
+      )
+      ipcMain.handle('user.find', (_event, id: number) => userController.findById(id))
+      ipcMain.handle('user.update', (_event, user: User) => userController.update(user))
+      ipcMain.handle('user.save', (_event, user: User) => userController.save(user))
     })
     .catch((err) => console.log(err))
 

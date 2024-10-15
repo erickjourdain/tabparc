@@ -12,43 +12,25 @@ import {
   TableRow,
   Typography
 } from '@mui/material'
+import { Route } from '@renderer/routes/admin/users'
 import { User } from '@renderer/type'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { FindManyOptions } from 'typeorm'
 
-/**
- * recherche des utilisateurs
- * @param filtre FindManyOptions<User>
- * @returns User[] tableau des utilisateurs
- */
-const getUsers = async (filtre?: FindManyOptions<User>) => {
-  const users = await window.electronAPI.getUsers(filtre)
-  return users
-}
-
-/**
- * comptabilise le nombre d'utilisateurs total correspondant à la requête
- * @param filtre FindManyOptions<User>
- * @returns number nombre d'utilisateurs
- */
-const countUsers = async (filtre?: FindManyOptions<User>) => {
-  const nbUsers = await window.electronAPI.countUsers(filtre)
-  return nbUsers
-}
-
-const Users = () => {
+const ListUsers = () => {
   const NB_ELEMENTS = 10
+  const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
   const [nbUsers, setNbUsers] = useState<number>(0)
   const [page, setPage] = useState(1)
 
-  // Lancement de la rec
+  const data = Route.useLoaderData()
+
   useEffect(() => {
-    getUsers({ skip: NB_ELEMENTS * (page - 1), take: NB_ELEMENTS }).then((data: User[]) => {
-      setUsers(data)
-    })
-    countUsers().then((data: number) => setNbUsers(data))
-  }, [])
+    console.log(data)
+    setUsers(data.data)
+    setNbUsers(data.nbdata)
+  }, [data])
 
   return (
     <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
@@ -58,6 +40,7 @@ const Users = () => {
         aria-label="ajouter-utilisateur"
         size="small"
         sx={{ position: 'absolute', top: 10, right: 10 }}
+        onClick={() => navigate({ to: '/admin/users/new' })}
       >
         <AddIcon />
       </Fab>
@@ -72,7 +55,10 @@ const Users = () => {
         </TableHead>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id}>
+            <TableRow
+              key={user.id}
+              onDoubleClick={() => navigate({ to: `/admin/users/${user.id}` })}
+            >
               <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
               <TableCell>{user.login}</TableCell>
               <TableCell>{user.role}</TableCell>
@@ -93,4 +79,4 @@ const Users = () => {
   )
 }
 
-export default Users
+export default ListUsers

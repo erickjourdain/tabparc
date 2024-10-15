@@ -7,10 +7,11 @@ declare global {
     electron: ElectronAPI
     api: unknown
     electronAPI: {
-      getLogged: () => Promise<User[]>
-      getUsers: (filtre?: FindManyOptions<User>) => Promise<User[]>
-      countUsers: (filtre?: FindManyOptions<User>) => Promise<number>
-      onUserReceived: (callback) => void
+      getLogged: () => Promise<User>
+      getUsers: (filtre?: FindManyOptions<User>) => Promise<[User[], nbUsers]>
+      getUser: (id: number) => Promise<User>
+      updateUser: (user: User) => Promise<User>
+      createUser: (user: User) => Promise<User>
     }
   }
 }

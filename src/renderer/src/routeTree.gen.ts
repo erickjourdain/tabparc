@@ -14,8 +14,10 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
-import { Route as AdminUsersImport } from './routes/admin/users'
 import { Route as AdminContactsImport } from './routes/admin/contacts'
+import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
+import { Route as AdminUsersNewImport } from './routes/admin/users/new'
+import { Route as AdminUsersIdImport } from './routes/admin/users/$id'
 
 // Create/Update Routes
 
@@ -34,13 +36,23 @@ const AdminIndexRoute = AdminIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminUsersRoute = AdminUsersImport.update({
-  path: '/users',
+const AdminContactsRoute = AdminContactsImport.update({
+  path: '/contacts',
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminContactsRoute = AdminContactsImport.update({
-  path: '/contacts',
+const AdminUsersIndexRoute = AdminUsersIndexImport.update({
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminUsersNewRoute = AdminUsersNewImport.update({
+  path: '/users/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminUsersIdRoute = AdminUsersIdImport.update({
+  path: '/users/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -69,18 +81,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContactsImport
       parentRoute: typeof AdminImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersImport
-      parentRoute: typeof AdminImport
-    }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users/$id': {
+      id: '/admin/users/$id'
+      path: '/users/$id'
+      fullPath: '/admin/users/$id'
+      preLoaderRoute: typeof AdminUsersIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users/new': {
+      id: '/admin/users/new'
+      path: '/users/new'
+      fullPath: '/admin/users/new'
+      preLoaderRoute: typeof AdminUsersNewImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexImport
       parentRoute: typeof AdminImport
     }
   }
@@ -90,14 +116,18 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminContactsRoute: typeof AdminContactsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminUsersIdRoute: typeof AdminUsersIdRoute
+  AdminUsersNewRoute: typeof AdminUsersNewRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminContactsRoute: AdminContactsRoute,
-  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminUsersIdRoute: AdminUsersIdRoute,
+  AdminUsersNewRoute: AdminUsersNewRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -106,15 +136,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/contacts': typeof AdminContactsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin/contacts': typeof AdminContactsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesById {
@@ -122,22 +156,39 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/contacts': typeof AdminContactsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/admin/contacts' | '/admin/users' | '/admin/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/contacts'
+    | '/admin/'
+    | '/admin/users/$id'
+    | '/admin/users/new'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin/contacts' | '/admin/users' | '/admin'
+  to:
+    | '/'
+    | '/admin/contacts'
+    | '/admin'
+    | '/admin/users/$id'
+    | '/admin/users/new'
+    | '/admin/users'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/admin/contacts'
-    | '/admin/users'
     | '/admin/'
+    | '/admin/users/$id'
+    | '/admin/users/new'
+    | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
 
@@ -174,20 +225,30 @@ export const routeTree = rootRoute
       "filePath": "admin.tsx",
       "children": [
         "/admin/contacts",
-        "/admin/users",
-        "/admin/"
+        "/admin/",
+        "/admin/users/$id",
+        "/admin/users/new",
+        "/admin/users/"
       ]
     },
     "/admin/contacts": {
       "filePath": "admin/contacts.tsx",
       "parent": "/admin"
     },
-    "/admin/users": {
-      "filePath": "admin/users.tsx",
-      "parent": "/admin"
-    },
     "/admin/": {
       "filePath": "admin/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/$id": {
+      "filePath": "admin/users/$id.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/new": {
+      "filePath": "admin/users/new.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users/": {
+      "filePath": "admin/users/index.tsx",
       "parent": "/admin"
     }
   }

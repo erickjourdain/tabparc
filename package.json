@@ -31,6 +31,7 @@
     "@mui/material": "^6.1.2",
     "@tanstack/react-router": "^1.65.0",
     "jotai": "^2.10.0",
+    "react-hook-form": "^7.53.0",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.20"

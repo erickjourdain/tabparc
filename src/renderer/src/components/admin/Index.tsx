@@ -8,7 +8,7 @@ import {
   SelectChangeEvent
 } from '@mui/material'
 import { Outlet, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface Type {
   label: string
@@ -27,13 +27,17 @@ const Admin = () => {
   const [element, setElement] = useState<Type>(DONNEES[0])
 
   // Changement de la sélection
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = useCallback((event: SelectChangeEvent) => {
     const selected = DONNEES.findIndex((d) => d.label === event.target.value)
     if (selected >= 0) {
       setElement(DONNEES[selected])
       navigate({ to: DONNEES[selected].route })
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    navigate({ to: element.route })
+  }, [])
 
   return (
     <Box>

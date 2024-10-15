@@ -11,11 +11,9 @@ import {
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 import { userAtom } from '@renderer/store'
-import { User } from '@renderer/type'
 import stringAvatar from '@renderer/utils/iconLetter'
 import settings from '@renderer/utils/settings'
-import { useAtom } from 'jotai'
-import { useEffect } from 'react'
+import { useAtomValue } from 'jotai'
 
 interface MainMenuProps {
   drawerStatus: boolean
@@ -50,19 +48,7 @@ const AppBar = styled(MuiAppBar, {
 }))
 
 const MainMenu = ({ drawerStatus, onDrawerOpen }: MainMenuProps) => {
-  const [user, setUser] = useAtom(userAtom)
-
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await window.electronAPI.getLogged()
-      return user
-    }
-
-    getUser().then((data: User[]) => {
-      if (data.length === 0) setUser(null)
-      else setUser(data[0])
-    })
-  }, [])
+  const user = useAtomValue(userAtom)
 
   return (
     <AppBar position="fixed" open={drawerStatus}>

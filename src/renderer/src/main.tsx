@@ -7,6 +7,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 // Import the generated route tree
+import Alerte from '@renderer/components/Alerte'
 import { routeTree } from '@renderer/routeTree.gen'
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router'
 
@@ -27,6 +28,7 @@ declare module '@tanstack/react-router' {
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
+    <Alerte />
     <RouterProvider router={router} />
   </React.StrictMode>
 )

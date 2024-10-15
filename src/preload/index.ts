@@ -14,14 +14,11 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
-      readUsers: (filtre: string | null, size: number | undefined) =>
-        ipcRenderer.invoke('user.all', [filtre, size]),
       getLogged: () => ipcRenderer.invoke('user.logged'),
       getUsers: (filtre?: FindManyOptions<User>) => ipcRenderer.invoke('user.all', filtre),
-      countUsers: (filtre?: FindManyOptions<User>) => ipcRenderer.invoke('user.count', filtre),
-      onUserReceived: (callback) => {
-        ipcRenderer.on('sendUser', (_event, value) => callback(value))
-      }
+      getUser: (id: string) => ipcRenderer.invoke('user.find', id),
+      updateUser: (user: User) => ipcRenderer.invoke('user.update', user),
+      createUser: (user: User) => ipcRenderer.invoke('user.save', user)
     })
   } catch (error) {
     console.error(error)
