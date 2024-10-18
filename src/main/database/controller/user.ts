@@ -10,7 +10,7 @@ const userRepository = AppDataSource.getRepository(User)
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @returns Promise<User[]> tableau d'utilisateurs
  */
-const findAll = (filter?: FindManyOptions<User>) => {
+const findAll = (filter: FindManyOptions<User>) => {
   return userRepository.findAndCount(filter)
 }
 

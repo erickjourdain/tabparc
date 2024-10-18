@@ -1,4 +1,4 @@
 export type FindAndCount<T> = {
   data: T[]
-  nbdata: number
+  nbData: number
 }
