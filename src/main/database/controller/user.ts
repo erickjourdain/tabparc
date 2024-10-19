@@ -1,4 +1,4 @@
-import { FindManyOptions } from 'typeorm'
+import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { User } from '../entity/user'
 
@@ -11,6 +11,21 @@ const userRepository = AppDataSource.getRepository(User)
  * @returns Promise<User[]> tableau d'utilisateurs
  */
 const findAll = (filter: FindManyOptions<User>) => {
+  return userRepository.findAndCount(filter)
+}
+
+/**
+ * Recherche d'utilisateurs
+ * @param filter FindManyOptions objet définissant les paramètres de la requête
+ * @param search string chaine à rechercher
+ * @returns Promise<User[]> tableau d'utilisateurs
+ */
+const search = (filter: FindManyOptions<User>, search: string) => {
+  filter.where = [
+    { nom: ILike(`%${search}%`) },
+    { prenom: ILike(`%${search}%`) },
+    { login: ILike(`%${search}%`) }
+  ]
   return userRepository.findAndCount(filter)
 }
 
@@ -50,4 +65,4 @@ const save = async (user: User) => {
   return userRepository.save(user)
 }
 
-export default { findById, findByName, findAll, save, update }
+export default { findById, findByName, findAll, save, search, update }

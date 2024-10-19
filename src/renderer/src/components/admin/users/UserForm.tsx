@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { alertAtom } from '@renderer/store'
 import { User, UserRole } from '@renderer/type'
+import { useNavigate } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -31,6 +32,8 @@ type UserFormProps = {
 }
 
 const UserForm = ({ user }: UserFormProps) => {
+  // Hook de navigation
+  const navigate = useNavigate()
   // Etat local de gestion de la sauvegarde
   const [isPending, setIsPending] = useState<boolean>(false)
   const setAlerte = useSetAtom(alertAtom)
@@ -63,10 +66,21 @@ const UserForm = ({ user }: UserFormProps) => {
   // Soumission du formulaire
   const onSubmit = async (data: IUserForm) => {
     setIsPending(true)
-    if (user?.id) await window.electronAPI.updateUser({ ...data, id: user.id })
+    if (user?.id)
+      await window.electronAPI.updateUser({
+        ...data,
+        id: user.id,
+        nom: data.nom.trim().toUpperCase(),
+        prenom: data.prenom
+          .trim()
+          .replace(/(^\w{1})|(\s+\w{1})|(-+\w{1})/g, (letter) => letter.toUpperCase()),
+        login: data.login.trim().toLowerCase(),
+        email: data.email.trim().toLowerCase()
+      })
     else window.electronAPI.createUser(data)
     setAlerte({ message: 'Utilisateur enregistré', color: 'success' })
     setIsPending(false)
+    navigate({ to: '/admin/users' })
   }
 
   return (

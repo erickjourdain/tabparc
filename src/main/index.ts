@@ -63,11 +63,12 @@ app.whenReady().then(() => {
     .then(() => {
       console.log('connection à la base de données initialisée')
       ipcMain.handle('user.logged', () => userController.findByName(os.userInfo().username))
-      ipcMain.handle('user.all', (_event, filter: FindManyOptions<User>) => {
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        console.log(filter)
-        return userController.findAll(filter)
-      })
+      ipcMain.handle('user.all', (_event, filter: FindManyOptions<User>) =>
+        userController.findAll(filter)
+      )
+      ipcMain.handle('user.search', (_event, filter: FindManyOptions<User>, search: string) =>
+        userController.search(filter, search)
+      )
       ipcMain.handle('user.find', (_event, id: number) => userController.findById(id))
       ipcMain.handle('user.update', (_event, user: User) => userController.update(user))
       ipcMain.handle('user.save', (_event, user: User) => userController.save(user))

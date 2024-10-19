@@ -16,6 +16,8 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electronAPI', {
       getLogged: () => ipcRenderer.invoke('user.logged'),
       getUsers: (filter: FindManyOptions<User>) => ipcRenderer.invoke('user.all', filter),
+      searchUsers: (filter: FindManyOptions<User>, search: string) =>
+        ipcRenderer.invoke('user.search', filter, search),
       getUser: (id: string) => ipcRenderer.invoke('user.find', id),
       updateUser: (user: User) => ipcRenderer.invoke('user.update', user),
       createUser: (user: User) => ipcRenderer.invoke('user.save', user)

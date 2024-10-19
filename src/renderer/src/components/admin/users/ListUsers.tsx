@@ -4,6 +4,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
 import {
+  Box,
   Fab,
   IconButton,
   InputAdornment,
@@ -60,25 +61,29 @@ const ListUsers = () => {
       >
         <AddIcon />
       </Fab>
-      <TextField
-        id="input-search"
-        label="Recherche"
-        value={newSearch}
-        onChange={(e) => setNewSearch(e.currentTarget.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <IconButton onClick={() => navigate({ search: { page: 1, search: '' } })}>
-              <ClearIcon />
-            </IconButton>
-          )
-        }}
-        variant="standard"
-      />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <TextField
+          id="input-search"
+          label="Recherche"
+          value={newSearch}
+          onChange={(e) => setNewSearch(e.currentTarget.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <IconButton onClick={() => navigate({ search: { page: 1, search: '' } })}>
+                  <ClearIcon />
+                </IconButton>
+              )
+            }
+          }}
+          variant="standard"
+        />
+      </Box>
       <Table aria-label="table utilisateurs">
         <TableHead>
           <TableRow>
