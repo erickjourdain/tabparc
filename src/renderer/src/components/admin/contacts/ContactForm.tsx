@@ -3,38 +3,33 @@ import {
   Box,
   Button,
   Fab,
-  FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   Switch,
   TextField,
   Typography
 } from '@mui/material'
 import { alertAtom } from '@renderer/store'
-import { User, UserRole } from '@renderer/type'
+import { Contact } from '@renderer/type'
 import { wordLetterUpperCase } from '@renderer/utils/format'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-type IUserForm = {
+type IContactForm = {
   nom: string
   prenom: string
-  login: string
   email: string
-  role: UserRole
+  telephone: string
   valide: boolean
 }
 
-type UserFormProps = {
-  user: User | null
+type ContactFormProps = {
+  contact: Contact | null
 }
 
-const UserForm = ({ user }: UserFormProps) => {
+const ContactForm = ({ contact }: ContactFormProps) => {
   // Hook de navigation
   const navigate = useNavigate()
   // Hook router
@@ -50,40 +45,42 @@ const UserForm = ({ user }: UserFormProps) => {
     handleSubmit,
     register,
     reset
-  } = useForm<IUserForm>({
+  } = useForm<IContactForm>({
     defaultValues: useMemo(() => {
       return {
-        nom: user?.nom || undefined,
-        prenom: user?.prenom || undefined,
-        login: user?.login || undefined,
-        email: user?.email || undefined,
-        role: user?.role || UserRole.USER,
-        valide: user?.valide || undefined
+        nom: contact?.nom || undefined,
+        prenom: contact?.prenom || undefined,
+        email: contact?.email || undefined,
+        role: contact?.telephone || undefined,
+        valide: contact?.valide || undefined
       }
-    }, [user])
+    }, [contact])
   })
 
   // Suivi de la mise à jour de l'utilisateur
   useEffect(() => {
-    if (user) reset(user)
-  }, [user])
+    if (contact) reset(contact)
+  }, [contact])
 
   // Soumission du formulaire
-  const onSubmit = async (data: IUserForm) => {
+  const onSubmit = async (data: IContactForm) => {
     setIsPending(true)
-    if (user?.id)
-      await window.electronAPI.updateUser({
-        ...data,
-        id: user.id,
-        nom: data.nom.trim().toUpperCase(),
-        prenom: wordLetterUpperCase(data.prenom),
-        login: data.login.trim().toLowerCase(),
-        email: data.email.trim().toLowerCase()
+    const value = {
+      ...data,
+      nom: data.nom.trim().toUpperCase(),
+      prenom: wordLetterUpperCase(data.prenom),
+      telephone: data.telephone.trim(),
+      email: data.email.trim().toLowerCase()
+    }
+    if (contact?.id)
+      await window.electronAPI.updateContact({
+        ...value,
+        id: contact.id
       })
-    else window.electronAPI.createUser(data)
-    setAlerte({ message: 'Utilisateur enregistré', color: 'success' })
+    else window.electronAPI.createContact(value)
+    setAlerte({ message: 'Contact enregistré', color: 'success' })
     setIsPending(false)
-    navigate({ to: '/admin/users' })
+    navigate({ to: '/admin/contacts' })
   }
 
   return (
@@ -147,19 +144,19 @@ const UserForm = ({ user }: UserFormProps) => {
         </Box>
         <Box sx={{ flex: '0 0 30%', m: 1 }}>
           <TextField
-            id="login"
-            label="login"
-            {...register('login', {
-              required: 'Le login est obligatoire',
-              minLength: {
-                value: 3,
-                message: 'Le login doit contenir au moins 3 caractères'
+            id="telephone"
+            label="telephone"
+            {...register('telephone', {
+              required: 'Le telephone est obligatoire',
+              pattern: {
+                value: /^(?:\+33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
+                message: 'Le numéro de téléphone est invalide'
               }
             })}
-            error={errors.login ? true : false}
+            error={errors.telephone ? true : false}
           />
           <Typography variant="inherit" color="error">
-            {errors.login?.message}
+            {errors.telephone?.message}
           </Typography>
         </Box>
         <Box sx={{ flex: '0 0 30%', m: 1 }}>
@@ -186,36 +183,16 @@ const UserForm = ({ user }: UserFormProps) => {
             render={({ field: { value, onChange } }) => (
               <FormControlLabel
                 control={<Switch checked={value} onChange={onChange} />}
-                label="validé"
+                label="valide"
               />
             )}
           />
-        </Box>
-        <Box sx={{ flex: '0 0 30%', m: 1 }}>
-          <FormControl>
-            <Controller
-              name="role"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <InputLabel id="role-select-label">role</InputLabel>
-                  <Select id="role-select" labelId="role-select-label" label="role" {...field}>
-                    {Object.entries(UserRole).map(([key, value]) => (
-                      <MenuItem value={value} key={key}>
-                        {value}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </>
-              )}
-            />
-          </FormControl>
         </Box>
       </Box>
       <Box mt={3} m={1} display="flex" alignItems="flex-start">
         <Stack spacing={2} direction="row">
           <Button variant="contained" color="primary" type="submit" disabled={isPending}>
-            {user?.id ? 'Mettre à jour' : 'Enregistrer'}
+            {contact?.id ? 'Mettre à jour' : 'Enregistrer'}
           </Button>
           <Button variant="contained" color="warning" onClick={() => reset()} disabled={isPending}>
             Reset
@@ -226,4 +203,4 @@ const UserForm = ({ user }: UserFormProps) => {
   )
 }
 
-export default UserForm
+export default ContactForm

@@ -14,10 +14,12 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
-import { Route as AdminContactsImport } from './routes/admin/contacts'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
+import { Route as AdminContactsIndexImport } from './routes/admin/contacts/index'
 import { Route as AdminUsersNewImport } from './routes/admin/users/new'
 import { Route as AdminUsersIdImport } from './routes/admin/users/$id'
+import { Route as AdminContactsNewImport } from './routes/admin/contacts/new'
+import { Route as AdminContactsIdImport } from './routes/admin/contacts/$id'
 
 // Create/Update Routes
 
@@ -36,13 +38,13 @@ const AdminIndexRoute = AdminIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminContactsRoute = AdminContactsImport.update({
-  path: '/contacts',
+const AdminUsersIndexRoute = AdminUsersIndexImport.update({
+  path: '/users/',
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminUsersIndexRoute = AdminUsersIndexImport.update({
-  path: '/users/',
+const AdminContactsIndexRoute = AdminContactsIndexImport.update({
+  path: '/contacts/',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -53,6 +55,16 @@ const AdminUsersNewRoute = AdminUsersNewImport.update({
 
 const AdminUsersIdRoute = AdminUsersIdImport.update({
   path: '/users/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminContactsNewRoute = AdminContactsNewImport.update({
+  path: '/contacts/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminContactsIdRoute = AdminContactsIdImport.update({
+  path: '/contacts/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -74,18 +86,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
-    '/admin/contacts': {
-      id: '/admin/contacts'
-      path: '/contacts'
-      fullPath: '/admin/contacts'
-      preLoaderRoute: typeof AdminContactsImport
-      parentRoute: typeof AdminImport
-    }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/contacts/$id': {
+      id: '/admin/contacts/$id'
+      path: '/contacts/$id'
+      fullPath: '/admin/contacts/$id'
+      preLoaderRoute: typeof AdminContactsIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/contacts/new': {
+      id: '/admin/contacts/new'
+      path: '/contacts/new'
+      fullPath: '/admin/contacts/new'
+      preLoaderRoute: typeof AdminContactsNewImport
       parentRoute: typeof AdminImport
     }
     '/admin/users/$id': {
@@ -102,6 +121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersNewImport
       parentRoute: typeof AdminImport
     }
+    '/admin/contacts/': {
+      id: '/admin/contacts/'
+      path: '/contacts'
+      fullPath: '/admin/contacts'
+      preLoaderRoute: typeof AdminContactsIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/users/': {
       id: '/admin/users/'
       path: '/users'
@@ -115,18 +141,22 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AdminRouteChildren {
-  AdminContactsRoute: typeof AdminContactsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminContactsIdRoute: typeof AdminContactsIdRoute
+  AdminContactsNewRoute: typeof AdminContactsNewRoute
   AdminUsersIdRoute: typeof AdminUsersIdRoute
   AdminUsersNewRoute: typeof AdminUsersNewRoute
+  AdminContactsIndexRoute: typeof AdminContactsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminContactsRoute: AdminContactsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminContactsIdRoute: AdminContactsIdRoute,
+  AdminContactsNewRoute: AdminContactsNewRoute,
   AdminUsersIdRoute: AdminUsersIdRoute,
   AdminUsersNewRoute: AdminUsersNewRoute,
+  AdminContactsIndexRoute: AdminContactsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
@@ -135,19 +165,23 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/admin/contacts': typeof AdminContactsRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/contacts/$id': typeof AdminContactsIdRoute
+  '/admin/contacts/new': typeof AdminContactsNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/contacts': typeof AdminContactsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin/contacts': typeof AdminContactsRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/contacts/$id': typeof AdminContactsIdRoute
+  '/admin/contacts/new': typeof AdminContactsNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/contacts': typeof AdminContactsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
 
@@ -155,10 +189,12 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/admin/contacts': typeof AdminContactsRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/contacts/$id': typeof AdminContactsIdRoute
+  '/admin/contacts/new': typeof AdminContactsNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
+  '/admin/contacts/': typeof AdminContactsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
 }
 
@@ -167,27 +203,33 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/admin/contacts'
     | '/admin/'
+    | '/admin/contacts/$id'
+    | '/admin/contacts/new'
     | '/admin/users/$id'
     | '/admin/users/new'
+    | '/admin/contacts'
     | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin/contacts'
     | '/admin'
+    | '/admin/contacts/$id'
+    | '/admin/contacts/new'
     | '/admin/users/$id'
     | '/admin/users/new'
+    | '/admin/contacts'
     | '/admin/users'
   id:
     | '__root__'
     | '/'
     | '/admin'
-    | '/admin/contacts'
     | '/admin/'
+    | '/admin/contacts/$id'
+    | '/admin/contacts/new'
     | '/admin/users/$id'
     | '/admin/users/new'
+    | '/admin/contacts/'
     | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
@@ -224,19 +266,25 @@ export const routeTree = rootRoute
     "/admin": {
       "filePath": "admin.tsx",
       "children": [
-        "/admin/contacts",
         "/admin/",
+        "/admin/contacts/$id",
+        "/admin/contacts/new",
         "/admin/users/$id",
         "/admin/users/new",
+        "/admin/contacts/",
         "/admin/users/"
       ]
     },
-    "/admin/contacts": {
-      "filePath": "admin/contacts.tsx",
-      "parent": "/admin"
-    },
     "/admin/": {
       "filePath": "admin/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/contacts/$id": {
+      "filePath": "admin/contacts/$id.tsx",
+      "parent": "/admin"
+    },
+    "/admin/contacts/new": {
+      "filePath": "admin/contacts/new.tsx",
       "parent": "/admin"
     },
     "/admin/users/$id": {
@@ -245,6 +293,10 @@ export const routeTree = rootRoute
     },
     "/admin/users/new": {
       "filePath": "admin/users/new.tsx",
+      "parent": "/admin"
+    },
+    "/admin/contacts/": {
+      "filePath": "admin/contacts/index.tsx",
       "parent": "/admin"
     },
     "/admin/users/": {
