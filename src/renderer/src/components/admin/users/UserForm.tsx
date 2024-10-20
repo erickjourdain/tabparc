@@ -18,7 +18,7 @@ import { User, UserRole } from '@renderer/type'
 import { wordLetterUpperCase } from '@renderer/utils/format'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 type IUserForm = {
@@ -68,22 +68,39 @@ const UserForm = ({ user }: UserFormProps) => {
     if (user) reset(user)
   }, [user])
 
-  // Soumission du formulaire
-  const onSubmit = async (data: IUserForm) => {
-    setIsPending(true)
-    if (user?.id)
-      await window.electronAPI.updateUser({
-        ...data,
-        id: user.id,
-        nom: data.nom.trim().toUpperCase(),
-        prenom: wordLetterUpperCase(data.prenom),
-        login: data.login.trim().toLowerCase(),
-        email: data.email.trim().toLowerCase()
-      })
-    else window.electronAPI.createUser(data)
+  // Enregistrement réalisé
+  const afterSave = useCallback(() => {
     setAlerte({ message: 'Utilisateur enregistré', color: 'success' })
     setIsPending(false)
     navigate({ to: '/admin/users' })
+  }, [])
+
+  // Enregistrement erreur
+  const errorSave = useCallback((err) => {
+    console.error(err)
+    setIsPending(false)
+    setAlerte({ message: "impossible de réaliser l'enregistrement", color: 'warning' })
+  }, [])
+
+  // Soumission du formulaire
+  const onSubmit = async (data: IUserForm) => {
+    setIsPending(true)
+    const value = {
+      ...data,
+      nom: data.nom.trim().toUpperCase(),
+      prenom: wordLetterUpperCase(data.prenom),
+      login: data.login.trim().toLowerCase(),
+      email: data.email.trim().toLowerCase()
+    }
+    if (user?.id)
+      await window.electronAPI
+        .updateUser({
+          ...data,
+          id: user.id
+        })
+        .then(afterSave)
+        .catch(errorSave)
+    else window.electronAPI.createUser(data).then(afterSave).catch(errorSave)
   }
 
   return (

@@ -14,7 +14,7 @@ import { Contact } from '@renderer/type'
 import { wordLetterUpperCase } from '@renderer/utils/format'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 type IContactForm = {
@@ -57,10 +57,24 @@ const ContactForm = ({ contact }: ContactFormProps) => {
     }, [contact])
   })
 
-  // Suivi de la mise à jour de l'utilisateur
+  // Suivi de la mise à jour du contact
   useEffect(() => {
     if (contact) reset(contact)
   }, [contact])
+
+  // Enregistrement réalisé
+  const afterSave = useCallback(() => {
+    setAlerte({ message: 'Contact enregistré', color: 'success' })
+    setIsPending(false)
+    navigate({ to: '/admin/contacts' })
+  }, [])
+
+  // Enregistrement erreur
+  const errorSave = useCallback((err) => {
+    console.error(err)
+    setIsPending(false)
+    setAlerte({ message: "impossible de réaliser l'enregistrement", color: 'warning' })
+  }, [])
 
   // Soumission du formulaire
   const onSubmit = async (data: IContactForm) => {
@@ -73,14 +87,14 @@ const ContactForm = ({ contact }: ContactFormProps) => {
       email: data.email.trim().toLowerCase()
     }
     if (contact?.id)
-      await window.electronAPI.updateContact({
-        ...value,
-        id: contact.id
-      })
-    else window.electronAPI.createContact(value)
-    setAlerte({ message: 'Contact enregistré', color: 'success' })
-    setIsPending(false)
-    navigate({ to: '/admin/contacts' })
+      await window.electronAPI
+        .updateContact({
+          ...value,
+          id: contact.id
+        })
+        .then(afterSave)
+        .catch(errorSave)
+    else window.electronAPI.createContact(value).then(afterSave).catch(errorSave)
   }
 
   return (

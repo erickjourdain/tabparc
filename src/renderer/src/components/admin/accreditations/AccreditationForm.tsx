@@ -13,7 +13,7 @@ import { alertAtom } from '@renderer/store'
 import { Accreditation } from '@renderer/type'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 type IAccreditationForm = {
@@ -50,10 +50,24 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
     }, [accreditation])
   })
 
-  // Suivi de la mise à jour de l'utilisateur
+  // Suivi de la mise à jour de l'accréditation
   useEffect(() => {
     if (accreditation) reset(accreditation)
   }, [accreditation])
+
+  // Enregistrement réalisé
+  const afterSave = useCallback(() => {
+    setAlerte({ message: 'Accréditation enregistrée', color: 'success' })
+    setIsPending(false)
+    navigate({ to: '/admin/accreditations' })
+  }, [])
+
+  // Enregistrement erreur
+  const errorSave = useCallback((err) => {
+    console.error(err)
+    setIsPending(false)
+    setAlerte({ message: "impossible de réaliser l'enregistrement", color: 'warning' })
+  }, [])
 
   // Soumission du formulaire
   const onSubmit = async (data: IAccreditationForm) => {
@@ -63,14 +77,14 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
       reference: data.reference.trim().toUpperCase()
     }
     if (accreditation?.id)
-      await window.electronAPI.updateAccreditation({
-        ...value,
-        id: accreditation.id
-      })
-    else window.electronAPI.createAccreditation(value)
-    setAlerte({ message: 'Accreditation enregistrée', color: 'success' })
-    setIsPending(false)
-    navigate({ to: '/admin/accreditations' })
+      await window.electronAPI
+        .updateAccreditation({
+          ...value,
+          id: accreditation.id
+        })
+        .then(afterSave)
+        .catch(errorSave)
+    else window.electronAPI.createAccreditation(value).then(afterSave).catch(errorSave)
   }
 
   return (
