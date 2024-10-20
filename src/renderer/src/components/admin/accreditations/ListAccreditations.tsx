@@ -22,13 +22,13 @@ import settings from '@renderer/utils/settings'
 import { useLoaderData, useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-const ListUsers = () => {
+const ListAccreditations = () => {
   // Hook de navigation
-  const navigate = useNavigate({ from: '/admin/users' })
+  const navigate = useNavigate({ from: '/admin/accreditations' })
   // Hook du loader de la route
-  const loader = useLoaderData({ from: '/admin/users/' })
+  const loader = useLoaderData({ from: '/admin/accreditations/' })
   // Hook des paramètres de recherche de la page
-  const { page, search } = useSearch({ from: '/admin/users/' })
+  const { page, search } = useSearch({ from: '/admin/accreditations/' })
 
   // Etat local de gestion du champ de recherche
   const [newSearch, setNewSearch] = useState<string>(search || '')
@@ -52,14 +52,14 @@ const ListUsers = () => {
   return (
     <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
       <Typography variant="h6" color="primary">
-        Gestion des utilisateurs
+        Gestion des accréditations
       </Typography>
       <Fab
         color="primary"
-        aria-label="ajouter-utilisateur"
+        aria-label="ajouter-accreditation"
         size="small"
         sx={{ position: 'absolute', top: 10, right: 10 }}
-        onClick={() => navigate({ to: '/admin/users/new' })}
+        onClick={() => navigate({ to: '/admin/accreditations/new' })}
       >
         <AddIcon />
       </Fab>
@@ -86,25 +86,23 @@ const ListUsers = () => {
           variant="standard"
         />
       </Box>
-      <Table aria-label="table utilisateurs">
+      <Table aria-label="table accreditations">
         <TableHead>
           <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Login</TableCell>
-            <TableCell>Role</TableCell>
+            <TableCell>Référence</TableCell>
             <TableCell>Valide</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {loader.data.map((user) => (
+          {loader.data.map((accreditation) => (
             <TableRow
-              key={user.id}
-              onDoubleClick={() => navigate({ to: `/admin/users/${user.id}` })}
+              key={accreditation.id}
+              onDoubleClick={() => navigate({ to: `/admin/accreditations/${accreditation.id}` })}
             >
-              <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
-              <TableCell>{user.login}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.valide ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</TableCell>
+              <TableCell>{accreditation.reference}</TableCell>
+              <TableCell>
+                {accreditation.valide ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -123,4 +121,4 @@ const ListUsers = () => {
   )
 }
 
-export default ListUsers
+export default ListAccreditations

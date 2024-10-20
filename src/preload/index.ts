@@ -1,5 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload'
-import { Contact, User } from '@entity/*'
+import { Accreditation, Contact, Lieu, User } from '@entity/*'
 import { contextBridge, ipcRenderer } from 'electron'
 import { FindManyOptions } from 'typeorm'
 
@@ -22,13 +22,32 @@ if (process.contextIsolated) {
       getUser: (id: string) => ipcRenderer.invoke('user.find', id),
       updateUser: (user: User) => ipcRenderer.invoke('user.update', user),
       createUser: (user: User) => ipcRenderer.invoke('user.save', user),
+
       // Contact repository
       getContacts: (filter: FindManyOptions<Contact>) => ipcRenderer.invoke('contact.all', filter),
       searchContacts: (filter: FindManyOptions<Contact>, search: string) =>
         ipcRenderer.invoke('contact.search', filter, search),
       getContact: (id: string) => ipcRenderer.invoke('contact.find', id),
       updateContact: (contact: Contact) => ipcRenderer.invoke('contact.update', contact),
-      createContact: (contact: Contact) => ipcRenderer.invoke('contact.save', contact)
+      createContact: (contact: Contact) => ipcRenderer.invoke('contact.save', contact),
+
+      // Lieu repository
+      getLieux: (filter: FindManyOptions<Lieu>) => ipcRenderer.invoke('lieu.all', filter),
+      searchLieux: (filter: FindManyOptions<Lieu>, search: string) =>
+        ipcRenderer.invoke('lieu.search', filter, search),
+      getLieu: (id: string) => ipcRenderer.invoke('lieu.find', id),
+      updateLieu: (lieu: Lieu) => ipcRenderer.invoke('lieu.update', lieu),
+      createLieu: (lieu: Lieu) => ipcRenderer.invoke('lieu.save', lieu),
+
+      // Accreditation repository
+      getAccreditations: (filter: FindManyOptions<Accreditation>) =>
+        ipcRenderer.invoke('accreditation.all', filter),
+      searchAccreditations: (filter: FindManyOptions<Accreditation>, search: string) =>
+        ipcRenderer.invoke('accreditation.search', filter, search),
+      getAccreditation: (id: string) => ipcRenderer.invoke('accreditation.find', id),
+      updateAccreditation: (lieu: Accreditation) =>
+        ipcRenderer.invoke('accreditation.update', lieu),
+      createAccreditation: (lieu: Accreditation) => ipcRenderer.invoke('accreditation.save', lieu)
     })
   } catch (error) {
     console.error(error)

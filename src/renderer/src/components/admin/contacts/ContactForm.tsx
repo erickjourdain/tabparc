@@ -52,7 +52,7 @@ const ContactForm = ({ contact }: ContactFormProps) => {
         prenom: contact?.prenom || undefined,
         email: contact?.email || undefined,
         role: contact?.telephone || undefined,
-        valide: contact?.valide || undefined
+        valide: contact?.valide || true
       }
     }, [contact])
   })

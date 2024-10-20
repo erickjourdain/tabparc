@@ -51,7 +51,9 @@ const ListContacts = () => {
 
   return (
     <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
-      <Typography variant="h6">Gestion des contacts</Typography>
+      <Typography variant="h6" color="primary">
+        Gestion des contacts
+      </Typography>
       <Fab
         color="primary"
         aria-label="ajouter-contact"

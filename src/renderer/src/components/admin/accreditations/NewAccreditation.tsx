@@ -1,17 +1,17 @@
 import { Box, Paper, Typography } from '@mui/material'
-import UserForm from './UserForm'
+import AccreditationForm from './AccreditationForm'
 
-const NewUser = () => {
+const NewAccreditation = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
         <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          Nouvel utilisateur
+          Nouvelle Accréditation
         </Typography>
-        <UserForm user={null} />
+        <AccreditationForm accreditation={null} />
       </Box>
     </Paper>
   )
 }
 
-export default NewUser
+export default NewAccreditation

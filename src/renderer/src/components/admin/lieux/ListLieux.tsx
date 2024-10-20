@@ -1,6 +1,4 @@
 import AddIcon from '@mui/icons-material/Add'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
 import {
@@ -22,13 +20,13 @@ import settings from '@renderer/utils/settings'
 import { useLoaderData, useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-const ListUsers = () => {
+const ListLieux = () => {
   // Hook de navigation
-  const navigate = useNavigate({ from: '/admin/users' })
+  const navigate = useNavigate({ from: '/admin/lieux' })
   // Hook du loader de la route
-  const loader = useLoaderData({ from: '/admin/users/' })
+  const loader = useLoaderData({ from: '/admin/lieux/' })
   // Hook des paramètres de recherche de la page
-  const { page, search } = useSearch({ from: '/admin/users/' })
+  const { page, search } = useSearch({ from: '/admin/lieux/' })
 
   // Etat local de gestion du champ de recherche
   const [newSearch, setNewSearch] = useState<string>(search || '')
@@ -50,16 +48,14 @@ const ListUsers = () => {
   }, [navigate, newSearch])
 
   return (
-    <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
-      <Typography variant="h6" color="primary">
-        Gestion des utilisateurs
-      </Typography>
+    <Paper sx={{ m: 1, p: 2, position: 'relative' }} color="primary">
+      <Typography variant="h6">Gestion des lieux</Typography>
       <Fab
         color="primary"
-        aria-label="ajouter-utilisateur"
+        aria-label="ajouter-lieu"
         size="small"
         sx={{ position: 'absolute', top: 10, right: 10 }}
-        onClick={() => navigate({ to: '/admin/users/new' })}
+        onClick={() => navigate({ to: '/admin/lieux/new' })}
       >
         <AddIcon />
       </Fab>
@@ -86,25 +82,21 @@ const ListUsers = () => {
           variant="standard"
         />
       </Box>
-      <Table aria-label="table utilisateurs">
+      <Table aria-label="table lieux">
         <TableHead>
           <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Login</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Valide</TableCell>
+            <TableCell>Site</TableCell>
+            <TableCell>Section</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {loader.data.map((user) => (
+          {loader.data.map((lieu) => (
             <TableRow
-              key={user.id}
-              onDoubleClick={() => navigate({ to: `/admin/users/${user.id}` })}
+              key={lieu.id}
+              onDoubleClick={() => navigate({ to: `/admin/lieux/${lieu.id}` })}
             >
-              <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
-              <TableCell>{user.login}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.valide ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</TableCell>
+              <TableCell>{lieu.site}</TableCell>
+              <TableCell>{lieu.section}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -123,4 +115,4 @@ const ListUsers = () => {
   )
 }
 
-export default ListUsers
+export default ListLieux

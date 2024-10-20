@@ -17,7 +17,9 @@ interface Type {
 
 const DONNEES = [
   { label: 'utilisateurs', route: '/admin/users' },
-  { label: 'contacts', route: '/admin/contacts' }
+  { label: 'contacts', route: '/admin/contacts' },
+  { label: 'lieux', route: '/admin/lieux' },
+  { label: 'accreditations', route: '/admin/accreditations' }
 ]
 
 const Admin = () => {

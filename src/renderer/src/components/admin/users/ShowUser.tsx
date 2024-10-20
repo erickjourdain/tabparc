@@ -12,7 +12,7 @@ const ShowUser = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }}>
+        <Typography variant="h6" sx={{ m: 2 }} color="primary">
           Profil {user.prenom} {user.nom}
         </Typography>
         <UserForm user={user} />

@@ -1,4 +1,6 @@
+import { Accreditation } from './accreditation'
 import { Contact } from './contact'
+import { Lieu } from './lieu'
 import { User, UserRole } from './user'
 
-export { Contact, User, UserRole }
+export { Accreditation, Contact, Lieu, User, UserRole }

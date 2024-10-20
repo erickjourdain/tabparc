@@ -1,17 +1,17 @@
 import { Box, Paper, Typography } from '@mui/material'
-import UserForm from './UserForm'
+import LieuForm from './LieuForm'
 
-const NewUser = () => {
+const NewLieu = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
         <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          Nouvel utilisateur
+          Nouveau Lieu
         </Typography>
-        <UserForm user={null} />
+        <LieuForm lieu={null} />
       </Box>
     </Paper>
   )
 }
 
-export default NewUser
+export default NewLieu

@@ -5,7 +5,7 @@ const NewContact = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }}>
+        <Typography variant="h6" sx={{ m: 2 }} color="primary">
           Nouveau contact
         </Typography>
         <ContactForm contact={null} />

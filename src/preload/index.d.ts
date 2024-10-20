@@ -13,6 +13,7 @@ declare global {
       getUser: (id: number) => Promise<User>
       updateUser: (user: User) => Promise<User>
       createUser: (user: User) => Promise<User>
+
       // Contact
       getContacts: (filter: FindManyOptions<Contact>) => Promise<[Contact[], number]>
       searchContacts: (
@@ -22,6 +23,25 @@ declare global {
       getContact: (id: number) => Promise<Contact>
       updateContact: (contact: Contact) => Promise<Contact>
       createContact: (contact: Contact) => Promise<Contact>
+
+      // Lieu
+      getLieux: (filter: FindManyOptions<Lieu>) => Promise<[Lieu[], number]>
+      searchLieux: (filter: FindManyOptions<Lieu>, search: string) => Promise<[Lieu[], number]>
+      getLieu: (id: number) => Promise<Lieu>
+      updateLieu: (lieu: Lieu) => Promise<Lieu>
+      createLieu: (lieu: Lieu) => Promise<Lieu>
+
+      // Accreditation
+      getAccreditations: (
+        filter: FindManyOptions<Accreditation>
+      ) => Promise<[Accreditation[], number]>
+      searchAccreditations: (
+        filter: FindManyOptions<Accreditation>,
+        search: string
+      ) => Promise<[Accreditation[], number]>
+      getAccreditation: (id: number) => Promise<Accreditation>
+      updateAccreditation: (lieu: Lieu) => Promise<Accreditation>
+      createAccreditation: (lieu: Lieu) => Promise<Accreditation>
     }
   }
 }

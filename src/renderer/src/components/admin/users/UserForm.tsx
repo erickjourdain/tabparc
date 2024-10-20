@@ -58,7 +58,7 @@ const UserForm = ({ user }: UserFormProps) => {
         login: user?.login || undefined,
         email: user?.email || undefined,
         role: user?.role || UserRole.USER,
-        valide: user?.valide || undefined
+        valide: user?.valide || true
       }
     }, [user])
   })
