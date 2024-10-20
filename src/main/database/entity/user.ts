@@ -17,13 +17,13 @@ export class User {
   @Column('text', { nullable: false })
   prenom!: string
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: false, unique: true })
   login!: string
 
   @Column('text', { nullable: false })
   email!: string
 
-  @Column('boolean')
+  @Column('boolean', { default: true })
   valide!: boolean
 
   @Column({

@@ -17,6 +17,6 @@ export class Contact {
   @Column('text', { nullable: false })
   telephone!: string
 
-  @Column('boolean')
+  @Column('boolean', { default: true })
   valide!: boolean
 }
