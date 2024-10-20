@@ -40,8 +40,18 @@ declare global {
         search: string
       ) => Promise<[Accreditation[], number]>
       getAccreditation: (id: number) => Promise<Accreditation>
-      updateAccreditation: (lieu: Lieu) => Promise<Accreditation>
-      createAccreditation: (lieu: Lieu) => Promise<Accreditation>
+      updateAccreditation: (accreditation: Accreditation) => Promise<Accreditation>
+      createAccreditation: (accreditation: Accreditation) => Promise<Accreditation>
+
+      // Instrument
+      getInstruments: (filter: FindManyOptions<Instrument>) => Promise<[Instrument[], number]>
+      searchInstruments: (
+        filter: FindManyOptions<Instrument>,
+        search: string
+      ) => Promise<[Instrument[], number]>
+      getInstrument: (id: number) => Promise<Instrument>
+      updateInstrument: (instrument: Instrument) => Promise<Instrument>
+      createInstrument: (instrument: Instrument) => Promise<Instrument>
     }
   }
 }

@@ -1,5 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload'
-import { Accreditation, Contact, Lieu, User } from '@entity/*'
+import { Accreditation, Contact, Instrument, Lieu, User } from '@entity/*'
 import { contextBridge, ipcRenderer } from 'electron'
 import { FindManyOptions } from 'typeorm'
 
@@ -45,9 +45,21 @@ if (process.contextIsolated) {
       searchAccreditations: (filter: FindManyOptions<Accreditation>, search: string) =>
         ipcRenderer.invoke('accreditation.search', filter, search),
       getAccreditation: (id: string) => ipcRenderer.invoke('accreditation.find', id),
-      updateAccreditation: (lieu: Accreditation) =>
-        ipcRenderer.invoke('accreditation.update', lieu),
-      createAccreditation: (lieu: Accreditation) => ipcRenderer.invoke('accreditation.save', lieu)
+      updateAccreditation: (accreditation: Accreditation) =>
+        ipcRenderer.invoke('accreditation.update', accreditation),
+      createAccreditation: (accreditation: Accreditation) =>
+        ipcRenderer.invoke('accreditation.save', accreditation),
+
+      // Instrument repository
+      getInstruments: (filter: FindManyOptions<Instrument>) =>
+        ipcRenderer.invoke('instrument.all', filter),
+      searchInstruments: (filter: FindManyOptions<Instrument>, search: string) =>
+        ipcRenderer.invoke('instrument.search', filter, search),
+      getInstrument: (id: string) => ipcRenderer.invoke('instrument.find', id),
+      updateInstrument: (instrument: Instrument) =>
+        ipcRenderer.invoke('instrument.update', instrument),
+      createInstrument: (instrument: Instrument) =>
+        ipcRenderer.invoke('instrument.save', instrument)
     })
   } catch (error) {
     console.error(error)

@@ -16,12 +16,15 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminLieuxIndexImport } from './routes/admin/lieux/index'
+import { Route as AdminInstrumentsIndexImport } from './routes/admin/instruments/index'
 import { Route as AdminContactsIndexImport } from './routes/admin/contacts/index'
 import { Route as AdminAccreditationsIndexImport } from './routes/admin/accreditations/index'
 import { Route as AdminUsersNewImport } from './routes/admin/users/new'
 import { Route as AdminUsersIdImport } from './routes/admin/users/$id'
 import { Route as AdminLieuxNewImport } from './routes/admin/lieux/new'
 import { Route as AdminLieuxIdImport } from './routes/admin/lieux/$id'
+import { Route as AdminInstrumentsNewImport } from './routes/admin/instruments/new'
+import { Route as AdminInstrumentsIdImport } from './routes/admin/instruments/$id'
 import { Route as AdminContactsNewImport } from './routes/admin/contacts/new'
 import { Route as AdminContactsIdImport } from './routes/admin/contacts/$id'
 import { Route as AdminAccreditationsNewImport } from './routes/admin/accreditations/new'
@@ -54,6 +57,11 @@ const AdminLieuxIndexRoute = AdminLieuxIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
+const AdminInstrumentsIndexRoute = AdminInstrumentsIndexImport.update({
+  path: '/instruments/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminContactsIndexRoute = AdminContactsIndexImport.update({
   path: '/contacts/',
   getParentRoute: () => AdminRoute,
@@ -81,6 +89,16 @@ const AdminLieuxNewRoute = AdminLieuxNewImport.update({
 
 const AdminLieuxIdRoute = AdminLieuxIdImport.update({
   path: '/lieux/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminInstrumentsNewRoute = AdminInstrumentsNewImport.update({
+  path: '/instruments/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminInstrumentsIdRoute = AdminInstrumentsIdImport.update({
+  path: '/instruments/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -157,6 +175,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContactsNewImport
       parentRoute: typeof AdminImport
     }
+    '/admin/instruments/$id': {
+      id: '/admin/instruments/$id'
+      path: '/instruments/$id'
+      fullPath: '/admin/instruments/$id'
+      preLoaderRoute: typeof AdminInstrumentsIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/instruments/new': {
+      id: '/admin/instruments/new'
+      path: '/instruments/new'
+      fullPath: '/admin/instruments/new'
+      preLoaderRoute: typeof AdminInstrumentsNewImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/lieux/$id': {
       id: '/admin/lieux/$id'
       path: '/lieux/$id'
@@ -199,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContactsIndexImport
       parentRoute: typeof AdminImport
     }
+    '/admin/instruments/': {
+      id: '/admin/instruments/'
+      path: '/instruments'
+      fullPath: '/admin/instruments'
+      preLoaderRoute: typeof AdminInstrumentsIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/lieux/': {
       id: '/admin/lieux/'
       path: '/lieux'
@@ -224,12 +263,15 @@ interface AdminRouteChildren {
   AdminAccreditationsNewRoute: typeof AdminAccreditationsNewRoute
   AdminContactsIdRoute: typeof AdminContactsIdRoute
   AdminContactsNewRoute: typeof AdminContactsNewRoute
+  AdminInstrumentsIdRoute: typeof AdminInstrumentsIdRoute
+  AdminInstrumentsNewRoute: typeof AdminInstrumentsNewRoute
   AdminLieuxIdRoute: typeof AdminLieuxIdRoute
   AdminLieuxNewRoute: typeof AdminLieuxNewRoute
   AdminUsersIdRoute: typeof AdminUsersIdRoute
   AdminUsersNewRoute: typeof AdminUsersNewRoute
   AdminAccreditationsIndexRoute: typeof AdminAccreditationsIndexRoute
   AdminContactsIndexRoute: typeof AdminContactsIndexRoute
+  AdminInstrumentsIndexRoute: typeof AdminInstrumentsIndexRoute
   AdminLieuxIndexRoute: typeof AdminLieuxIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
@@ -240,12 +282,15 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAccreditationsNewRoute: AdminAccreditationsNewRoute,
   AdminContactsIdRoute: AdminContactsIdRoute,
   AdminContactsNewRoute: AdminContactsNewRoute,
+  AdminInstrumentsIdRoute: AdminInstrumentsIdRoute,
+  AdminInstrumentsNewRoute: AdminInstrumentsNewRoute,
   AdminLieuxIdRoute: AdminLieuxIdRoute,
   AdminLieuxNewRoute: AdminLieuxNewRoute,
   AdminUsersIdRoute: AdminUsersIdRoute,
   AdminUsersNewRoute: AdminUsersNewRoute,
   AdminAccreditationsIndexRoute: AdminAccreditationsIndexRoute,
   AdminContactsIndexRoute: AdminContactsIndexRoute,
+  AdminInstrumentsIndexRoute: AdminInstrumentsIndexRoute,
   AdminLieuxIndexRoute: AdminLieuxIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
@@ -260,12 +305,15 @@ export interface FileRoutesByFullPath {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
+  '/admin/instruments/new': typeof AdminInstrumentsNewRoute
   '/admin/lieux/$id': typeof AdminLieuxIdRoute
   '/admin/lieux/new': typeof AdminLieuxNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations': typeof AdminAccreditationsIndexRoute
   '/admin/contacts': typeof AdminContactsIndexRoute
+  '/admin/instruments': typeof AdminInstrumentsIndexRoute
   '/admin/lieux': typeof AdminLieuxIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
@@ -277,12 +325,15 @@ export interface FileRoutesByTo {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
+  '/admin/instruments/new': typeof AdminInstrumentsNewRoute
   '/admin/lieux/$id': typeof AdminLieuxIdRoute
   '/admin/lieux/new': typeof AdminLieuxNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations': typeof AdminAccreditationsIndexRoute
   '/admin/contacts': typeof AdminContactsIndexRoute
+  '/admin/instruments': typeof AdminInstrumentsIndexRoute
   '/admin/lieux': typeof AdminLieuxIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
@@ -296,12 +347,15 @@ export interface FileRoutesById {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
+  '/admin/instruments/new': typeof AdminInstrumentsNewRoute
   '/admin/lieux/$id': typeof AdminLieuxIdRoute
   '/admin/lieux/new': typeof AdminLieuxNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations/': typeof AdminAccreditationsIndexRoute
   '/admin/contacts/': typeof AdminContactsIndexRoute
+  '/admin/instruments/': typeof AdminInstrumentsIndexRoute
   '/admin/lieux/': typeof AdminLieuxIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
 }
@@ -316,12 +370,15 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/instruments/$id'
+    | '/admin/instruments/new'
     | '/admin/lieux/$id'
     | '/admin/lieux/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations'
     | '/admin/contacts'
+    | '/admin/instruments'
     | '/admin/lieux'
     | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
@@ -332,12 +389,15 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/instruments/$id'
+    | '/admin/instruments/new'
     | '/admin/lieux/$id'
     | '/admin/lieux/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations'
     | '/admin/contacts'
+    | '/admin/instruments'
     | '/admin/lieux'
     | '/admin/users'
   id:
@@ -349,12 +409,15 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/instruments/$id'
+    | '/admin/instruments/new'
     | '/admin/lieux/$id'
     | '/admin/lieux/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations/'
     | '/admin/contacts/'
+    | '/admin/instruments/'
     | '/admin/lieux/'
     | '/admin/users/'
   fileRoutesById: FileRoutesById
@@ -397,12 +460,15 @@ export const routeTree = rootRoute
         "/admin/accreditations/new",
         "/admin/contacts/$id",
         "/admin/contacts/new",
+        "/admin/instruments/$id",
+        "/admin/instruments/new",
         "/admin/lieux/$id",
         "/admin/lieux/new",
         "/admin/users/$id",
         "/admin/users/new",
         "/admin/accreditations/",
         "/admin/contacts/",
+        "/admin/instruments/",
         "/admin/lieux/",
         "/admin/users/"
       ]
@@ -427,6 +493,14 @@ export const routeTree = rootRoute
       "filePath": "admin/contacts/new.tsx",
       "parent": "/admin"
     },
+    "/admin/instruments/$id": {
+      "filePath": "admin/instruments/$id.tsx",
+      "parent": "/admin"
+    },
+    "/admin/instruments/new": {
+      "filePath": "admin/instruments/new.tsx",
+      "parent": "/admin"
+    },
     "/admin/lieux/$id": {
       "filePath": "admin/lieux/$id.tsx",
       "parent": "/admin"
@@ -449,6 +523,10 @@ export const routeTree = rootRoute
     },
     "/admin/contacts/": {
       "filePath": "admin/contacts/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/instruments/": {
+      "filePath": "admin/instruments/index.tsx",
       "parent": "/admin"
     },
     "/admin/lieux/": {

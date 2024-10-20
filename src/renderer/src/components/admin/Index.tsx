@@ -19,7 +19,8 @@ const DONNEES = [
   { label: 'utilisateurs', route: '/admin/users' },
   { label: 'contacts', route: '/admin/contacts' },
   { label: 'lieux', route: '/admin/lieux' },
-  { label: 'accreditations', route: '/admin/accreditations' }
+  { label: 'accreditations', route: '/admin/accreditations' },
+  { label: 'instruments', route: '/admin/instruments' }
 ]
 
 const Admin = () => {
