@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { Grandeur } from './grandeur'
 
 @Entity()
 @Unique('site_section', ['site', 'section'])
@@ -11,4 +12,7 @@ export class Lieu {
 
   @Column('int', { nullable: false })
   section!: string
+
+  @OneToMany(() => Grandeur, (grandeur) => grandeur.accreditation)
+  grandeurs!: Grandeur[]
 }

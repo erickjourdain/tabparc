@@ -19,17 +19,29 @@ import {
   Typography
 } from '@mui/material'
 import settings from '@renderer/utils/settings'
-import { useLoaderData, useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-const ListUsers = () => {
-  // Hook de navigation
-  const navigate = useNavigate({ from: '/admin/users' })
-  // Hook du loader de la route
-  const loader = useLoaderData({ from: '/admin/users/' })
-  // Hook des paramètres de recherche de la page
-  const { page, search } = useSearch({ from: '/admin/users/' })
+interface ListDataProps {
+  type: string
+  route:
+  | '/admin/accreditations'
+  | '/admin/users'
+  | '/admin/contacts'
+  | '/admin/instruments'
+  | '/admin/lieux'
+  data: {
+    id: number | undefined
+    [key: string]: string | number | boolean | undefined
+  }[]
+  nbData: number
+}
 
+const ListParamsData = ({ route, type, data, nbData }: ListDataProps) => {
+  // Hook de navigation
+  const navigate = useNavigate({ from: route })
+  // Hook des paramètres de recherche de la page
+  const { page, search } = useSearch({ from: `${route}/` })
   // Etat local de gestion du champ de recherche
   const [newSearch, setNewSearch] = useState<string>(search || '')
 
@@ -52,14 +64,14 @@ const ListUsers = () => {
   return (
     <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
       <Typography variant="h6" color="primary">
-        Gestion des utilisateurs
+        Gestion des {type}
       </Typography>
       <Fab
         color="primary"
-        aria-label="ajouter-utilisateur"
+        aria-label={`ajouter-${type}`}
         size="small"
         sx={{ position: 'absolute', top: 10, right: 10 }}
-        onClick={() => navigate({ to: '/admin/users/new' })}
+        onClick={() => navigate({ to: `${route}/new` })}
       >
         <AddIcon />
       </Fab>
@@ -86,41 +98,48 @@ const ListUsers = () => {
           variant="standard"
         />
       </Box>
-      <Table aria-label="table utilisateurs">
-        <TableHead>
-          <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Login</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Valide</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {loader.data.map((user) => (
-            <TableRow
-              key={user.id}
-              onDoubleClick={() => navigate({ to: `/admin/users/${user.id}` })}
-            >
-              <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
-              <TableCell>{user.login}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.valide ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[10]}
-        component="div"
-        count={loader.nbData}
-        rowsPerPage={settings.nbElements}
-        page={page !== undefined ? page - 1 : 0}
-        onPageChange={(_evt, newPage) =>
-          navigate({ search: (prev) => ({ ...prev, page: newPage + 1 }) })
-        }
-      />
+      {data.length && (
+        <>
+          <Table aria-label="table accreditations">
+            <TableHead>
+              <TableRow>
+                {Object.entries(data[0]).map(
+                  ([key]) => key !== 'id' && <TableCell key={key}>{key}</TableCell>
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((val) => (
+                <TableRow key={val.id} onDoubleClick={() => navigate({ to: `${route}/${val.id}` })}>
+                  {Object.entries(val).map(
+                    ([key, value]) =>
+                      key !== 'id' &&
+                      (typeof value !== 'boolean' ? (
+                        <TableCell key={key}>{value}</TableCell>
+                      ) : (
+                        <TableCell key={key}>
+                          {value ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+                        </TableCell>
+                      ))
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[settings.nbElements]}
+            component="div"
+            count={nbData}
+            rowsPerPage={settings.nbElements}
+            page={page !== undefined ? page - 1 : 0}
+            onPageChange={(_evt, newPage) =>
+              navigate({ search: (prev) => ({ ...prev, page: newPage + 1 }) })
+            }
+          />
+        </>
+      )}
     </Paper>
   )
 }
 
-export default ListUsers
+export default ListParamsData

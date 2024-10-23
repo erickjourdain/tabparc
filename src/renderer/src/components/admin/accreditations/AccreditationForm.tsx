@@ -77,14 +77,18 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
       reference: data.reference.trim().toUpperCase()
     }
     if (accreditation?.id)
-      await window.electronAPI
-        .updateAccreditation({
+      await window.electron.ipcRenderer
+        .invoke('accreditation.update', {
           ...value,
           id: accreditation.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else window.electronAPI.createAccreditation(value).then(afterSave).catch(errorSave)
+    else
+      window.electron.ipcRenderer
+        .invoke('accreditation.save', value)
+        .then(afterSave)
+        .catch(errorSave)
   }
 
   return (

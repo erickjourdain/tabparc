@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Grandeur } from './grandeur'
 
 @Entity()
 export class Accreditation {
@@ -10,4 +11,7 @@ export class Accreditation {
 
   @Column('boolean', { default: true })
   valide!: boolean
+
+  @OneToMany(() => Grandeur, (grandeur) => grandeur.accreditation)
+  grandeurs!: Grandeur[]
 }

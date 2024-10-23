@@ -45,7 +45,7 @@ const Root = () => {
 
 export const Route = createRootRoute({
   loader: async (): Promise<User | null> => {
-    const user = await window.electronAPI.getLogged()
+    const user = await window.electron.ipcRenderer.invoke('user.logged')
     return user
   },
   component: Root

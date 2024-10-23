@@ -77,14 +77,15 @@ const InstrumentForm = ({ instrument }: InstrumentFormProps) => {
       nom: data.nom.trim().toLocaleLowerCase()
     }
     if (instrument?.id)
-      await window.electronAPI
-        .updateInstrument({
+      await window.electron.ipcRenderer
+        .invoke('instrument.update', {
           ...value,
           id: instrument.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else window.electronAPI.createInstrument(value).then(afterSave).catch(errorSave)
+    else
+      window.electron.ipcRenderer.invoke('instrument.save', value).then(afterSave).catch(errorSave)
   }
 
   return (

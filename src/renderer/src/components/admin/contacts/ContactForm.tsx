@@ -51,7 +51,7 @@ const ContactForm = ({ contact }: ContactFormProps) => {
         nom: contact?.nom || undefined,
         prenom: contact?.prenom || undefined,
         email: contact?.email || undefined,
-        role: contact?.telephone || undefined,
+        telephone: contact?.telephone || undefined,
         valide: contact?.valide || true
       }
     }, [contact])
@@ -87,14 +87,14 @@ const ContactForm = ({ contact }: ContactFormProps) => {
       email: data.email.trim().toLowerCase()
     }
     if (contact?.id)
-      await window.electronAPI
-        .updateContact({
+      await window.electron.ipcRenderer
+        .invoke('contact.update', {
           ...value,
           id: contact.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else window.electronAPI.createContact(value).then(afterSave).catch(errorSave)
+    else window.electron.ipcRenderer.invoke('contact.save', value).then(afterSave).catch(errorSave)
   }
 
   return (

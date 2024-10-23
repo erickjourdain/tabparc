@@ -68,14 +68,14 @@ const LieuForm = ({ lieu }: LieuFormProps) => {
       site: data.site.trim().toUpperCase()
     }
     if (lieu?.id)
-      await window.electronAPI
-        .updateLieu({
+      await window.electron.ipcRenderer
+        .invoke('lieu.update', {
           ...value,
           id: lieu.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else window.electronAPI.createLieu(value).then(afterSave).catch(errorSave)
+    else window.electron.ipcRenderer.invoke('lieu.save', value).then(afterSave).catch(errorSave)
   }
 
   return (

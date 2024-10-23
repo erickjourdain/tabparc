@@ -93,14 +93,14 @@ const UserForm = ({ user }: UserFormProps) => {
       email: data.email.trim().toLowerCase()
     }
     if (user?.id)
-      await window.electronAPI
-        .updateUser({
+      await window.electron.ipcRenderer
+        .invoke('user.update', {
           ...data,
           id: user.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else window.electronAPI.createUser(data).then(afterSave).catch(errorSave)
+    else window.electron.ipcRenderer.invoke('user.save', value).then(afterSave).catch(errorSave)
   }
 
   return (
