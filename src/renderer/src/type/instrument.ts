@@ -1,5 +1,5 @@
 export interface Instrument {
-  id?: number
-  nom?: string
+  id: number
+  nom: string
   valide?: boolean
 }

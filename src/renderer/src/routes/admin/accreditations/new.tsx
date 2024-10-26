@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material'
-import AccreditationForm from '@renderer/components/admin/accreditations/AccreditationForm'
+import AccreditationForm from '@renderer/components/admin/formulaires/AccreditationForm'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**

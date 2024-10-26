@@ -1,5 +1,5 @@
 export interface Contact {
-  id?: number
+  id: number
   nom?: string
   prenom?: string
   email?: string

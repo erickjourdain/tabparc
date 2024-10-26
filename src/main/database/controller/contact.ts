@@ -6,7 +6,7 @@ import { Contact } from '../entity/contact'
 const contactRepository = AppDataSource.getRepository(Contact)
 
 /**
- * Liste d'contacts
+ * Liste des contacts
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @returns Promise<Contact[]> tableau d'contacts
  */
@@ -15,10 +15,10 @@ const findAll = (filter: FindManyOptions<Contact>) => {
 }
 
 /**
- * Recherche d'contacts
+ * Recherche de contacts
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @param search string chaine à rechercher
- * @returns Promise<Contact[]> tableau d'contacts
+ * @returns Promise<Contact[]>
  */
 const search = (filter: FindManyOptions<Contact>, search: string) => {
   filter.where = [{ nom: ILike(`%${search}%`) }, { prenom: ILike(`%${search}%`) }]
@@ -27,8 +27,8 @@ const search = (filter: FindManyOptions<Contact>, search: string) => {
 
 /**
  * Recherche d'un contact retourne null si contact non trouvé
- * @param id identifiant de l'contact recherché
- * @returns Promise<Contact> contact
+ * @param id identifiant de le contact recherché
+ * @returns Promise<Contact>
  */
 const findById = (id: number) => {
   return contactRepository.findOneBy({ id })
@@ -36,20 +36,20 @@ const findById = (id: number) => {
 
 /**
  * Mise à jour d'un contact
- * @param Contact Contact contact à mettre à jour
+ * @param contact Contact contact à mettre à jour
  * @returns Promise<Contact>
  */
-const update = async (Contact: Contact) => {
-  return contactRepository.update({ id: Contact.id }, Contact)
+const update = async (contact: Contact) => {
+  return contactRepository.update({ id: contact.id }, contact)
 }
 
 /**
  * Sauvegarde d'un nouvel contact
- * @param Contact Contact contact à enregistrer
+ * @param contact Contact contact à enregistrer
  * @returns Promise<Contact>
  */
-const save = async (Contact: Contact) => {
-  return contactRepository.save(Contact)
+const save = async (contact: Contact) => {
+  return contactRepository.save(contact)
 }
 
 export default { findById, findAll, save, search, update }

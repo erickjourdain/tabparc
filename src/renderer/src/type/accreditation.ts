@@ -1,5 +1,5 @@
 export interface Accreditation {
-  id?: number
-  reference?: string
+  id: number
+  reference: string
   valide?: boolean
 }

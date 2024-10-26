@@ -1,5 +1,5 @@
 import { Alert, Box, Paper, Typography } from '@mui/material'
-import UserForm from '@renderer/components/admin/users/UserForm'
+import UserForm from '@renderer/components/admin/formulaires/UserForm'
 import { User } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 

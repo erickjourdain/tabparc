@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material'
-import InstrumentForm from '@renderer/components/admin/instruments/InstrumentForm'
+import InstrumentForm from '@renderer/components/admin/formulaires/InstrumentForm'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**

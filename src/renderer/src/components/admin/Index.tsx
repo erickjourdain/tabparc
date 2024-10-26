@@ -20,7 +20,8 @@ const DONNEES = [
   { label: 'contacts', route: '/admin/contacts' },
   { label: 'lieux', route: '/admin/lieux' },
   { label: 'accreditations', route: '/admin/accreditations' },
-  { label: 'instruments', route: '/admin/instruments' }
+  { label: 'instruments', route: '/admin/instruments' },
+  { label: 'grandeurs', route: '/admin/grandeurs' }
 ]
 
 const Admin = () => {

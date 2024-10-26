@@ -1,5 +1,5 @@
 import { Alert, Box, Paper, Typography } from '@mui/material'
-import ContactForm from '@renderer/components/admin/contacts/ContactForm'
+import ContactForm from '@renderer/components/admin/formulaires/ContactForm'
 import { Contact } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 

@@ -30,6 +30,7 @@ interface ListDataProps {
   | '/admin/contacts'
   | '/admin/instruments'
   | '/admin/lieux'
+  | '/admin/grandeurs'
   data: {
     id: number | undefined
     [key: string]: string | number | boolean | undefined

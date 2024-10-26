@@ -12,17 +12,17 @@ export class Grandeur {
   @Column('text', { nullable: false, unique: false })
   nom!: string
 
-  @ManyToOne(() => Accreditation, (accreditation) => accreditation.grandeurs)
+  @ManyToOne(() => Accreditation, (accreditation) => accreditation.grandeurs, { eager: true })
   accreditation!: Accreditation
 
-  @ManyToMany(() => Contact)
+  @ManyToMany(() => Contact, { eager: true })
   @JoinTable()
   contacts!: Contact[]
 
-  @ManyToOne(() => Lieu, (lieu) => lieu.grandeurs)
+  @ManyToOne(() => Lieu, (lieu) => lieu.grandeurs, { eager: true })
   lieu!: Lieu
 
-  @ManyToMany(() => Instrument)
+  @ManyToMany(() => Instrument, { eager: true })
   @JoinTable()
   instruments!: Instrument[]
 }

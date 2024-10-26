@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material'
-import LieuForm from '@renderer/components/admin/lieux/LieuForm'
+import LieuForm from '@renderer/components/admin/formulaires/LieuForm'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
