@@ -3,6 +3,7 @@ import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import AppSource from './database/data-source'
+import crm from './database/mssql/crm'
 import './ipc-main'
 
 function createWindow(): void {
@@ -53,16 +54,20 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC insert todo
-  //ipcMain.on('insertTodo', () => todoMngr.insertTodo('test', 'encours'))
-
+  // Connexion aux bases de données puis ouverture de la fenêtre principale
   AppSource.initialize()
     .then(() => {
       console.log('connection à la base de données initialisée')
+      crm.connexion().then(() => {
+        createWindow()
+        // crm.recherchePresta('tampon', 1, 10).then((data) => console.log(data))
+        //crm.rechercheClient('dg', 1, 10).then((data) => console.log(data))
+      })
     })
-    .catch((err) => console.log(err))
-
-  createWindow()
+    .catch((err) => {
+      console.log(err)
+      process.exit(0)
+    })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -75,6 +80,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  crm.deconnexion()
   if (process.platform !== 'darwin') {
     app.quit()
   }
