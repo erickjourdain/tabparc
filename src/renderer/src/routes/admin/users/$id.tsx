@@ -1,5 +1,6 @@
-import { Alert, Box, Paper, Typography } from '@mui/material'
+import { Alert, Box, Paper } from '@mui/material'
 import UserForm from '@renderer/components/admin/formulaires/UserForm'
+import SousTitre from '@renderer/components/admin/SousTitre'
 import { User } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -17,9 +18,7 @@ const ShowUser = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          Profil {user.prenom} {user.nom}
-        </Typography>
+        <SousTitre sx={{ mb: 2 }} titre={`Profil ${user.prenom} ${user.nom}`} />
         <UserForm user={user} />
       </Box>
     </Paper>

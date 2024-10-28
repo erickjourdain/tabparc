@@ -1,5 +1,6 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { Box, Button, Fab, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
 import { Lieu } from '@renderer/type'
 import { useNavigate, useRouter } from '@tanstack/react-router'
@@ -85,59 +86,44 @@ const LieuForm = ({ lieu }: LieuFormProps) => {
       noValidate
       sx={{ position: 'relative' }}
     >
-      <Fab
-        color="secondary"
-        aria-label="back"
-        size="small"
-        sx={{ position: 'absolute', bottom: 10, right: 10 }}
-        onClick={() => router.history.back()}
-      >
-        <ArrowBackIcon />
-      </Fab>
-      <Box display="flex" flexWrap="wrap" justifyContent="flex-start" mt="2">
-        <Box sx={{ flex: '0 0 30%', m: 1 }}>
-          <TextField
-            id="site"
-            label="nom"
-            {...register('site', {
-              required: 'Le site est obligatoire',
-              minLength: {
-                value: 3,
-                message: 'Le site doit contenir au moins 3 caractères'
-              },
-              maxLength: {
-                value: 55,
-                message: 'Le site ne peut contenir plus de 55 caractères.'
-              }
-            })}
-            error={errors.site ? true : false}
-          />
-          <Typography variant="inherit" color="error">
-            {errors.site?.message}
-          </Typography>
-        </Box>
-        <Box sx={{ flex: '0 0 30%', m: 1 }}>
-          <TextField
-            id="section"
-            label="section"
-            type="number"
-            {...register('section', {
-              required: 'La section est obligatoire',
-              min: {
-                value: 300,
-                message: 'section >= 300'
-              },
-              max: {
-                value: 500,
-                message: 'section < 500'
-              }
-            })}
-            error={errors.section ? true : false}
-          />
-          <Typography variant="inherit" color="error">
-            {errors.section?.message}
-          </Typography>
-        </Box>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2} mb={3}>
+          <Grid size={4}>
+            <InputForm
+              control={control}
+              name="site"
+              rules={{
+                required: 'Le site est obligatoire',
+                minLength: {
+                  value: 3,
+                  message: 'Le site doit contenir au moins 3 caractères'
+                },
+                maxLength: {
+                  value: 55,
+                  message: 'Le site ne peut contenir plus de 55 caractères.'
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={4}>
+            <InputForm
+              control={control}
+              name="section"
+              type="number"
+              rules={{
+                required: 'La section est obligatoire',
+                min: {
+                  value: 300,
+                  message: 'section >= 300'
+                },
+                max: {
+                  value: 500,
+                  message: 'section < 500'
+                }
+              }}
+            />
+          </Grid>
+        </Grid>
       </Box>
       <Box mt={3} m={1} display="flex" alignItems="flex-start">
         <Stack spacing={2} direction="row">

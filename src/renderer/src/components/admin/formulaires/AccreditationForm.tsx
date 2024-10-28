@@ -1,17 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import {
-  Box,
-  Button,
-  Fab,
-  FormControlLabel,
-  Stack,
-  Switch,
-  TextField,
-  Typography
-} from '@mui/material'
+import { Box, Button, FormControlLabel, Stack, Switch } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
 import { Accreditation } from '@renderer/type'
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -28,8 +20,6 @@ type AccreditationFormProps = {
 const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
   // Hook de navigation
   const navigate = useNavigate()
-  // Hook router
-  const router = useRouter()
   // Etat local de gestion de la sauvegarde
   const [isPending, setIsPending] = useState<boolean>(false)
   const setAlerte = useSetAtom(alertAtom)
@@ -98,50 +88,38 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
       noValidate
       sx={{ position: 'relative' }}
     >
-      <Fab
-        color="secondary"
-        aria-label="back"
-        size="small"
-        sx={{ position: 'absolute', bottom: 10, right: 10 }}
-        onClick={() => router.history.back()}
-      >
-        <ArrowBackIcon />
-      </Fab>
-      <Box display="flex" flexWrap="wrap" justifyContent="flex-start" mt="2">
-        <Box sx={{ flex: '0 0 50%', m: 1 }}>
-          <TextField
-            id="nom"
-            label="nom"
-            fullWidth
-            {...register('reference', {
-              required: 'La référence est obligatoire',
-              minLength: {
-                value: 3,
-                message: 'La référence doit contenir au moins 3 caractères'
-              },
-              maxLength: {
-                value: 55,
-                message: 'La référence ne peut contenir plus de 55 caractères.'
-              }
-            })}
-            error={errors.reference ? true : false}
-          />
-          <Typography variant="inherit" color="error">
-            {errors.reference?.message}
-          </Typography>
-        </Box>
-        <Box sx={{ flex: '0 0 30%', m: 1 }}>
-          <Controller
-            name="valide"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <FormControlLabel
-                control={<Switch checked={value} onChange={onChange} />}
-                label="valide"
-              />
-            )}
-          />
-        </Box>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2} mb={3}>
+          <Grid size={6}>
+            <InputForm
+              control={control}
+              name="reference"
+              rules={{
+                required: 'La référence est obligatoire',
+                minLength: {
+                  value: 3,
+                  message: 'La référence doit contenir au moins 3 caractères'
+                },
+                maxLength: {
+                  value: 55,
+                  message: 'La référence ne peut contenir plus de 55 caractères.'
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={4}>
+            <Controller
+              name="valide"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <FormControlLabel
+                  control={<Switch checked={value} onChange={onChange} />}
+                  label="valide"
+                />
+              )}
+            />
+          </Grid>
+        </Grid>
       </Box>
       <Box mt={3} m={1} display="flex" alignItems="flex-start">
         <Stack spacing={2} direction="row">

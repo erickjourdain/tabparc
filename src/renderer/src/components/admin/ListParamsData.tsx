@@ -15,12 +15,12 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material'
 import settings from '@renderer/utils/settings'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import SousTitre from './SousTitre'
 
 interface ListDataProps {
   type: string
@@ -63,82 +63,85 @@ const ListParamsData = ({ route, type, data, nbData }: ListDataProps) => {
   }, [navigate, newSearch])
 
   return (
-    <Paper sx={{ m: 1, p: 2, position: 'relative' }}>
-      <Typography variant="h6" color="primary">
-        Gestion des {type}
-      </Typography>
-      <Fab
-        color="primary"
-        aria-label={`ajouter-${type}`}
-        size="small"
-        sx={{ position: 'absolute', top: 10, right: 10 }}
-        onClick={() => navigate({ to: `${route}/new` })}
-      >
-        <AddIcon />
-      </Fab>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <TextField
-          id="input-search"
-          label="Recherche"
-          value={newSearch}
-          onChange={(e) => setNewSearch(e.currentTarget.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <IconButton onClick={() => navigate({ search: { page: 1, search: '' } })}>
-                  <ClearIcon />
-                </IconButton>
-              )
-            }
-          }}
-          variant="standard"
-        />
-      </Box>
-      {data.length && (
-        <>
-          <Table aria-label="table accreditations">
-            <TableHead>
-              <TableRow>
-                {Object.entries(data[0]).map(
-                  ([key]) => key !== 'id' && <TableCell key={key}>{key}</TableCell>
-                )}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((val) => (
-                <TableRow key={val.id} onDoubleClick={() => navigate({ to: `${route}/${val.id}` })}>
-                  {Object.entries(val).map(
-                    ([key, value]) =>
-                      key !== 'id' &&
-                      (typeof value !== 'boolean' ? (
-                        <TableCell key={key}>{value}</TableCell>
-                      ) : (
-                        <TableCell key={key}>
-                          {value ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
-                        </TableCell>
-                      ))
+    <Paper>
+      <Box px={3} py={2} sx={{ position: 'relative' }}>
+        <SousTitre titre={`Gestion des ${type}`} />
+        <Fab
+          color="primary"
+          aria-label={`ajouter-${type}`}
+          size="small"
+          sx={{ position: 'absolute', top: 10, right: 10 }}
+          onClick={() => navigate({ to: `${route}/new` })}
+        >
+          <AddIcon />
+        </Fab>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <TextField
+            id="input-search"
+            label="Recherche"
+            value={newSearch}
+            onChange={(e) => setNewSearch(e.currentTarget.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <IconButton onClick={() => navigate({ search: { page: 1, search: '' } })}>
+                    <ClearIcon />
+                  </IconButton>
+                )
+              }
+            }}
+            variant="standard"
+          />
+        </Box>
+        {data.length && (
+          <>
+            <Table aria-label="table accreditations">
+              <TableHead>
+                <TableRow>
+                  {Object.entries(data[0]).map(
+                    ([key]) => key !== 'id' && <TableCell key={key}>{key}</TableCell>
                   )}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[settings.nbElements]}
-            component="div"
-            count={nbData}
-            rowsPerPage={settings.nbElements}
-            page={page !== undefined ? page - 1 : 0}
-            onPageChange={(_evt, newPage) =>
-              navigate({ search: (prev) => ({ ...prev, page: newPage + 1 }) })
-            }
-          />
-        </>
-      )}
+              </TableHead>
+              <TableBody>
+                {data.map((val) => (
+                  <TableRow
+                    key={val.id}
+                    onDoubleClick={() => navigate({ to: `${route}/${val.id}` })}
+                  >
+                    {Object.entries(val).map(
+                      ([key, value]) =>
+                        key !== 'id' &&
+                        (typeof value !== 'boolean' ? (
+                          <TableCell key={key}>{value}</TableCell>
+                        ) : (
+                          <TableCell key={key}>
+                            {value ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+                          </TableCell>
+                        ))
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[settings.nbElements]}
+              component="div"
+              count={nbData}
+              rowsPerPage={settings.nbElements}
+              page={page !== undefined ? page - 1 : 0}
+              onPageChange={(_evt, newPage) =>
+                navigate({ search: (prev) => ({ ...prev, page: newPage + 1 }) })
+              }
+            />
+          </>
+        )}
+      </Box>
     </Paper>
   )
 }

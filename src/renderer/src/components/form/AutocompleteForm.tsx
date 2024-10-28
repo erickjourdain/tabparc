@@ -1,26 +1,32 @@
 import { Autocomplete, TextField } from '@mui/material'
 import loadData from '@renderer/utils/loader/admin'
 import { useCallback, useEffect, useState } from 'react'
-import { Control, FieldValue, FieldValues, useController } from 'react-hook-form'
+import { Control, FieldValue, FieldValues, RegisterOptions, useController } from 'react-hook-form'
 
-interface AutocompleteSelectProps {
+interface AutocompleteFormProps {
   control: Control<FieldValue<FieldValues>>
   name: string
   route: string
   label: string
+  rules?: Omit<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    RegisterOptions<any, string>,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >
   multiple?: boolean
   getOptionLabel: (option) => string
 }
 
-const AutocompleteSelect = <T,>({
+const AutocompleteForm = <T,>({
   control,
   name,
   route,
   label,
+  rules,
   multiple,
   getOptionLabel
-}: AutocompleteSelectProps) => {
-  const { field, fieldState } = useController({ control, name })
+}: AutocompleteFormProps) => {
+  const { field, fieldState } = useController({ control, name, rules })
   const { onChange, value, ...rest } = field
   const [options, setOptions] = useState<T[]>([])
 
@@ -39,6 +45,7 @@ const AutocompleteSelect = <T,>({
 
   return (
     <Autocomplete
+      {...rest}
       options={options}
       getOptionLabel={getOptionLabel}
       fullWidth
@@ -58,10 +65,9 @@ const AutocompleteSelect = <T,>({
       onInputChange={(_ev, newValue) => handleInputChange(newValue)}
       filterOptions={(x) => x}
       onChange={(_e, newValue) => onChange(newValue ? newValue : null)}
-      {...rest}
       value={value || null}
     />
   )
 }
 
-export default AutocompleteSelect
+export default AutocompleteForm

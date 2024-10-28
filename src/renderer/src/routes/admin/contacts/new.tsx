@@ -1,5 +1,6 @@
-import { Box, Paper, Typography } from '@mui/material'
+import { Box, Paper } from '@mui/material'
 import ContactForm from '@renderer/components/admin/formulaires/ContactForm'
+import SousTitre from '@renderer/components/admin/SousTitre'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
@@ -10,9 +11,7 @@ const NewContact = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          Nouveau contact
-        </Typography>
+        <SousTitre sx={{ mb: 2 }} titre="Nouveau contact" />
         <ContactForm contact={null} />
       </Box>
     </Paper>

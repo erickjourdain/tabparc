@@ -27,6 +27,7 @@ import { Route as AdminLieuxIdImport } from './routes/admin/lieux/$id'
 import { Route as AdminInstrumentsNewImport } from './routes/admin/instruments/new'
 import { Route as AdminInstrumentsIdImport } from './routes/admin/instruments/$id'
 import { Route as AdminGrandeursNewImport } from './routes/admin/grandeurs/new'
+import { Route as AdminGrandeursIdImport } from './routes/admin/grandeurs/$id'
 import { Route as AdminContactsNewImport } from './routes/admin/contacts/new'
 import { Route as AdminContactsIdImport } from './routes/admin/contacts/$id'
 import { Route as AdminAccreditationsNewImport } from './routes/admin/accreditations/new'
@@ -114,6 +115,11 @@ const AdminGrandeursNewRoute = AdminGrandeursNewImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
+const AdminGrandeursIdRoute = AdminGrandeursIdImport.update({
+  path: '/grandeurs/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminContactsNewRoute = AdminContactsNewImport.update({
   path: '/contacts/new',
   getParentRoute: () => AdminRoute,
@@ -185,6 +191,13 @@ declare module '@tanstack/react-router' {
       path: '/contacts/new'
       fullPath: '/admin/contacts/new'
       preLoaderRoute: typeof AdminContactsNewImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/grandeurs/$id': {
+      id: '/admin/grandeurs/$id'
+      path: '/grandeurs/$id'
+      fullPath: '/admin/grandeurs/$id'
+      preLoaderRoute: typeof AdminGrandeursIdImport
       parentRoute: typeof AdminImport
     }
     '/admin/grandeurs/new': {
@@ -289,6 +302,7 @@ interface AdminRouteChildren {
   AdminAccreditationsNewRoute: typeof AdminAccreditationsNewRoute
   AdminContactsIdRoute: typeof AdminContactsIdRoute
   AdminContactsNewRoute: typeof AdminContactsNewRoute
+  AdminGrandeursIdRoute: typeof AdminGrandeursIdRoute
   AdminGrandeursNewRoute: typeof AdminGrandeursNewRoute
   AdminInstrumentsIdRoute: typeof AdminInstrumentsIdRoute
   AdminInstrumentsNewRoute: typeof AdminInstrumentsNewRoute
@@ -310,6 +324,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAccreditationsNewRoute: AdminAccreditationsNewRoute,
   AdminContactsIdRoute: AdminContactsIdRoute,
   AdminContactsNewRoute: AdminContactsNewRoute,
+  AdminGrandeursIdRoute: AdminGrandeursIdRoute,
   AdminGrandeursNewRoute: AdminGrandeursNewRoute,
   AdminInstrumentsIdRoute: AdminInstrumentsIdRoute,
   AdminInstrumentsNewRoute: AdminInstrumentsNewRoute,
@@ -335,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
   '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
   '/admin/instruments/new': typeof AdminInstrumentsNewRoute
@@ -357,6 +373,7 @@ export interface FileRoutesByTo {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
   '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
   '/admin/instruments/new': typeof AdminInstrumentsNewRoute
@@ -381,6 +398,7 @@ export interface FileRoutesById {
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
   '/admin/contacts/new': typeof AdminContactsNewRoute
+  '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
   '/admin/instruments/$id': typeof AdminInstrumentsIdRoute
   '/admin/instruments/new': typeof AdminInstrumentsNewRoute
@@ -406,6 +424,7 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
     | '/admin/instruments/$id'
     | '/admin/instruments/new'
@@ -427,6 +446,7 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
     | '/admin/instruments/$id'
     | '/admin/instruments/new'
@@ -449,6 +469,7 @@ export interface FileRouteTypes {
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
     | '/admin/contacts/new'
+    | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
     | '/admin/instruments/$id'
     | '/admin/instruments/new'
@@ -502,6 +523,7 @@ export const routeTree = rootRoute
         "/admin/accreditations/new",
         "/admin/contacts/$id",
         "/admin/contacts/new",
+        "/admin/grandeurs/$id",
         "/admin/grandeurs/new",
         "/admin/instruments/$id",
         "/admin/instruments/new",
@@ -535,6 +557,10 @@ export const routeTree = rootRoute
     },
     "/admin/contacts/new": {
       "filePath": "admin/contacts/new.tsx",
+      "parent": "/admin"
+    },
+    "/admin/grandeurs/$id": {
+      "filePath": "admin/grandeurs/$id.tsx",
       "parent": "/admin"
     },
     "/admin/grandeurs/new": {

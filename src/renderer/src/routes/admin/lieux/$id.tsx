@@ -1,5 +1,6 @@
-import { Alert, Box, Paper, Typography } from '@mui/material'
+import { Alert, Box, Paper } from '@mui/material'
 import LieuForm from '@renderer/components/admin/formulaires/LieuForm'
+import SousTitre from '@renderer/components/admin/SousTitre'
 import { Lieu } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -17,9 +18,7 @@ const ShowLieu = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          {lieu.site}
-        </Typography>
+        <SousTitre sx={{ mb: 2 }} titre={lieu.site} />
         <LieuForm lieu={lieu} />
       </Box>
     </Paper>

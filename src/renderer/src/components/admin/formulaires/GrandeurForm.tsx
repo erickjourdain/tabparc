@@ -1,7 +1,7 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { Box, Button, Fab, Stack, TextField } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import AutocompleteSelect from '@renderer/components/form/AutocompleteInput'
+import AutocompleteForm from '@renderer/components/form/AutocompleteForm'
+import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
 import { Accreditation, Contact, Grandeur, Instrument, Lieu } from '@renderer/type'
 import settings from '@renderer/utils/settings'
@@ -104,23 +104,13 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
       noValidate
       sx={{ position: 'relative' }}
     >
-      <Fab
-        color="secondary"
-        aria-label="back"
-        size="small"
-        sx={{ position: 'absolute', bottom: 10, right: 10 }}
-        onClick={() => router.history.back()}
-      >
-        <ArrowBackIcon />
-      </Fab>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2} mb={3}>
           <Grid size={4}>
-            <TextField
-              id="nom"
-              label="nom"
-              fullWidth
-              {...register('nom', {
+            <InputForm
+              control={control}
+              name="nom"
+              rules={{
                 required: 'Le nom est obligatoire',
                 minLength: {
                   value: 3,
@@ -130,13 +120,11 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
                   value: 55,
                   message: 'Le nom ne peut contenir plus de 55 caractères.'
                 }
-              })}
-              error={errors.nom ? true : false}
-              helperText={errors.nom?.message || ''}
+              }}
             />
           </Grid>
           <Grid size={4}>
-            <AutocompleteSelect
+            <AutocompleteForm
               control={control}
               name="accreditation"
               route="accreditation"
@@ -145,26 +133,28 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
             />
           </Grid>
           <Grid size={4}>
-            <AutocompleteSelect
+            <AutocompleteForm
               control={control}
               name="lieu"
               route="lieu"
               label="site"
+              rules={{ required: 'Le site est obligatoire' }}
               getOptionLabel={(option: Lieu) => `${option.section} - ${option.site}`}
             />
           </Grid>
           <Grid size={12}>
-            <AutocompleteSelect
+            <AutocompleteForm
               control={control}
               name="contacts"
               route="contact"
               label="contacts"
-              getOptionLabel={(option: Contact) => `${option.prenom} - ${option.nom}`}
+              rules={{ required: 'Sélectionner au moins un contact' }}
+              getOptionLabel={(option: Contact) => `${option.prenom} ${option.nom}`}
               multiple={true}
             />
           </Grid>
           <Grid size={12}>
-            <AutocompleteSelect
+            <AutocompleteForm
               control={control}
               name="instruments"
               route="instrument"

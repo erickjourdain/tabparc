@@ -40,7 +40,7 @@ const findById = (id: number) => {
  * @returns Promise<Grandeur>
  */
 const update = async (grandeur: Grandeur) => {
-  return grandeurRepository.update({ id: grandeur.id }, grandeur)
+  return grandeurRepository.save(grandeur)
 }
 
 /**

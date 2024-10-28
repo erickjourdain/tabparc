@@ -1,16 +1,19 @@
-import { Box, CssBaseline } from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Box, CssBaseline, Fab } from '@mui/material'
 import DrawerHeader from '@renderer/components/DrawerHeader'
 import DrawerMenu from '@renderer/components/DrawerMenu'
 import MainMenu from '@renderer/components/MainMenu'
 import { userAtom } from '@renderer/store'
 import { User } from '@renderer/type'
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useRouter } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 
 const Root = () => {
   // Récupération de l'utilisateur charger par le loader de la route
   const data = Route.useLoaderData()
+  // Hook router
+  const router = useRouter()
   // etat de gestion du statut du drawer
   const [open, setOpen] = useState(false)
   // utilisateur connecté
@@ -38,6 +41,15 @@ const Root = () => {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Outlet />
+        <Fab
+          color="secondary"
+          aria-label="back"
+          size="small"
+          sx={{ position: 'fixed', bottom: 10, right: 10 }}
+          onClick={() => router.history.back()}
+        >
+          <ArrowBackIcon />
+        </Fab>
       </Box>
     </Box>
   )

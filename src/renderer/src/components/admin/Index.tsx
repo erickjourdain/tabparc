@@ -48,7 +48,7 @@ const Admin = () => {
       <Alert icon={false} severity="success" sx={{ mb: 1 }}>
         Administration des données
       </Alert>
-      <FormControl sx={{ width: '50%' }}>
+      <FormControl sx={{ width: '50%', mb: 2 }}>
         <InputLabel id="admin-type-select-label">Type</InputLabel>
         <Select
           labelId="admin-type-select-label"

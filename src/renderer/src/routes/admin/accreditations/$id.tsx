@@ -1,5 +1,6 @@
-import { Alert, Box, Paper, Typography } from '@mui/material'
+import { Alert, Box, Paper } from '@mui/material'
 import AccreditationForm from '@renderer/components/admin/formulaires/AccreditationForm'
+import SousTitre from '@renderer/components/admin/SousTitre'
 import { Accreditation } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -17,9 +18,7 @@ const ShowAccreditation = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <Typography variant="h6" sx={{ m: 2 }} color="primary">
-          {accreditation.reference}
-        </Typography>
+        <SousTitre titre={accreditation.reference} sx={{ mb: 2 }} />
         <AccreditationForm accreditation={accreditation} />
       </Box>
     </Paper>
