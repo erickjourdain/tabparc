@@ -28,7 +28,7 @@ interface ListDataProps {
   | '/admin/accreditations'
   | '/admin/users'
   | '/admin/contacts'
-  | '/admin/instruments'
+  | '/admin/famille-instruments'
   | '/admin/lieux'
   | '/admin/grandeurs'
   data: {

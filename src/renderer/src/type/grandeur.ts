@@ -1,6 +1,6 @@
 import { Accreditation } from './accreditation'
 import { Contact } from './contact'
-import { Instrument } from './instrument'
+import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 
 export interface Grandeur {
@@ -9,5 +9,5 @@ export interface Grandeur {
   accreditation?: Accreditation
   contacts?: Contact[]
   lieu?: Lieu
-  instruments?: Instrument[]
+  instruments?: FamilleInstrument[]
 }

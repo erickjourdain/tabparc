@@ -1,7 +1,7 @@
 import './accreditation'
 import './contact'
 import './grandeur'
-import './instrument'
+import './familleInstrument'
 import './lieu'
 import './user'
 

@@ -3,22 +3,22 @@ import Grid from '@mui/material/Grid2'
 import InputForm from '@renderer/components/form/InputForm'
 import SwitchForm from '@renderer/components/form/SwitchForm'
 import { alertAtom } from '@renderer/store'
-import { Instrument } from '@renderer/type'
+import { FamilleInstrument } from '@renderer/type'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-type InstrumentForm = {
+type FamilleInstrumentForm = {
   nom: string
   valide: boolean
 }
 
-type InstrumentFormProps = {
-  instrument: Instrument | null
+type FamilleInstrumentFormProps = {
+  familleInstrument: FamilleInstrument | null
 }
 
-const InstrumentForm = ({ instrument }: InstrumentFormProps) => {
+const InstrumentForm = ({ familleInstrument }: FamilleInstrumentFormProps) => {
   // Hook de navigation
   const navigate = useNavigate()
   // Hook router
@@ -34,25 +34,25 @@ const InstrumentForm = ({ instrument }: InstrumentFormProps) => {
     handleSubmit,
     register,
     reset
-  } = useForm<InstrumentForm>({
+  } = useForm<FamilleInstrumentForm>({
     defaultValues: useMemo(() => {
       return {
-        reference: instrument?.nom || undefined,
-        valide: instrument?.valide || true
+        reference: familleInstrument?.nom || undefined,
+        valide: familleInstrument?.valide || true
       }
-    }, [instrument])
+    }, [familleInstrument])
   })
 
   // Suivi de la mise à jour de l'instrument
   useEffect(() => {
-    if (instrument) reset(instrument)
-  }, [instrument])
+    if (familleInstrument) reset(familleInstrument)
+  }, [familleInstrument])
 
   // Enregistrement réalisé
   const afterSave = useCallback(() => {
-    setAlerte({ message: 'Instrument enregistré', color: 'success' })
+    setAlerte({ message: 'Famille instruments enregistrée', color: 'success' })
     setIsPending(false)
-    navigate({ to: '/admin/instruments' })
+    navigate({ to: '/admin/famille-instruments' })
   }, [])
 
   // Enregistrement erreur
@@ -63,22 +63,25 @@ const InstrumentForm = ({ instrument }: InstrumentFormProps) => {
   }, [])
 
   // Soumission du formulaire
-  const onSubmit = async (data: InstrumentForm) => {
+  const onSubmit = async (data: FamilleInstrumentForm) => {
     setIsPending(true)
     const value = {
       ...data,
       nom: data.nom.trim().toLocaleLowerCase()
     }
-    if (instrument?.id)
+    if (familleInstrument?.id)
       await window.electron.ipcRenderer
-        .invoke('instrument.update', {
+        .invoke('famille-instrument.update', {
           ...value,
-          id: instrument.id
+          id: familleInstrument.id
         })
         .then(afterSave)
         .catch(errorSave)
     else
-      window.electron.ipcRenderer.invoke('instrument.save', value).then(afterSave).catch(errorSave)
+      window.electron.ipcRenderer
+        .invoke('famille-instrument.save', value)
+        .then(afterSave)
+        .catch(errorSave)
   }
 
   return (
@@ -115,7 +118,7 @@ const InstrumentForm = ({ instrument }: InstrumentFormProps) => {
       <Box mt={3} m={1} display="flex" alignItems="flex-start">
         <Stack spacing={2} direction="row">
           <Button variant="contained" color="primary" type="submit" disabled={isPending}>
-            {instrument?.id ? 'Mettre à jour' : 'Enregistrer'}
+            {familleInstrument?.id ? 'Mettre à jour' : 'Enregistrer'}
           </Button>
           <Button variant="contained" color="warning" onClick={() => reset()} disabled={isPending}>
             Reset

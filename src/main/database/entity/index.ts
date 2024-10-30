@@ -1,8 +1,8 @@
 import { Accreditation } from './accreditation'
 import { Contact } from './contact'
 import { Grandeur } from './grandeur'
-import { Instrument } from './instrument'
+import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 import { User, UserRole } from './user'
 
-export { Accreditation, Contact, Grandeur, Instrument, Lieu, User, UserRole }
+export { Accreditation, Contact, Grandeur, FamilleInstrument, Lieu, User, UserRole }

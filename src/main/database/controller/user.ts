@@ -43,8 +43,8 @@ const findById = (id: number) => {
  * @param login identifiant de l'utilisateur connecté
  * @returns Promise<User> utilisateur
  */
-const findByName = (login: string) => {
-  return userRepository.findOneBy({ login })
+const findByLogin = (login: string) => {
+  return userRepository.findOneOrFail({ where: { login: ILike(login) } })
 }
 
 /**
@@ -65,4 +65,4 @@ const save = async (user: User) => {
   return userRepository.save(user)
 }
 
-export default { findById, findByName, findAll, save, search, update }
+export default { findById, findByLogin, findAll, save, search, update }

@@ -1,5 +1,5 @@
 import ListParamsData from '@renderer/components/admin/ListParamsData'
-import { FindAndCount, Instrument } from '@renderer/type'
+import { FindAndCount, FamilleInstrument } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
@@ -24,9 +24,11 @@ interface Data {
  * Composants de présentation des données
  * @returns JSX
  */
-const ListInstruments = () => {
+const ListFamilleInstruments = () => {
   // Hook du loader de la route
-  const loader: FindAndCount<Instrument> = useLoaderData({ from: '/admin/instruments/' })
+  const loader: FindAndCount<FamilleInstrument> = useLoaderData({
+    from: '/admin/famille-instruments/'
+  })
 
   const [data, setData] = useState<Data[]>([])
 
@@ -43,8 +45,8 @@ const ListInstruments = () => {
 
   return (
     <ListParamsData
-      route="/admin/instruments"
-      type="instruments"
+      route="/admin/famille-instruments"
+      type="familles d'instruments"
       data={data}
       nbData={loader.nbData}
     />
@@ -54,7 +56,7 @@ const ListInstruments = () => {
 /**
  * Création de la route
  */
-export const Route = createFileRoute('/admin/instruments/')({
+export const Route = createFileRoute('/admin/famille-instruments/')({
   // Validation des paramètres de recherhce
   validateSearch: (search: Record<string, unknown>): FormSearchSchema =>
     formSearchSchema.parse(search),
@@ -65,8 +67,12 @@ export const Route = createFileRoute('/admin/instruments/')({
   }),
   // Chargement des données correspondant aux paramètres de recherche
   loader: async ({ deps }) => {
-    return await loadData({ page: deps.page, search: deps.search, route: 'instrument' })
+    return await loadData({
+      page: deps.page,
+      search: deps.search,
+      route: 'famille-instrument'
+    })
   },
   // Composant à afficher
-  component: () => <ListInstruments />
+  component: () => <ListFamilleInstruments />
 })

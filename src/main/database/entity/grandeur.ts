@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Accreditation } from './accreditation'
 import { Contact } from './contact'
-import { Instrument } from './instrument'
+import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 
 @Entity()
@@ -22,7 +22,7 @@ export class Grandeur {
   @ManyToOne(() => Lieu, (lieu) => lieu.grandeurs, { eager: true })
   lieu!: Lieu
 
-  @ManyToMany(() => Instrument, { eager: true })
+  @ManyToMany(() => FamilleInstrument, { eager: true })
   @JoinTable()
-  instruments!: Instrument[]
+  instruments!: FamilleInstrument[]
 }
