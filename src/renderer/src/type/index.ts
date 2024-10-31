@@ -6,6 +6,7 @@ import { Grandeur } from './grandeur'
 import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 import { User, UserRole } from './user'
+import { Opportunite } from './opportunite'
 
 export { UserRole }
 
@@ -17,6 +18,6 @@ export type {
   Grandeur,
   FamilleInstrument,
   Lieu,
-  User
+  User,
+  Opportunite
 }
-

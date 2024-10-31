@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2'
 import AutocompleteForm from '@renderer/components/form/AutocompleteForm'
 import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
-import { Accreditation, Contact, Grandeur, Instrument, Lieu } from '@renderer/type'
+import { Accreditation, Contact, Grandeur, FamilleInstrument, Lieu } from '@renderer/type'
 import settings from '@renderer/utils/settings'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
@@ -16,7 +16,7 @@ type IGrandeurForm = {
   accreditation: Accreditation | null
   contacts: Contact[]
   lieu: Lieu | null
-  instruments: Instrument[]
+  instruments: FamilleInstrument[]
 }
 
 type GrandeurFormProps = {
@@ -47,7 +47,7 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
   } = useForm<IGrandeurForm>({
     defaultValues: useMemo(() => {
       return {
-        nom: grandeur?.nom || undefined,
+        nom: grandeur?.nom || '',
         accreditation: grandeur?.accreditation || null,
         contacts: grandeur?.contacts || [],
         lieu: grandeur?.lieu || null,
@@ -156,10 +156,10 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
           <Grid size={12}>
             <AutocompleteForm
               control={control}
-              name="instruments"
-              route="instrument"
-              label="instruments"
-              getOptionLabel={(option: Instrument) => option.nom}
+              name="famille-instruments"
+              route="famille-instrument"
+              label="famille instruments"
+              getOptionLabel={(option: FamilleInstrument) => option.nom}
               multiple={true}
             />
           </Grid>

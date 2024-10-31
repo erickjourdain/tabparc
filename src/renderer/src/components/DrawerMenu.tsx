@@ -1,6 +1,7 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import HomeIcon from '@mui/icons-material/Home'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Divider, IconButton, Drawer as MuiDrawer } from '@mui/material'
 import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles'
@@ -16,8 +17,11 @@ interface DrawerMenuProps {
 }
 
 // Liste des entrées du menu standard
-const itemsMenu = [{ label: 'accueil', icon: <HomeIcon />, route: '/' }]
-// Liste des entrées du meny administration
+const itemsMenu = [
+  { label: 'accueil', icon: <HomeIcon />, route: '/' },
+  { label: 'nouveau', icon: <AddCircleOutlineIcon />, route: '/nouveau' }
+]
+// Liste des entrées du menu administration
 const itemsAdmin = [{ label: 'administration', icon: <SettingsIcon />, route: '/admin' }]
 
 // style css pour l'ouverture du drawer

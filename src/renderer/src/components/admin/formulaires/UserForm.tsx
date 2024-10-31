@@ -43,10 +43,10 @@ const UserForm = ({ user }: UserFormProps) => {
   } = useForm<IUserForm>({
     defaultValues: useMemo(() => {
       return {
-        nom: user?.nom || undefined,
-        prenom: user?.prenom || undefined,
-        login: user?.login || undefined,
-        email: user?.email || undefined,
+        nom: user?.nom || '',
+        prenom: user?.prenom || '',
+        login: user?.login || '',
+        email: user?.email || '',
         role: user?.role || UserRole.USER,
         valide: user?.valide || true
       }

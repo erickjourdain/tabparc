@@ -4,4 +4,5 @@ import './grandeur'
 import './familleInstrument'
 import './lieu'
 import './user'
-
+import './opportunite'
+import './demande'

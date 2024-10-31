@@ -1,1 +1,1 @@
-export type DataCRM<T> = [number, T[]]
+export type DataCRM<T> = [T[], number]

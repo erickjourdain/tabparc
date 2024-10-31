@@ -25,16 +25,10 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
   const setAlerte = useSetAtom(alertAtom)
 
   // Hook de définition du formulaire de gestion des utilisateurs
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    register,
-    reset
-  } = useForm<IAccreditationForm>({
+  const { control, handleSubmit, reset } = useForm<IAccreditationForm>({
     defaultValues: useMemo(() => {
       return {
-        reference: accreditation?.reference || undefined,
+        reference: accreditation?.reference || '',
         valide: accreditation?.valide || true
       }
     }, [accreditation])

@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
+import { Route as NouveauIndexImport } from './routes/nouveau/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminLieuxIndexImport } from './routes/admin/lieux/index'
@@ -42,6 +43,11 @@ const AdminRoute = AdminImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NouveauIndexRoute = NouveauIndexImport.update({
+  path: '/nouveau/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -167,6 +173,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof AdminImport
+    }
+    '/nouveau/': {
+      id: '/nouveau/'
+      path: '/nouveau'
+      fullPath: '/nouveau'
+      preLoaderRoute: typeof NouveauIndexImport
+      parentRoute: typeof rootRoute
     }
     '/admin/accreditations/$id': {
       id: '/admin/accreditations/$id'
@@ -349,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/nouveau': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -372,6 +386,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminIndexRoute
+  '/nouveau': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -397,6 +412,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/nouveau/': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -423,6 +439,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/admin/'
+    | '/nouveau'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -445,6 +462,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/nouveau'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -468,6 +486,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/admin/'
+    | '/nouveau/'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -492,11 +511,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  NouveauIndexRoute: typeof NouveauIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  NouveauIndexRoute: NouveauIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -512,7 +533,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/admin"
+        "/admin",
+        "/nouveau/"
       ]
     },
     "/": {
@@ -545,6 +567,9 @@ export const routeTree = rootRoute
     "/admin/": {
       "filePath": "admin/index.tsx",
       "parent": "/admin"
+    },
+    "/nouveau/": {
+      "filePath": "nouveau/index.tsx"
     },
     "/admin/accreditations/$id": {
       "filePath": "admin/accreditations/$id.tsx",

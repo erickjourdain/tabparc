@@ -36,8 +36,8 @@ const LieuForm = ({ lieu }: LieuFormProps) => {
   } = useForm<ILieuForm>({
     defaultValues: useMemo(() => {
       return {
-        site: lieu?.site || undefined,
-        section: lieu?.section || undefined
+        site: lieu?.site || '',
+        section: lieu?.section || 0
       }
     }, [lieu])
   })

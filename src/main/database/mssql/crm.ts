@@ -1,5 +1,5 @@
 import mssql, { ConnectionPool } from 'mssql'
-import { Client, DataCRM, Prestation } from 'src/main/type'
+import { Client, DataCRM, Opportunite, Prestation } from 'src/main/type'
 
 const config: mssql.config = {
   user: import.meta.env.MAIN_VITE_CRM_USER,
@@ -85,7 +85,7 @@ const recherchePresta = async (
         .request()
         .input('search', mssql.VarChar(50), `%${search}%`)
         .query(queryCount)
-      return [resCount.recordset[0].NBVAL, resData.recordset]
+      return [resData.recordset, resCount.recordset[0].NBVAL]
     } else return null
   } catch (error) {
     console.log(error)
@@ -142,7 +142,7 @@ const rechercheClient = async (
         .request()
         .input('search', mssql.VarChar(50), `%${search}%`)
         .query(queryCount)
-      return [resCount.recordset[0].NBVAL, resData.recordset]
+      return [resData.recordset, resCount.recordset[0].NBVAL]
     } else return null
   } catch (error) {
     console.log(error)
@@ -150,4 +150,45 @@ const rechercheClient = async (
   }
 }
 
-export default { connexion, deconnexion, recherchePresta, rechercheClient }
+const rechercheOpportunite = async (opp: string): Promise<Opportunite | null> => {
+  try {
+    if (pool) {
+      const queryData = `select
+        aff.AF_CODE code,
+        aff.AF_IDENT_PROP reference,
+        aff.AF_INFO_COMP23 titre,
+        aff.AF_DATE_CREA dateCreation,
+        cl.CLIENT client,
+        cont.NOM contactNom,
+        cont.PRENOM contactPrenom,
+        cont.CL_TEL contactTelephone,
+        cont.VILLE contactVille,
+        cont.CO_CODE contactPays,
+        cont.CL_EMAIL contactEmail,
+        t9.T9_LIB statut
+        from LNE.AFFAIRES aff
+        inner join LNE.CLIENTS cl on cl.REFERENCE = aff.REFERENCE
+        inner join LNE.ENTITY_LINK entl on
+          entl.EL_CODE_SRC = aff.AF_CODE
+          and entl.EL_SRC = 'AFFAIRES'
+          and entl.EL_DEST = 'CLIENTS'
+          and entl.TLI_CODE = 527
+        inner join LNE.CLIENTS cont on cont.REFERENCE = entl.EL_CODE_DEST
+        inner join LNE.TABLE9 t9 on t9.T9_CODE = aff.T9_CODE
+        where aff.UN_CODE = -307
+        and aff.AF_IDENT_PROP = @opp;
+      `
+      const resData: mssql.IResult<Opportunite> = await pool
+        .request()
+        .input('opp', mssql.VarChar(50), opp)
+        .query(queryData)
+      console.log(resData)
+      return resData.rowsAffected[0] === 1 ? resData.recordset[0] : null
+    } else return null
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+export default { connexion, deconnexion, recherchePresta, rechercheClient, rechercheOpportunite }

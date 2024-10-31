@@ -41,10 +41,10 @@ const ContactForm = ({ contact }: ContactFormProps) => {
   } = useForm<IContactForm>({
     defaultValues: useMemo(() => {
       return {
-        nom: contact?.nom || undefined,
-        prenom: contact?.prenom || undefined,
-        email: contact?.email || undefined,
-        telephone: contact?.telephone || undefined,
+        nom: contact?.nom || '',
+        prenom: contact?.prenom || '',
+        email: contact?.email || '',
+        telephone: contact?.telephone || '',
         valide: contact?.valide || true
       }
     }, [contact])

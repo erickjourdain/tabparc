@@ -37,7 +37,7 @@ const InstrumentForm = ({ familleInstrument }: FamilleInstrumentFormProps) => {
   } = useForm<FamilleInstrumentForm>({
     defaultValues: useMemo(() => {
       return {
-        reference: familleInstrument?.nom || undefined,
+        reference: familleInstrument?.nom || '',
         valide: familleInstrument?.valide || true
       }
     }, [familleInstrument])
