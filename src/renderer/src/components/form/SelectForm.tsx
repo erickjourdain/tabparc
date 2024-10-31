@@ -24,6 +24,7 @@ const SelectForm = ({ control, name, options }: SelectFormProps) => {
         label={name}
         {...field}
         onChange={onChange}
+        size="small"
       >
         {Object.entries(options).map(([key, value]) => (
           <MenuItem value={value} key={key}>

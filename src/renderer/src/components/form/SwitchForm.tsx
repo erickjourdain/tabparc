@@ -13,7 +13,7 @@ const SwitchForm = ({ control, name }: SwitchFormProps) => {
   return (
     <FormControlLabel
       {...rest}
-      control={<Switch checked={value} onChange={onChange} />}
+      control={<Switch checked={value} onChange={onChange} size="small" />}
       label={name}
     />
   )

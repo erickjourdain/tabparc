@@ -66,6 +66,7 @@ const AutocompleteForm = <T,>({
       filterOptions={(x) => x}
       onChange={(_e, newValue) => onChange(newValue ? newValue : null)}
       value={value || null}
+      size="small"
     />
   )
 }

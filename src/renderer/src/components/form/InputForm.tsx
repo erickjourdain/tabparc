@@ -26,6 +26,7 @@ const InputForm = ({ control, name, type, rules }: InputFormProps) => {
       onChange={onChange}
       helperText={fieldState.error?.message || ''}
       error={fieldState.error ? true : false}
+      size="small"
     />
   )
 }
