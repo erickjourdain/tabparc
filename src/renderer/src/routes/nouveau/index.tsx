@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Chip, Paper, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Chip, Link, Paper, TextField, Typography } from '@mui/material'
 import Titre from '@renderer/components/Titre'
 import Grid from '@mui/material/Grid2'
 import { createFileRoute } from '@tanstack/react-router'
@@ -20,7 +20,8 @@ const Nouveau = () => {
   // Hook de gestion du formulaire de recherche de l'opportunité
   const { control, handleSubmit, reset } = useForm<IOppForm>({
     defaultValues: {
-      opportunite: ''
+      //opportunite: 'OPP2117077'
+      opportunite: 'OPP2414055'
     }
   })
 
@@ -48,6 +49,7 @@ const Nouveau = () => {
     reset()
   }
 
+  // Génératiopn d'une nouvelle demande
   const onNewDemande = async () => {
     const dir = await window.electron.ipcRenderer.invoke('demande.new', opportunite)
     console.log(dir)

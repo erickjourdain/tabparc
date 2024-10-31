@@ -30,6 +30,7 @@
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
     "@tanstack/react-router": "^1.65.0",
+    "exceljs": "^4.4.0",
     "jotai": "^2.10.0",
     "mssql": "^11.0.1",
     "react-hook-form": "^7.53.0",
@@ -37,7 +38,6 @@
     "sqlite3": "^5.1.7",
     "tabparc": "file:",
     "typeorm": "^0.3.6",
-    "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
