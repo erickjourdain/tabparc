@@ -11,5 +11,7 @@ export interface User {
   login?: string
   email?: string
   role?: UserRole
+  titre?: string
+  telephone?: string
   valide?: boolean
 }

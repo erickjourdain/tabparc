@@ -1,10 +1,10 @@
 import { User } from '@entity/*'
 import { ipcMain } from 'electron'
-import os from 'os'
 import { FindManyOptions } from 'typeorm'
 import userController from '../database/controller/user'
+import { loggedUser } from '../database/controller/login'
 
-ipcMain.handle('user.logged', () => userController.findByLogin(os.userInfo().username))
+ipcMain.handle('user.logged', () => loggedUser)
 ipcMain.handle('user.all', (_event, filter: FindManyOptions<User>) =>
   userController.findAll(filter)
 )

@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import AppSource from './database/data-source'
 import crm from './database/mssql/crm'
 import './ipc-main'
+import { login } from './database/controller/login'
 
 function createWindow(): void {
   // Create the browser window.
@@ -56,8 +57,9 @@ app.whenReady().then(() => {
 
   // Connexion aux bases de données puis ouverture de la fenêtre principale
   AppSource.initialize()
-    .then(() => {
+    .then(async () => {
       console.log('connection à la base de données initialisée')
+      await login()
       crm.connexion().then(() => {
         createWindow()
         // crm.recherchePresta('tampon', 1, 10).then((data) => console.log(data))

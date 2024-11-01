@@ -17,6 +17,8 @@ type IUserForm = {
   login: string
   email: string
   role: UserRole
+  titre: string
+  telephone: string
   valide: boolean
 }
 
@@ -48,6 +50,8 @@ const UserForm = ({ user }: UserFormProps) => {
         login: user?.login || '',
         email: user?.email || '',
         role: user?.role || UserRole.USER,
+        titre: user?.titre || '',
+        telephone: user?.telephone || '',
         valide: user?.valide || true
       }
     }, [user])
@@ -80,7 +84,8 @@ const UserForm = ({ user }: UserFormProps) => {
       nom: data.nom.trim().toUpperCase(),
       prenom: wordLetterUpperCase(data.prenom),
       login: data.login.trim().toLowerCase(),
-      email: data.email.trim().toLowerCase()
+      email: data.email.trim().toLowerCase(),
+      titre: wordLetterUpperCase(data.titre)
     }
     if (user?.id)
       await window.electron.ipcRenderer
@@ -158,6 +163,36 @@ const UserForm = ({ user }: UserFormProps) => {
                 pattern: {
                   value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                   message: "L'adresse email est invalide"
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={4}>
+            <InputForm
+              control={control}
+              name="telephone"
+              rules={{
+                required: 'Le telephone est obligatoire',
+                pattern: {
+                  value: /^(?:\+33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
+                  message: 'Le numéro de téléphone est invalide'
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={4}>
+            <InputForm
+              control={control}
+              name="titre"
+              rules={{
+                required: 'Le titre est obligatoire',
+                minLength: {
+                  value: 3,
+                  message: 'Le titre doit contenir au moins 3 caractères'
+                },
+                maxLength: {
+                  value: 55,
+                  message: 'Le titre ne peut contenir plus de 55 caractères.'
                 }
               }}
             />

@@ -51,8 +51,7 @@ const Nouveau = () => {
 
   // Génératiopn d'une nouvelle demande
   const onNewDemande = async () => {
-    const dir = await window.electron.ipcRenderer.invoke('demande.new', opportunite)
-    console.log(dir)
+    const message = await window.electron.ipcRenderer.invoke('demande.new', opportunite)
   }
 
   return (
@@ -105,7 +104,7 @@ const Nouveau = () => {
       {opportunite && (
         <Paper>
           <Box sx={{ flexGrow: 1 }} px={3} py={2}>
-            <Grid container spacing={2} mb={3} alignItems="center">
+            <Grid container spacing={2} mb={3}>
               <Grid size={12}>
                 <Chip label={opportunite.statut} color={creationDemande ? 'success' : 'error'} />
               </Grid>
@@ -146,8 +145,8 @@ const Nouveau = () => {
                 />
               </Grid>
               {creationDemande && (
-                <Grid size={12}>
-                  <Button color="primary" variant="contained" onClick={() => onNewDemande()}>
+                <Grid size={6} display="flex" justifyContent="center" alignItems="center">
+                  <Button color="primary" variant="outlined" onClick={() => onNewDemande()}>
                     Créer une nouvelle demande
                   </Button>
                 </Grid>

@@ -23,6 +23,12 @@ export class User {
   @Column('text', { nullable: false })
   email!: string
 
+  @Column('text', { nullable: false })
+  titre!: string
+
+  @Column('text', { nullable: false })
+  telephone!: string
+
   @Column('boolean', { default: true })
   valide!: boolean
 
