@@ -1,6 +1,7 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { Grandeur } from '../entity/grandeur'
+import { loggedUser } from './login'
 
 // Repository d'accès aux grandeurs
 const grandeurRepository = AppDataSource.getRepository(Grandeur)
@@ -40,7 +41,17 @@ const findById = (id: number) => {
  * @returns Promise<Grandeur>
  */
 const update = async (grandeur: Grandeur) => {
-  return grandeurRepository.save(grandeur)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(grandeurRepository.save(grandeur))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 /**
@@ -49,7 +60,17 @@ const update = async (grandeur: Grandeur) => {
  * @returns Promise<Grandeur>
  */
 const save = async (grandeur: Grandeur) => {
-  return grandeurRepository.save(grandeur)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(grandeurRepository.save(grandeur))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 export default { findById, findAll, save, search, update }

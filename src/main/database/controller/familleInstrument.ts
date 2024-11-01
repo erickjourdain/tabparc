@@ -1,6 +1,7 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { FamilleInstrument } from '../entity/familleInstrument'
+import { loggedUser } from './login'
 
 // Repository d'accès aux familles d'instrumnents
 const familleInstrumentRepository = AppDataSource.getRepository(FamilleInstrument)
@@ -40,7 +41,19 @@ const findById = (id: number) => {
  * @returns Promise<FamilleInstrument>
  */
 const update = async (familleInstrument: FamilleInstrument) => {
-  return familleInstrumentRepository.update({ id: familleInstrument.id }, familleInstrument)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(
+        familleInstrumentRepository.update({ id: familleInstrument.id }, familleInstrument)
+      )
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 /**
@@ -49,7 +62,17 @@ const update = async (familleInstrument: FamilleInstrument) => {
  * @returns Promise<FamilleInstrument>
  */
 const save = async (familleInstrument: FamilleInstrument) => {
-  return familleInstrumentRepository.save(familleInstrument)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(familleInstrumentRepository.save(familleInstrument))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 export default { findById, findAll, save, search, update }

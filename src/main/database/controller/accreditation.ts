@@ -1,6 +1,7 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { Accreditation } from '../entity/accreditation'
+import { loggedUser } from './login'
 
 // Repository d'accès aux accreditations
 const accreditationRepository = AppDataSource.getRepository(Accreditation)
@@ -40,7 +41,17 @@ const findById = (id: number) => {
  * @returns Promise<Accreditation>
  */
 const update = async (accreditation: Accreditation) => {
-  return accreditationRepository.update({ id: accreditation.id }, accreditation)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(accreditationRepository.update({ id: accreditation.id }, accreditation))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 /**
@@ -49,7 +60,17 @@ const update = async (accreditation: Accreditation) => {
  * @returns Promise<Accreditation>
  */
 const save = async (accreditation: Accreditation) => {
-  return accreditationRepository.save(accreditation)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(accreditationRepository.save(accreditation))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 export default { findById, findAll, save, search, update }

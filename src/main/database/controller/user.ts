@@ -1,6 +1,7 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { User } from '../entity/user'
+import { loggedUser } from './login'
 
 // Repository d'accès aux utilisateurs
 const userRepository = AppDataSource.getRepository(User)
@@ -53,7 +54,17 @@ const findByLogin = (login: string) => {
  * @returns Promise<User>
  */
 const update = async (user: User) => {
-  return userRepository.update({ id: user.id }, user)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(userRepository.update({ id: user.id }, user))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 /**
@@ -62,7 +73,17 @@ const update = async (user: User) => {
  * @returns Promise<User>
  */
 const save = async (user: User) => {
-  return userRepository.save(user)
+  return new Promise((resolve, reject) => {
+    try {
+      if (loggedUser?.role !== 'ADMIN')
+        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
+          cause: 'operation denied'
+        })
+      return resolve(userRepository.save(user))
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 export default { findById, findByLogin, findAll, save, search, update }
