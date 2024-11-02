@@ -12,6 +12,7 @@ const accreditationRepository = AppDataSource.getRepository(Accreditation)
  * @returns Promise<Accreditation[]> tableau d'accreditations
  */
 const findAll = (filter: FindManyOptions<Accreditation>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return accreditationRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<Accreditation>) => {
  * @returns Promise<Accreditation[]> tableau d'accreditations
  */
 const search = (filter: FindManyOptions<Accreditation>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = { reference: ILike(`%${search}%`) }
   return accreditationRepository.findAndCount(filter)
 }

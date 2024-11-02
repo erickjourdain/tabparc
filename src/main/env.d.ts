@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly MAIN_VITE_CRM_PWD: string
   readonly MAIN_VITE_GEC_PATH: string
   readonly MAIN_VITE_TEMPLATE_PATH: string
+  readonly MAIN_VITE_MAX_ITEMS: number
 }
 
 interface ImportMeta {

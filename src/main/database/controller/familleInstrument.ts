@@ -12,6 +12,7 @@ const familleInstrumentRepository = AppDataSource.getRepository(FamilleInstrumen
  * @returns Promise<FamilleInstrument[]> tableau de famille d'instrumnents
  */
 const findAll = (filter: FindManyOptions<FamilleInstrument>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return familleInstrumentRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<FamilleInstrument>) => {
  * @returns Promise<FamilleInstrument[]> tableau d'instrumnents
  */
 const search = (filter: FindManyOptions<FamilleInstrument>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = { nom: ILike(`%${search}%`) }
   return familleInstrumentRepository.findAndCount(filter)
 }

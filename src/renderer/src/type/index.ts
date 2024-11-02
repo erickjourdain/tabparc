@@ -7,13 +7,15 @@ import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 import { User, UserRole } from './user'
 import { Opportunite } from './opportunite'
+import { Demande, Statut } from './demande'
 
-export { UserRole }
+export { UserRole, Statut }
 
 export type {
   Accreditation,
   Alerte,
   Contact,
+  Demande,
   FindAndCount,
   Grandeur,
   FamilleInstrument,

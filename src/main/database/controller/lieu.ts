@@ -12,6 +12,7 @@ const lieuRepository = AppDataSource.getRepository(Lieu)
  * @returns Promise<Lieu[]> tableau d'lieux
  */
 const findAll = (filter: FindManyOptions<Lieu>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return lieuRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<Lieu>) => {
  * @returns Promise<Lieu[]> tableau d'lieux
  */
 const search = (filter: FindManyOptions<Lieu>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = [{ site: ILike(`%${search}%`) }, { section: ILike(`%${search}%`) }]
   return lieuRepository.findAndCount(filter)
 }

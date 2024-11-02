@@ -51,7 +51,7 @@ const Nouveau = () => {
 
   // Génératiopn d'une nouvelle demande
   const onNewDemande = async () => {
-    const message = await window.electron.ipcRenderer.invoke('demande.new', opportunite)
+    const message = await window.electron.ipcRenderer.invoke('demande.new', opportunite?.reference)
   }
 
   return (

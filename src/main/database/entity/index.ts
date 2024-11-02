@@ -4,5 +4,6 @@ import { Grandeur } from './grandeur'
 import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 import { User, UserRole } from './user'
+import { Demande } from './demande'
 
-export { Accreditation, Contact, Grandeur, FamilleInstrument, Lieu, User, UserRole }
+export { Accreditation, Contact, Demande, Grandeur, FamilleInstrument, Lieu, User, UserRole }

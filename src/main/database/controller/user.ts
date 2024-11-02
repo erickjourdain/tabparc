@@ -12,6 +12,7 @@ const userRepository = AppDataSource.getRepository(User)
  * @returns Promise<User[]> tableau d'utilisateurs
  */
 const findAll = (filter: FindManyOptions<User>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return userRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<User>) => {
  * @returns Promise<User[]> tableau d'utilisateurs
  */
 const search = (filter: FindManyOptions<User>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = [
     { nom: ILike(`%${search}%`) },
     { prenom: ILike(`%${search}%`) },

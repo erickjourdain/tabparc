@@ -12,6 +12,7 @@ const contactRepository = AppDataSource.getRepository(Contact)
  * @returns Promise<Contact[]> tableau d'contacts
  */
 const findAll = (filter: FindManyOptions<Contact>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return contactRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<Contact>) => {
  * @returns Promise<Contact[]>
  */
 const search = (filter: FindManyOptions<Contact>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = [{ nom: ILike(`%${search}%`) }, { prenom: ILike(`%${search}%`) }]
   return contactRepository.findAndCount(filter)
 }

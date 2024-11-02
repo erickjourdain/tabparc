@@ -9,9 +9,10 @@ const grandeurRepository = AppDataSource.getRepository(Grandeur)
 /**
  * Liste des grandeurs
  * @param filter FindManyOptions objet définissant les paramètres de la requête
- * @returns Promise<Grandeurs[]> tableau d'contacts
+ * @returns Promise<Grandeurs[]> tableau des grandeurs
  */
 const findAll = (filter: FindManyOptions<Grandeur>) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   return grandeurRepository.findAndCount(filter)
 }
 
@@ -22,6 +23,7 @@ const findAll = (filter: FindManyOptions<Grandeur>) => {
  * @returns Promise<Grandeur[]> tableau de grandeurs
  */
 const search = (filter: FindManyOptions<Grandeur>, search: string) => {
+  filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = [{ nom: ILike(`%${search}%`) }, { nom: ILike(`%${search}%`) }]
   return grandeurRepository.findAndCount(filter)
 }
