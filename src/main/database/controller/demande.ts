@@ -11,16 +11,18 @@ const demandeRepository = AppDataSource.getRepository(Demande)
 /**
  * Liste des demandes
  * @param filter FindManyOptions objet définissant les paramètres de la requête
- * @returns Promise<Demande[]> tableau des demandes
+ * @returns Promise<DemandeOpp[]> tableau des demandes
  */
 const findAll = async (filter: FindManyOptions<Demande>) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   const [data, count] = await demandeRepository.findAndCount(filter)
   const demandes: DemandeOpp[] = []
   for (let i = 0; i < data.length; i++) {
-    demandes.push({ 
+    demandes.push({
       id: data[i].id,
       statut: data[i].statut,
+      codeClient: data[i].codeClient,
+      client: data[i].client,
       createur: data[i].createur,
       gestionnaire: data[i].gestionnaire,
       createdAt: data[i].createdAt,
@@ -35,17 +37,19 @@ const findAll = async (filter: FindManyOptions<Demande>) => {
  * Recherche de demandes
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @param search string chaine à rechercher
- * @returns Promise<Demande[]> tableau des demandes
+ * @returns Promise<DemandeOpp[]> tableau des demandes
  */
 const search = async (filter: FindManyOptions<Demande>, search: string) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
-  filter.where = { refOpportunite: ILike(`%${search}%`) }
+  filter.where = [{ refOpportunite: ILike(`%${search}%`) }, { client: ILike(`%${search}%`) }]
   const [data, count] = await demandeRepository.findAndCount(filter)
   const demandes: DemandeOpp[] = []
   for (let i = 0; i < data.length; i++) {
-    demandes.push({ 
+    demandes.push({
       id: data[i].id,
       statut: data[i].statut,
+      codeClient: data[i].codeClient,
+      client: data[i].client,
       createur: data[i].createur,
       gestionnaire: data[i].gestionnaire,
       createdAt: data[i].createdAt,
@@ -59,25 +63,56 @@ const search = async (filter: FindManyOptions<Demande>, search: string) => {
 /**
  * Recherche d'une demande via son opportunité
  * @param refOpp référence de l'opportunité
- * @returns Promise<Demande> demande
+ * @param withOpportunitye booléen definissant l'association à l'opportunité (défaut = false)
+ * @returns Promise<DemandeOpp> demande
  */
-const findByOpportunite = (refOpp: string) => {
-  return demandeRepository.findOneOrFail({ where: { refOpportunite: ILike(refOpp) } })
+const findByOpportunite = async (
+  refOpp: string,
+  withOpportunitye = true
+): Promise<DemandeOpp | Demande | null> => {
+  const demande = await demandeRepository.findOne({
+    where: { refOpportunite: ILike(refOpp) }
+  })
+  if (demande === null) return null
+  if (withOpportunitye)
+    return {
+      id: demande.id,
+      statut: demande.statut,
+      createur: demande.createur,
+      codeClient: demande.codeClient,
+      client: demande.client,
+      gestionnaire: demande.gestionnaire,
+      createdAt: demande.createdAt,
+      updatedAt: demande.updatedAt,
+      opportunite: await crm.rechercheOpportunite(demande.refOpportunite)
+    }
+  else return demande
 }
 
 /**
  * Recherche d'une demande
  * @param id identifiant de la demande recherchée
- * @returns Promise<Demande> demande
+ * @returns Promise<DemandeOpp> demande
  */
-const findById = (id: number) => {
-  return demandeRepository.findOneBy({ id })
+const findById = async (id: number) => {
+  const demande = await demandeRepository.findOneByOrFail({ id })
+  return {
+    id: demande.id,
+    statut: demande.statut,
+    codeClient: demande.codeClient,
+    client: demande.client,
+    createur: demande.createur,
+    gestionnaire: demande.gestionnaire,
+    createdAt: demande.createdAt,
+    updatedAt: demande.updatedAt,
+    opportunite: await crm.rechercheOpportunite(demande.refOpportunite)
+  }
 }
 
 /**
  * Sauvegarde d'une nouvelle demande
  * @param demande Demande demande à enregistrer
- * @returns Promise<Demande>
+ * @returns Promise<DemandeOpp>
  */
 const save = async (demande: Demande) => {
   return new Promise((resolve, reject) => {
@@ -96,7 +131,7 @@ const save = async (demande: Demande) => {
 /**
  * Mise à jour d'une demande
  * @param demande Demande demande à mettre à jour
- * @returns Promise<Demande>
+ * @returns Promise<DemandeOpp>
  */
 const update = async (demande: Demande) => {
   return new Promise((resolve, reject) => {

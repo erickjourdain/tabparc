@@ -159,6 +159,7 @@ const rechercheOpportunite = async (opp: string): Promise<Opportunite | null> =>
         aff.AF_INFO_COMP23 titre,
         aff.AF_DATE_CREA dateCreation,
         cl.CLIENT client,
+        cl.REFERENCE codeClient,
         cont.NOM contactNom,
         cont.PRENOM contactPrenom,
         cont.CL_TEL contactTelephone,

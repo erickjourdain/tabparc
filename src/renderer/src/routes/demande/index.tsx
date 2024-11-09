@@ -1,13 +1,14 @@
-import { Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography, useTheme } from '@mui/material'
+import { Card, CardActions, CardContent, Chip, ClickAwayListener, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import CloseIcon from '@mui/icons-material/Close'
 import EmailIcon from '@mui/icons-material/Email'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Demande, FindAndCount, Statut } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData, useNavigate, useRouter } from '@tanstack/react-router'
 import { z } from 'zod'
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { getStatut } from '@renderer/utils/format'
 
 // Schema des paramètres de la recherche
 const formSearchSchema = z.object({
@@ -20,10 +21,42 @@ type FormSearchSchema = z.infer<typeof formSearchSchema>
 
 const DemandeIndex = () => {
   const demandes: FindAndCount<Demande> = useLoaderData({ from: '/demande/' })
-  
+  // Reférence pour l'ouverture du menu déroulant
+  const anchorRef = useRef<HTMLDivElement>(null)
+  // Hook navigation
+  const navigate = useNavigate()
+  // Etat gérant l'ouverture du menu déroulant
+  const [open, setOpen] = useState(false)
+  // Ouverture du message pour envoi au client
   const handleClick = useCallback((refOpp: string) => {
     window.electron.ipcRenderer.invoke('demande.openEmail', refOpp)
   }, [])
+  // Mise à jour deu statut de la demande
+  const handleMenuItemClick = useCallback((demande: Demande, option: string) => {
+    if (demande.statut === Statut[option]) return
+    window.electron.ipcRenderer.invoke('demande.update', {
+      ...demande,
+      statut: Statut[option]
+    })
+      .then(() => {
+        demande.statut = Statut[option]
+        setOpen(false)
+      })
+  }, [])
+  // Changement état du menu déroulant
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  }
+
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+    setOpen(false);
+  }
 
   return (
     <Grid container spacing={2} mb={3}>
@@ -37,10 +70,10 @@ const DemandeIndex = () => {
               <Typography sx={{ color: 'text.secondary', mb: 1.5, fontSize: 12 }}>
                 {demande.createdAt.toLocaleDateString()}
               </Typography>
-              <Chip label={Object.keys(Statut)[Object.values(Statut).indexOf(demande.statut)]} />
+              <Chip label={getStatut(demande.statut)} />
             </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="voir demande">
+            <CardActions sx={{ justifyContent: "space-between" }}>
+              <IconButton aria-label="voir demande" onClick={() => navigate({ to: `/demande/${demande.id}` })}>
                 <VisibilityIcon />
               </IconButton>
               {(demande.statut === Statut.BROUILLON) && (
@@ -48,9 +81,44 @@ const DemandeIndex = () => {
                   <EmailIcon />
                 </IconButton>
               )}
-              <IconButton aria-label="fermer demande">
-                <CloseIcon />
-              </IconButton>
+              <div ref={anchorRef}>
+                <IconButton aria-label="change statut" onClick={handleToggle}>
+                  <MoreVertIcon />
+                </IconButton>
+              </div>
+              <Popper
+                sx={{ zIndex: 1 }}
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList id="split-button-menu" autoFocusItem>
+                          {Object.keys(Statut).map((option) => (
+                            <MenuItem
+                              key={option}
+                              onClick={() => handleMenuItemClick(demande, option)}
+                            >
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </CardActions>
           </Card>
         </Grid>

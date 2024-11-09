@@ -5,5 +5,18 @@ import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
 import { User, UserRole } from './user'
 import { Demande } from './demande'
+import { Instrument } from './instrument'
+import { Programme } from './programme'
 
-export { Accreditation, Contact, Demande, Grandeur, FamilleInstrument, Lieu, User, UserRole }
+export {
+  Accreditation,
+  Contact,
+  Demande,
+  Grandeur,
+  FamilleInstrument,
+  Instrument,
+  Lieu,
+  Programme,
+  User,
+  UserRole
+}

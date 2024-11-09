@@ -13,9 +13,10 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
-import { Route as NouveauIndexImport } from './routes/nouveau/index'
 import { Route as DemandeIndexImport } from './routes/demande/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
+import { Route as DemandeNouvelleImport } from './routes/demande/nouvelle'
+import { Route as DemandeIdImport } from './routes/demande/$id'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminLieuxIndexImport } from './routes/admin/lieux/index'
 import { Route as AdminGrandeursIndexImport } from './routes/admin/grandeurs/index'
@@ -47,11 +48,6 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const NouveauIndexRoute = NouveauIndexImport.update({
-  path: '/nouveau/',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const DemandeIndexRoute = DemandeIndexImport.update({
   path: '/demande/',
   getParentRoute: () => rootRoute,
@@ -60,6 +56,16 @@ const DemandeIndexRoute = DemandeIndexImport.update({
 const AdminIndexRoute = AdminIndexImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+
+const DemandeNouvelleRoute = DemandeNouvelleImport.update({
+  path: '/demande/nouvelle',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DemandeIdRoute = DemandeIdImport.update({
+  path: '/demande/$id',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AdminUsersIndexRoute = AdminUsersIndexImport.update({
@@ -173,6 +179,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
+    '/demande/$id': {
+      id: '/demande/$id'
+      path: '/demande/$id'
+      fullPath: '/demande/$id'
+      preLoaderRoute: typeof DemandeIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/demande/nouvelle': {
+      id: '/demande/nouvelle'
+      path: '/demande/nouvelle'
+      fullPath: '/demande/nouvelle'
+      preLoaderRoute: typeof DemandeNouvelleImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -185,13 +205,6 @@ declare module '@tanstack/react-router' {
       path: '/demande'
       fullPath: '/demande'
       preLoaderRoute: typeof DemandeIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/nouveau/': {
-      id: '/nouveau/'
-      path: '/nouveau'
-      fullPath: '/nouveau'
-      preLoaderRoute: typeof NouveauIndexImport
       parentRoute: typeof rootRoute
     }
     '/admin/accreditations/$id': {
@@ -374,9 +387,10 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/demande/$id': typeof DemandeIdRoute
+  '/demande/nouvelle': typeof DemandeNouvelleRoute
   '/admin/': typeof AdminIndexRoute
   '/demande': typeof DemandeIndexRoute
-  '/nouveau': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -399,9 +413,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/demande/$id': typeof DemandeIdRoute
+  '/demande/nouvelle': typeof DemandeNouvelleRoute
   '/admin': typeof AdminIndexRoute
   '/demande': typeof DemandeIndexRoute
-  '/nouveau': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -426,9 +441,10 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/demande/$id': typeof DemandeIdRoute
+  '/demande/nouvelle': typeof DemandeNouvelleRoute
   '/admin/': typeof AdminIndexRoute
   '/demande/': typeof DemandeIndexRoute
-  '/nouveau/': typeof NouveauIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -454,9 +470,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/demande/$id'
+    | '/demande/nouvelle'
     | '/admin/'
     | '/demande'
-    | '/nouveau'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -478,9 +495,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/demande/$id'
+    | '/demande/nouvelle'
     | '/admin'
     | '/demande'
-    | '/nouveau'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -503,9 +521,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/demande/$id'
+    | '/demande/nouvelle'
     | '/admin/'
     | '/demande/'
-    | '/nouveau/'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -530,15 +549,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  DemandeIdRoute: typeof DemandeIdRoute
+  DemandeNouvelleRoute: typeof DemandeNouvelleRoute
   DemandeIndexRoute: typeof DemandeIndexRoute
-  NouveauIndexRoute: typeof NouveauIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  DemandeIdRoute: DemandeIdRoute,
+  DemandeNouvelleRoute: DemandeNouvelleRoute,
   DemandeIndexRoute: DemandeIndexRoute,
-  NouveauIndexRoute: NouveauIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -555,8 +576,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/admin",
-        "/demande/",
-        "/nouveau/"
+        "/demande/$id",
+        "/demande/nouvelle",
+        "/demande/"
       ]
     },
     "/": {
@@ -586,15 +608,18 @@ export const routeTree = rootRoute
         "/admin/users/"
       ]
     },
+    "/demande/$id": {
+      "filePath": "demande/$id.tsx"
+    },
+    "/demande/nouvelle": {
+      "filePath": "demande/nouvelle.tsx"
+    },
     "/admin/": {
       "filePath": "admin/index.tsx",
       "parent": "/admin"
     },
     "/demande/": {
       "filePath": "demande/index.tsx"
-    },
-    "/nouveau/": {
-      "filePath": "nouveau/index.tsx"
     },
     "/admin/accreditations/$id": {
       "filePath": "admin/accreditations/$id.tsx",

@@ -3,6 +3,7 @@ import { Accreditation } from './accreditation'
 import { Contact } from './contact'
 import { FamilleInstrument } from './familleInstrument'
 import { Lieu } from './lieu'
+import { Instrument } from './instrument'
 
 @Entity()
 export class Grandeur {
@@ -21,6 +22,9 @@ export class Grandeur {
 
   @ManyToOne(() => Lieu, (lieu) => lieu.grandeurs, { eager: true })
   lieu!: Lieu
+
+  @ManyToOne(() => Instrument)
+  instrument!: Instrument
 
   @ManyToMany(() => FamilleInstrument, { eager: true })
   @JoinTable()

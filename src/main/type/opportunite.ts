@@ -4,6 +4,7 @@ export interface Opportunite {
   titre: string
   dateCreation: Date
   client: string
+  codeClient: number
   contactNom: string
   contactPrenom: string
   contactTelephone: string

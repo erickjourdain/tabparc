@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { User } from './user'
+import { Instrument } from './instrument'
 
 export enum Statut {
   BROUILLON = 0,
@@ -25,6 +27,18 @@ export class Demande {
   @Column('text', { nullable: false, unique: true })
   refOpportunite!: string
 
+  @Column('int', { nullable: false, unique: true })
+  codeClient?: number
+
+  @Column('text', { nullable: false })
+  client?: string
+
+  @Column('date', { default: null })
+  dateRetour?: Date
+
+  @Column('date', { default: null })
+  dateSouhaitee?: Date
+
   @Column({ type: 'int8', enum: Statut, default: Statut.BROUILLON })
   statut?: Statut
 
@@ -33,6 +47,9 @@ export class Demande {
 
   @ManyToOne(() => User, { eager: true })
   gestionnaire!: User
+
+  @OneToMany(() => Instrument, (instrument) => instrument.demande)
+  instruments!: Instrument[]
 
   @CreateDateColumn()
   createdAt?: Date

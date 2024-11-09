@@ -19,7 +19,6 @@ const loadData = async ({ page, search, route }: Deps): Promise<FindAndCount<unk
   } else {
     data = await window.electron.ipcRenderer.invoke(`${route}.all`, filter)
   }
-  console.log(data)
   return { data: data[0], nbData: data[1] }
 }
 

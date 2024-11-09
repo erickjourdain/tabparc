@@ -19,7 +19,7 @@ interface DrawerMenuProps {
 // Liste des entrées du menu standard
 const itemsMenu = [
   { label: 'accueil', icon: <HomeIcon />, route: '/' },
-  { label: 'nouveau', icon: <AddCircleOutlineIcon />, route: '/nouveau' }
+  { label: 'nouvelle entrée', icon: <AddCircleOutlineIcon />, route: '/demande/nouvelle' }
 ]
 // Liste des entrées du menu administration
 const itemsAdmin = [{ label: 'administration', icon: <SettingsIcon />, route: '/admin' }]

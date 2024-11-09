@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Chip, Link, Paper, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Paper } from '@mui/material'
 import Titre from '@renderer/components/Titre'
 import Grid from '@mui/material/Grid2'
 import { createFileRoute } from '@tanstack/react-router'
@@ -6,12 +6,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import InputForm from '@renderer/components/form/InputForm'
 import { Opportunite } from '@renderer/type'
+import DemandeForm from '@renderer/components/demande/DemandeForm'
 
 type IOppForm = {
   opportunite: string
 }
 
-const Nouveau = () => {
+const DemandeNouvelle = () => {
   // Etat local de gestion de la sauvegarde
   const [isPending, setIsPending] = useState<boolean>(false)
   const [opportunite, setOpportunite] = useState<Opportunite | null | undefined>(undefined)
@@ -105,45 +106,7 @@ const Nouveau = () => {
         <Paper>
           <Box sx={{ flexGrow: 1 }} px={3} py={2}>
             <Grid container spacing={2} mb={3}>
-              <Grid size={12}>
-                <Chip label={opportunite.statut} color={creationDemande ? 'success' : 'error'} />
-              </Grid>
-              <Grid size={4}>
-                <TextField
-                  fullWidth
-                  value={opportunite.client}
-                  label="client"
-                  size="small"
-                  disabled
-                />
-              </Grid>
-              <Grid size={4}>
-                <TextField
-                  fullWidth
-                  value={`${opportunite.contactNom} ${opportunite.contactPrenom}`}
-                  label="contact"
-                  size="small"
-                  disabled
-                />
-              </Grid>
-              <Grid size={4}>
-                <TextField
-                  fullWidth
-                  value={opportunite.dateCreation.toLocaleDateString()}
-                  label="date création"
-                  size="small"
-                  disabled
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  fullWidth
-                  value={opportunite.titre}
-                  label="titre"
-                  size="small"
-                  disabled
-                />
-              </Grid>
+              <DemandeForm opportunite={opportunite} />
               {creationDemande && (
                 <Grid size={6} display="flex" justifyContent="center" alignItems="center">
                   <Button color="primary" variant="outlined" onClick={() => onNewDemande()}>
@@ -159,6 +122,6 @@ const Nouveau = () => {
   )
 }
 
-export const Route = createFileRoute('/nouveau/')({
-  component: () => <Nouveau />
+export const Route = createFileRoute('/demande/nouvelle')({
+  component: () => <DemandeNouvelle />
 })

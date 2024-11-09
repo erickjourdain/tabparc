@@ -11,6 +11,7 @@ import { loggedUser } from '../database/controller/login'
 import { FindManyOptions } from 'typeorm'
 import { Demande } from '@entity/*'
 
+// création d'une nouvelle demande
 ipcMain.handle('demande.new', async (_event, refOpp: string) => {
   try {
     // vérification que l'utilisateur est loggé
@@ -18,7 +19,7 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
 
     // vérification état opportunité
     const opp = await crm.rechercheOpportunite(refOpp)
-    if (opp === null) return new Error("L'Opportunité recherché n'existe pas")
+    if (opp === null) return new Error("L'Opportunité recherchée n'existe pas")
     if (opp.statut.indexOf('Close)') >= 0) return new Error("L'opportunité est close")
 
     // chemin du stockage des données de l'opportunité
@@ -48,6 +49,8 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
     // créatione de la demande
     const demande = await demandeController.save({
       refOpportunite: opp.reference,
+      client: opp.client,
+      codeClient: opp.codeClient,
       createur: loggedUser,
       gestionnaire: loggedUser
     })
@@ -58,22 +61,34 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
   }
 })
 
+/**
+ * Ouverture du message d'envoi de la demande au client
+ */
 ipcMain.handle('demande.openEmail', async (_event, refOpp: string) => {
   // vérification état opportunité
   const opp = await crm.rechercheOpportunite(refOpp)
   if (opp === null) return new Error("L'Opportunité recherché n'existe pas")
   // chemin du stockage des données de l'opportunité
-  const dirOpp = stockage.oppPath(opp)    
-  
+  const dirOpp = stockage.oppPath(opp)
+
   // ouverture du message pour envoi
   shell.openPath(`${dirOpp}/liste instrument.eml`)
 
   return true
 })
 
+// Recherche de toutes les demandes
 ipcMain.handle('demande.all', (_event, filter: FindManyOptions<Demande>) =>
   demandeController.findAll(filter)
 )
+
+//Recherhce de demandes en fonction de la référence de l'opportunité ou du client
 ipcMain.handle('demande.search', (_event, filter: FindManyOptions<Demande>, search: string) =>
   demandeController.search(filter, search)
 )
+
+// Mise à jour d'une demande
+ipcMain.handle('demande.update', (_event, demande: Demande) => demandeController.update(demande))
+
+// Recherche d'une demande via son id
+ipcMain.handle('demande.find', (_event, id: number) => demandeController.findById(id))
