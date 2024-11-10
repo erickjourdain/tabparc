@@ -3,10 +3,18 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-import { Instrument } from './instrument'
+import { Instrument } from './instrument.entity'
+import { Prestation } from './prestation.entity'
+
+export enum TypePrestation {
+  ETALONNAGE = 0,
+  VERIFICATION = 1,
+  ETALONNAGE_VERIFICATOION = 2
+}
 
 @Entity()
 export class Programme {
@@ -19,8 +27,13 @@ export class Programme {
   @Column('text')
   ptsMesures!: string
 
-  @Column('text')
-  prestation!: string
+  @Column({
+    type: 'int8',
+    enum: TypePrestation,
+    default: TypePrestation.ETALONNAGE,
+    nullable: false
+  })
+  typePrestation!: number
 
   @Column('text')
   emt!: string
@@ -30,6 +43,9 @@ export class Programme {
 
   @Column('date')
   dateSouhaite!: Date
+
+  @OneToOne(() => Prestation)
+  prestion!: Prestation
 
   @ManyToOne(() => Instrument)
   instrument!: Instrument

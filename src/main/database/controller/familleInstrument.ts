@@ -1,6 +1,6 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { FamilleInstrument } from '../entity/familleInstrument'
+import { FamilleInstrument } from '../entity/familleInstrument.entity'
 import { loggedUser } from './login'
 
 // Repository d'accès aux familles d'instrumnents

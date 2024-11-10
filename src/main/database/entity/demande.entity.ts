@@ -2,13 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-import { User } from './user'
-import { Instrument } from './instrument'
+import { User } from './user.entity'
+import { Instrument } from './instrument.entity'
 
 export enum Statut {
   BROUILLON = 0,
@@ -24,14 +24,17 @@ export class Demande {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('text', { nullable: false, unique: true })
+  @Column('varchar', { nullable: false, unique: true })
   refOpportunite!: string
 
-  @Column('int', { nullable: false, unique: true })
-  codeClient?: number
+  @Column('varchar')
+  refProjet?: string
 
-  @Column('text', { nullable: false })
-  client?: string
+  @Column('int', { nullable: false })
+  codeClient!: number
+
+  @Column('varchar', { nullable: false })
+  client!: string
 
   @Column('date', { default: null })
   dateRetour?: Date
@@ -39,8 +42,8 @@ export class Demande {
   @Column('date', { default: null })
   dateSouhaitee?: Date
 
-  @Column({ type: 'int8', enum: Statut, default: Statut.BROUILLON })
-  statut?: Statut
+  @Column({ type: 'int8', enum: Statut, default: Statut.BROUILLON, nullable: false })
+  statut!: Statut
 
   @ManyToOne(() => User, { eager: true })
   createur!: User
@@ -48,12 +51,12 @@ export class Demande {
   @ManyToOne(() => User, { eager: true })
   gestionnaire!: User
 
-  @OneToMany(() => Instrument, (instrument) => instrument.demande)
+  @ManyToMany(() => Instrument)
   instruments!: Instrument[]
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: false })
   createdAt?: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ nullable: false })
   updatedAt?: Date
 }

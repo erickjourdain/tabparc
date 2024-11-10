@@ -13,31 +13,31 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   nom!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   prenom!: string
 
-  @Column('text', { nullable: false, unique: true })
+  @Column('varchar', { nullable: false, unique: true })
   login!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   email!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   titre!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   telephone!: string
 
-  @Column('boolean', { default: true })
+  @Column('boolean', { nullable: true, default: true })
   valide!: boolean
 
   @Column({
-    type: 'text',
+    type: 'varchar',
     enum: UserRole,
-    default: UserRole.READER
+    default: 'READER'
   })
   role!: UserRole
 }

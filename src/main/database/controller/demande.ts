@@ -3,7 +3,7 @@ import AppDataSource from '../data-source'
 import { loggedUser } from './login'
 import crm from '../mssql/crm'
 import { DemandeOpp } from 'src/main/type'
-import { Demande } from '../entity/demande'
+import { Demande } from '../entity/demande.entity'
 
 // Repository d'accès aux demandes
 const demandeRepository = AppDataSource.getRepository(Demande)
@@ -71,7 +71,7 @@ const findByOpportunite = async (
   withOpportunitye = true
 ): Promise<DemandeOpp | Demande | null> => {
   const demande = await demandeRepository.findOne({
-    where: { refOpportunite: ILike(refOpp) }
+    where: { refOpportunite: refOpp }
   })
   if (demande === null) return null
   if (withOpportunitye)

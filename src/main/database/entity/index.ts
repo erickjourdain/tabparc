@@ -1,12 +1,15 @@
-import { Accreditation } from './accreditation'
-import { Contact } from './contact'
-import { Grandeur } from './grandeur'
-import { FamilleInstrument } from './familleInstrument'
-import { Lieu } from './lieu'
-import { User, UserRole } from './user'
-import { Demande } from './demande'
-import { Instrument } from './instrument'
-import { Programme } from './programme'
+import { Accreditation } from './accreditation.entity'
+import { Contact } from './contact.entity'
+import { Grandeur } from './grandeur.entity'
+import { FamilleInstrument } from './familleInstrument.entity'
+import { Lieu } from './lieu.entity'
+import { User, UserRole } from './user.entity'
+import { Demande, Statut } from './demande.entity'
+import { Instrument } from './instrument.entity'
+import { Programme, TypePrestation } from './programme.entity'
+import { Section } from './section.entity'
+import { Site } from './site.entity'
+import { Prestation } from './prestation.entity'
 
 export {
   Accreditation,
@@ -16,7 +19,12 @@ export {
   FamilleInstrument,
   Instrument,
   Lieu,
+  Prestation,
   Programme,
+  Section,
+  Site,
+  Statut,
+  TypePrestation,
   User,
   UserRole
 }

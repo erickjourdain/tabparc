@@ -10,6 +10,8 @@ import ReactDOM from 'react-dom/client'
 import Alerte from '@renderer/components/Alerte'
 import { routeTree } from '@renderer/routeTree.gen'
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router'
+import type {} from '@mui/material/themeCssVarsAugmentation'
+import { createTheme, ThemeProvider } from '@mui/material'
 
 // Create a memory history instance to initialize the router so it doesn't break when compiled:
 const memoryHistory = createMemoryHistory({
@@ -26,9 +28,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
+const theme = createTheme({ cssVariables: true })
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Alerte />
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <Alerte />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 )

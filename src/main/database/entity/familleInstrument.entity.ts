@@ -3,11 +3,11 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 @Entity()
 export class FamilleInstrument {
   @PrimaryGeneratedColumn()
-  id!: number
+  id?: number
 
-  @Column('text', { nullable: false, unique: true })
+  @Column('varchar', { nullable: false, unique: true })
   nom!: string
 
-  @Column('boolean', { default: true })
+  @Column('boolean', { nullable: false, default: true })
   valide!: boolean
 }

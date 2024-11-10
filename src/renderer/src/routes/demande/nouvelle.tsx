@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Paper } from '@mui/material'
 import Titre from '@renderer/components/Titre'
 import Grid from '@mui/material/Grid2'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import InputForm from '@renderer/components/form/InputForm'
-import { Opportunite } from '@renderer/type'
+import { Demande, Opportunite } from '@renderer/type'
 import DemandeForm from '@renderer/components/demande/DemandeForm'
 
 type IOppForm = {
@@ -13,10 +13,13 @@ type IOppForm = {
 }
 
 const DemandeNouvelle = () => {
+  // Hook de navigation
+  const navigate = useNavigate()
   // Etat local de gestion de la sauvegarde
   const [isPending, setIsPending] = useState<boolean>(false)
   const [opportunite, setOpportunite] = useState<Opportunite | null | undefined>(undefined)
   const [creationDemande, setCreationDemande] = useState<boolean>(false)
+  const [demande, setDemande] = useState<Demande | null>(null)
 
   // Hook de gestion du formulaire de recherche de l'opportunité
   const { control, handleSubmit, reset } = useForm<IOppForm>({
@@ -37,9 +40,17 @@ const DemandeNouvelle = () => {
       'opportunite.search',
       data.opportunite.trim()
     )
+    // recherche demande existante dans la base de données
+    const demande: Demande | null = await window.electron.ipcRenderer.invoke(
+      'demande.findOpp',
+      opportunite?.reference,
+      false
+    )
+    setDemande(demande)
     // mise à jour des états locaux du composant
     setOpportunite(opportunite)
-    if (opportunite && opportunite.statut.indexOf('Close') === -1) setCreationDemande(true)
+    if (opportunite && opportunite.statut.indexOf('Close') === -1 && demande === null)
+      setCreationDemande(true)
     setIsPending(false)
   }
 
@@ -52,6 +63,7 @@ const DemandeNouvelle = () => {
 
   // Génératiopn d'une nouvelle demande
   const onNewDemande = async () => {
+    // création de la demande
     const message = await window.electron.ipcRenderer.invoke('demande.new', opportunite?.reference)
   }
 
@@ -102,6 +114,26 @@ const DemandeNouvelle = () => {
         </Box>
       </Box>
       {opportunite === null && <Alert color="warning">L&apos;opportunité n&apos;existe pas</Alert>}
+      {opportunite && !creationDemande && demande !== null && (
+        <Alert
+          color="warning"
+          sx={{ mb: 2 }}
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate({ to: `/demande/${demande.id}` })}
+            >
+              VOIR
+            </Button>
+          }
+        >
+          Il existe déjà une demande pour cette opportunité
+        </Alert>
+      )}
+      {opportunite && !creationDemande && demande === null && (
+        <Alert color="warning">L&apos;opportunité est close</Alert>
+      )}
       {opportunite && (
         <Paper>
           <Box sx={{ flexGrow: 1 }} px={3} py={2}>

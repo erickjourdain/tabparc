@@ -1,6 +1,6 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { Grandeur } from '../entity/grandeur'
+import { Grandeur } from '../entity/grandeur.entity'
 import { loggedUser } from './login'
 
 // Repository d'accès aux grandeurs

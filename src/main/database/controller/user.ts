@@ -1,6 +1,6 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { User } from '../entity/user'
+import { User } from '../entity/user.entity'
 import { loggedUser } from './login'
 
 // Repository d'accès aux utilisateurs

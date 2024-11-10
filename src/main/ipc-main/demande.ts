@@ -52,7 +52,8 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
       client: opp.client,
       codeClient: opp.codeClient,
       createur: loggedUser,
-      gestionnaire: loggedUser
+      gestionnaire: loggedUser,
+      instruments: []
     })
 
     return demande
@@ -92,3 +93,8 @@ ipcMain.handle('demande.update', (_event, demande: Demande) => demandeController
 
 // Recherche d'une demande via son id
 ipcMain.handle('demande.find', (_event, id: number) => demandeController.findById(id))
+
+// Recherche d'une demande via son opportunité
+ipcMain.handle('demande.findOpp', (_event, refOpp: string, withOpp: boolean) =>
+  demandeController.findByOpportunite(refOpp, withOpp)
+)

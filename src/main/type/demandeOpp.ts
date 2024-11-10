@@ -1,5 +1,5 @@
 import { User } from '@entity/*'
-import { Statut } from '../database/entity/demande'
+import { Statut } from '../database/entity/demande.entity'
 import { Opportunite } from './opportunite'
 
 export interface DemandeOpp {

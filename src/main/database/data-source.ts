@@ -9,7 +9,10 @@ import {
   User,
   Demande,
   Instrument,
-  Programme
+  Programme,
+  Prestation,
+  Section,
+  Site
 } from './entity'
 
 const AppDataSource = new DataSource({
@@ -23,7 +26,10 @@ const AppDataSource = new DataSource({
     Grandeur,
     Instrument,
     Lieu,
+    Prestation,
     Programme,
+    Section,
+    Site,
     User
   ],
   synchronize: true,

@@ -5,18 +5,18 @@ export class Contact {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   nom!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   prenom!: string
 
-  @Column('text')
+  @Column('varchar', { nullable: false })
   email!: string
 
-  @Column('text', { nullable: false })
+  @Column('varchar', { nullable: false })
   telephone!: string
 
-  @Column('boolean', { default: true })
+  @Column('boolean', { nullable: false, default: true })
   valide!: boolean
 }

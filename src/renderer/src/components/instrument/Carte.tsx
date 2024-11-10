@@ -7,8 +7,9 @@ interface InstrumentCarteProps {
 
 const InstrumentCarte = ({ instrument }: InstrumentCarteProps) => {
   return (
-    <Card>
+    <Card sx={{ height: '100%' }}>
       <CardHeader
+        sx={{ backgroundColor: 'primary.light', color: 'white' }}
         title={instrument.designation}
         subheader={`${instrument.fabricant} ${instrument.type}`}
       />

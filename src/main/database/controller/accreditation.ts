@@ -1,6 +1,6 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { Accreditation } from '../entity/accreditation'
+import { Accreditation } from '../entity/accreditation.entity'
 import { loggedUser } from './login'
 
 // Repository d'accès aux accreditations

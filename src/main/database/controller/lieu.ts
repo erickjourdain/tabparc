@@ -1,6 +1,6 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { Lieu } from '../entity/lieu'
+import { Lieu } from '../entity/lieu.entity'
 import { loggedUser } from './login'
 
 // Repository d'accès aux lieux
