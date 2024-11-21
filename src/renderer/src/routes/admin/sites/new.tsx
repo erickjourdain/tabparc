@@ -1,5 +1,5 @@
 import { Box, Paper } from '@mui/material'
-import LieuForm from '@renderer/components/admin/formulaires/LieuForm'
+import SiteForm from '@renderer/components/admin/formulaires/SiteForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -7,12 +7,12 @@ import { createFileRoute } from '@tanstack/react-router'
  * Composant de la route
  * @returns JSX Composant
  */
-const NewLieu = () => {
+const NewSite = () => {
   return (
     <Paper>
       <Box px={3} py={2}>
-        <SousTitre sx={{ mb: 2 }} titre="Nouveau Lieu" />
-        <LieuForm lieu={null} />
+        <SousTitre sx={{ mb: 2 }} titre="Nouveau Site" />
+        <SiteForm site={null} />
       </Box>
     </Paper>
   )
@@ -21,6 +21,6 @@ const NewLieu = () => {
 /**
  * Création de la route
  */
-export const Route = createFileRoute('/admin/lieux/new')({
-  component: () => <NewLieu />
+export const Route = createFileRoute('/admin/sites/new')({
+  component: () => <NewSite />
 })

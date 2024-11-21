@@ -1,5 +1,6 @@
+import { Opportunite } from '@apptypes/*'
 import mssql, { ConnectionPool } from 'mssql'
-import { Client, DataCRM, Opportunite, Prestation } from 'src/main/type'
+import { Client, DataCRM, Prestation } from 'src/main/type'
 
 const config: mssql.config = {
   user: import.meta.env.MAIN_VITE_CRM_USER,
@@ -183,12 +184,10 @@ const rechercheOpportunite = async (opp: string): Promise<Opportunite | null> =>
         .request()
         .input('opp', mssql.VarChar(50), opp)
         .query(queryData)
-      console.log(resData)
       return resData.rowsAffected[0] === 1 ? resData.recordset[0] : null
     } else return null
   } catch (error) {
-    console.log(error)
-    return null
+    return new Promise((_, reject) => reject(error))
   }
 }
 

@@ -1,30 +1,21 @@
+import { Opportunite } from '@apptypes/index'
 import { Chip, TextField } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Opportunite } from '@renderer/type'
 
 interface DemandeFormProps {
-    opportunite: Opportunite
+  opportunite: Opportunite
 }
 
-const DemandeForm = ( { opportunite }: DemandeFormProps) => {
-
-    return (
-        <>
-        <Grid size={12}>
-        <Chip
-          label={opportunite.statut}
-        />
+const DemandeForm = ({ opportunite }: DemandeFormProps) => {
+  return (
+    <>
+      <Grid size={12}>
+        <Chip label={opportunite.statut} />
       </Grid>
-      <Grid size={4}>
-        <TextField
-          fullWidth
-          value={opportunite.client}
-          label="client"
-          size="small"
-          disabled
-        />
+      <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+        <TextField fullWidth value={opportunite.client} label="client" size="small" disabled />
       </Grid>
-      <Grid size={4}>
+      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
         <TextField
           fullWidth
           value={`${opportunite.contactNom} ${opportunite.contactPrenom}`}
@@ -33,7 +24,7 @@ const DemandeForm = ( { opportunite }: DemandeFormProps) => {
           disabled
         />
       </Grid>
-      <Grid size={4}>
+      <Grid size={{ xs: 12, sm: 6, md: 2 }}>
         <TextField
           fullWidth
           value={opportunite.dateCreation.toLocaleDateString()}
@@ -43,16 +34,10 @@ const DemandeForm = ( { opportunite }: DemandeFormProps) => {
         />
       </Grid>
       <Grid size={12}>
-        <TextField
-          fullWidth
-          value={opportunite.titre}
-          label="titre"
-          size="small"
-          disabled
-        />
+        <TextField fullWidth value={opportunite.titre} label="titre" size="small" disabled />
       </Grid>
-      </>
-    )
+    </>
+  )
 }
 
 export default DemandeForm

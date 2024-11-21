@@ -1,7 +1,7 @@
 /**
  * Class de gestion des erreurs de l'application
  */
-class AppError extends Error {
+export class AppError extends Error {
   num: number
 
   constructor(num: number = 100, ...params) {

@@ -1,14 +1,28 @@
-import { Card, CardActions, CardContent, Chip, ClickAwayListener, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material'
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  ClickAwayListener,
+  Grow,
+  IconButton,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Typography
+} from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import EmailIcon from '@mui/icons-material/Email'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { Demande, FindAndCount, Statut } from '@renderer/type'
+import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
-import { createFileRoute, useLoaderData, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useCallback, useRef, useState } from 'react'
 import { getStatut } from '@renderer/utils/format'
+import { Demande, Statut } from '@apptypes/index'
 
 // Schema des paramètres de la recherche
 const formSearchSchema = z.object({
@@ -34,10 +48,11 @@ const DemandeIndex = () => {
   // Mise à jour deu statut de la demande
   const handleMenuItemClick = useCallback((demande: Demande, option: string) => {
     if (demande.statut === Statut[option]) return
-    window.electron.ipcRenderer.invoke('demande.update', {
-      ...demande,
-      statut: Statut[option]
-    })
+    window.electron.ipcRenderer
+      .invoke('demande.update', {
+        ...demande,
+        statut: Statut[option]
+      })
       .then(() => {
         demande.statut = Statut[option]
         setOpen(false)
@@ -45,39 +60,42 @@ const DemandeIndex = () => {
   }, [])
   // Changement état du menu déroulant
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen((prevOpen) => !prevOpen)
   }
 
   const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return
     }
-    setOpen(false);
+    setOpen(false)
   }
 
   return (
     <Grid container spacing={2} mb={3}>
-      {demandes.data.map(demande => (
+      {demandes.data.map((demande) => (
         <Grid size={4} key={demande.id}>
-          <Card >
+          <Card>
             <CardContent>
-              <Typography gutterBottom sx={{ fontSize: 14 }} color='primary'>
-                {demande.opportunite.client}
+              <Typography gutterBottom sx={{ fontSize: 14 }} color="primary">
+                {demande.client}
               </Typography>
               <Typography sx={{ color: 'text.secondary', mb: 1.5, fontSize: 12 }}>
-                {demande.createdAt.toLocaleDateString()}
+                {demande.createdAt?.toLocaleDateString()}
               </Typography>
               <Chip label={getStatut(demande.statut)} />
             </CardContent>
-            <CardActions sx={{ justifyContent: "space-between" }}>
-              <IconButton aria-label="voir demande" onClick={() => navigate({ to: `/demande/${demande.id}` })}>
+            <CardActions sx={{ justifyContent: 'space-between' }}>
+              <IconButton
+                aria-label="voir demande"
+                onClick={() => navigate({ to: `/demande/${demande.id}` })}
+              >
                 <VisibilityIcon />
               </IconButton>
-              {(demande.statut === Statut.BROUILLON) && (
-                <IconButton aria-label="envoyer demande" onClick={() => handleClick(demande.opportunite.reference) }>
+              {demande.statut === Statut.BROUILLON && (
+                <IconButton
+                  aria-label="envoyer demande"
+                  onClick={() => handleClick(demande.refOpportunite)}
+                >
                   <EmailIcon />
                 </IconButton>
               )}
@@ -98,8 +116,7 @@ const DemandeIndex = () => {
                   <Grow
                     {...TransitionProps}
                     style={{
-                      transformOrigin:
-                        placement === 'bottom' ? 'center top' : 'center bottom',
+                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
                     }}
                   >
                     <Paper>
@@ -140,7 +157,7 @@ export const Route = createFileRoute('/demande/')({
     search: search.search || ''
   }),
   loader: async ({ deps }) => {
-    return await loadData({ page: deps.page, search: deps.search, route:'demande' })
-  }, 
-  component: () => <DemandeIndex />,
+    return await loadData({ page: deps.page, search: deps.search, route: 'demande' })
+  },
+  component: () => <DemandeIndex />
 })

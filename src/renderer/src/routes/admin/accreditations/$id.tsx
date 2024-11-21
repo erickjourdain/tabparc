@@ -1,7 +1,7 @@
 import { Alert, Box, Paper } from '@mui/material'
+import { Accreditation } from '@apptypes/index'
 import AccreditationForm from '@renderer/components/admin/formulaires/AccreditationForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
-import { Accreditation } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
@@ -12,7 +12,7 @@ const ShowAccreditation = () => {
   // Récupération de l'accrediation chargée par le loader de la route
   const accreditation = Route.useLoaderData()
 
-  // Utilisateur non trouvé
+  // Accréditation non trouvée
   if (!accreditation) return <Alert severity="warning">Référence inconnue</Alert>
 
   return (

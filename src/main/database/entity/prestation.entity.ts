@@ -14,7 +14,7 @@ export class Prestation {
   @Column('varchar', { nullable: false })
   lebelleUBW!: string
 
-  @Column('int8', { nullable: false, default: 1 })
+  @Column('int', { nullable: false, default: 1 })
   quantite?: number
 
   @Column('float', { nullable: false, default: 0 })

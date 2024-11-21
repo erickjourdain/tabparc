@@ -1,5 +1,6 @@
+import { Section } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
-import { FindAndCount, Lieu } from '@renderer/type'
+import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
@@ -24,9 +25,9 @@ interface Data {
  * Composants de présentation des données
  * @returns JSX
  */
-const ListLieux = () => {
+const ListSections = () => {
   // Hook du loader de la route
-  const loader: FindAndCount<Lieu> = useLoaderData({ from: '/admin/lieux/' })
+  const loader: FindAndCount<Section> = useLoaderData({ from: '/admin/sections/' })
 
   const [data, setData] = useState<Data[]>([])
 
@@ -34,21 +35,23 @@ const ListLieux = () => {
     const values = loader.data.map((val) => {
       return {
         id: val.id,
-        site: val.site,
-        section: val.section
+        reference: val.reference,
+        valide: val.valide
       }
     })
     setData(values)
   }, [loader])
 
-  return <ListParamsData route="/admin/lieux" type="lieux" data={data} nbData={loader.nbData} />
+  return (
+    <ListParamsData route="/admin/sections" type="sections" data={data} nbData={loader.nbData} />
+  )
 }
 
 /**
  * Création de la route
  */
-export const Route = createFileRoute('/admin/lieux/')({
-  // Validation des paramètres de recherhce
+export const Route = createFileRoute('/admin/sections/')({
+  // Validation des paramètres de recherche
   validateSearch: (search: Record<string, unknown>): FormSearchSchema =>
     formSearchSchema.parse(search),
   // Définition des paramètres de recherche
@@ -58,8 +61,7 @@ export const Route = createFileRoute('/admin/lieux/')({
   }),
   // Chargement des données correspondant aux paramètres de recherche
   loader: async ({ deps }) => {
-    return await loadData({ page: deps.page, search: deps.search, route: 'lieu' })
+    return await loadData({ page: deps.page, search: deps.search, route: 'section' })
   },
-  // Composant à afficher
-  component: () => <ListLieux />
+  component: () => <ListSections />
 })

@@ -1,38 +1,21 @@
 import 'reflect-metadata'
-import { DataSource } from 'typeorm'
-import {
-  Accreditation,
-  Contact,
-  Grandeur,
-  FamilleInstrument,
-  Lieu,
-  User,
-  Demande,
-  Instrument,
-  Programme,
-  Prestation,
-  Section,
-  Site
-} from './entity'
+import { DataSource, EntitySchema, MixedList } from 'typeorm'
+import * as entities from './entity'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+const ent: MixedList<string | Function | EntitySchema<any>> | undefined = []
+for (const [key, _value] of Object.entries(entities)) {
+  ent.push(entities[key])
+}
 
 const AppDataSource = new DataSource({
-  type: 'sqlite',
-  database: import.meta.env.MAIN_VITE_DB_PATH,
-  entities: [
-    Accreditation,
-    Contact,
-    Demande,
-    FamilleInstrument,
-    Grandeur,
-    Instrument,
-    Lieu,
-    Prestation,
-    Programme,
-    Section,
-    Site,
-    User
-  ],
-  synchronize: true,
+  type: 'mariadb',
+  host: import.meta.env.MAIN_VITE_DB_HOST,
+  username: import.meta.env.MAIN_VITE_DB_USER,
+  password: import.meta.env.MAIN_VITE_DB_PWD,
+  database: import.meta.env.MAIN_VITE_DB_DB,
+  synchronize: false,
+  entities: ent,
   logging: true
 })
 

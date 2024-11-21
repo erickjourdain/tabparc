@@ -1,9 +1,9 @@
+import { Accreditation, Contact, FamilleInstrument, Grandeur, Section, Site } from '@apptypes/index'
 import { Box, Button, Stack } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import AutocompleteForm from '@renderer/components/form/AutocompleteForm'
 import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
-import { Accreditation, Contact, Grandeur, FamilleInstrument, Lieu } from '@renderer/type'
 import settings from '@renderer/utils/settings'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
@@ -15,7 +15,8 @@ type IGrandeurForm = {
   nom: string
   accreditation: Accreditation | null
   contacts: Contact[]
-  lieu: Lieu | null
+  section: Section | null
+  site: Site | null
   instruments: FamilleInstrument[]
 }
 
@@ -46,11 +47,13 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
     reset
   } = useForm<IGrandeurForm>({
     defaultValues: useMemo(() => {
+      console.log(grandeur)
       return {
         nom: grandeur?.nom || '',
         accreditation: grandeur?.accreditation || null,
         contacts: grandeur?.contacts || [],
-        lieu: grandeur?.lieu || null,
+        section: grandeur?.section || null,
+        site: grandeur?.site || null,
         instruments: grandeur?.instruments || []
       }
     }, [grandeur])
@@ -63,7 +66,7 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
 
   // Enregistrement réalisé
   const afterSave = useCallback(() => {
-    setAlerte({ message: 'Accréditation enregistrée', color: 'success' })
+    setAlerte({ message: 'Grandeur enregistrée', color: 'success' })
     setIsPending(false)
     navigate({ to: '/admin/grandeurs' })
   }, [])
@@ -83,7 +86,8 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
       nom: data.nom.trim().toUpperCase(),
       accreditation: data.accreditation,
       contacts: data.contacts,
-      lieu: data.lieu,
+      site: data.site,
+      section: data.section,
       instruments: data.instruments
     }
     if (grandeur?.id)
@@ -106,7 +110,7 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
     >
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2} mb={3}>
-          <Grid size={4}>
+          <Grid size={12}>
             <InputForm
               control={control}
               name="nom"
@@ -117,8 +121,8 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
                   message: 'Le nom doit contenir au moins 3 caractères'
                 },
                 maxLength: {
-                  value: 55,
-                  message: 'Le nom ne peut contenir plus de 55 caractères.'
+                  value: 255,
+                  message: 'Le nom ne peut contenir plus de 255 caractères.'
                 }
               }}
             />
@@ -126,20 +130,32 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
           <Grid size={4}>
             <AutocompleteForm
               control={control}
-              name="accreditation"
-              route="accreditation"
-              label="reference"
-              getOptionLabel={(option: Accreditation) => option.reference}
+              name="site"
+              route="site"
+              label="site"
+              rules={{ required: 'Le site est obligatoire' }}
+              getOptionLabel={(option: Site) => option.nom}
+              multiple={false}
             />
           </Grid>
           <Grid size={4}>
             <AutocompleteForm
               control={control}
-              name="lieu"
-              route="lieu"
-              label="site"
-              rules={{ required: 'Le site est obligatoire' }}
-              getOptionLabel={(option: Lieu) => `${option.section} - ${option.site}`}
+              name="section"
+              route="section"
+              label="section"
+              rules={{ required: 'Le section est obligatoire' }}
+              getOptionLabel={(option: Section) => option.reference.toString()}
+              multiple={false}
+            />
+          </Grid>
+          <Grid size={4}>
+            <AutocompleteForm
+              control={control}
+              name="accreditation"
+              route="accreditation"
+              label="accréditation"
+              getOptionLabel={(option: Accreditation) => option.reference}
             />
           </Grid>
           <Grid size={12}>
@@ -156,7 +172,7 @@ const GrandeurForm = ({ grandeur }: GrandeurFormProps) => {
           <Grid size={12}>
             <AutocompleteForm
               control={control}
-              name="famille-instruments"
+              name="instruments"
               route="famille-instrument"
               label="famille instruments"
               getOptionLabel={(option: FamilleInstrument) => option.nom}

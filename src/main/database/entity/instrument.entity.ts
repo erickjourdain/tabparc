@@ -20,10 +20,10 @@ export class Instrument {
   @Column('varchar', { nullable: false })
   designation!: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   fabricant?: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   type?: string
 
   @Column('varchar', { nullable: false })
@@ -32,13 +32,13 @@ export class Instrument {
   @Column('varchar', { nullable: false })
   refClient?: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   contact?: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   email?: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   telephone?: string
 
   @Column('boolean', { nullable: false, default: true })

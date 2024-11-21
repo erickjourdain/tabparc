@@ -1,7 +1,7 @@
 import { Alert, Box, Paper } from '@mui/material'
+import { Contact } from '@apptypes/index'
 import ContactForm from '@renderer/components/admin/formulaires/ContactForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
-import { Contact } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**

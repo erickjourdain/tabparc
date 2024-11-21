@@ -1,7 +1,7 @@
 import { Alert, Box, Paper } from '@mui/material'
+import { User } from '@apptypes/index'
 import UserForm from '@renderer/components/admin/formulaires/UserForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
-import { User } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**

@@ -1,11 +1,11 @@
 import { Box, Button, Chip, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Demande, Statut } from '@renderer/type'
 import { getStatut } from '@renderer/utils/format'
 import { createFileRoute, redirect, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { DataInstrument } from '@preload/types'
+import { DataInstrument, Demande, Opportunite } from '@apptypes/index'
 import InstrumentCarte from '@renderer/components/instrument/Carte'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 
 interface DisplayInfoProps {
   info: string
@@ -40,34 +40,29 @@ const DisplayInfo = ({ info, label, value, error = false }: DisplayInfoProps) =>
 
 const DemandeId = () => {
   // Récupération des données de la route
-  const loader = useLoaderData({ from: '/demande/$id' })
+  const { demande, opportunite } = useLoaderData({ from: '/demande/$id' })
 
   const [data, setData] = useState<DataInstrument>()
   const [modification, setModification] = useState<boolean>(false)
 
   // Ouverture du répertoire de l'opportunité
   const openOpportunite = () => {
-    window.electron.ipcRenderer.invoke('directory.openOpportunite', loader.opportunite.reference)
+    window.electron.ipcRenderer.invoke('directory.openOpportunite', opportunite?.reference)
   }
 
   // Lancement chargement des instruments
   const onLoadInstrument = async () => {
-    const data = await window.electron.ipcRenderer.invoke(
-      'instrument.load',
-      loader.opportunite.reference
-    )
+    const data = await window.electron.ipcRenderer.invoke('instrument.load', opportunite?.reference)
     setData(data)
     setModification(true)
   }
 
   // Tester cohérence contact fichier et opportunité
   const testContact = () => {
-    if (data === undefined || data.contact === null) return true
+    if (data === undefined || data.contact === null || opportunite === null) return true
     else
       return (
-        data.contact
-          .toLocaleLowerCase()
-          .indexOf(loader.opportunite.contactNom.toLocaleLowerCase()) < 0
+        data.contact.toLocaleLowerCase().indexOf(opportunite.contactNom.toLocaleLowerCase()) < 0
       )
   }
 
@@ -96,23 +91,23 @@ const DemandeId = () => {
       <Grid container>
         <Grid size={6}>
           <Chip
-            label={loader.opportunite.reference}
+            label={demande.refOpportunite}
             color="primary"
             sx={{ cursor: 'pointer', mr: 2 }}
             onDoubleClick={openOpportunite}
           />
-          <Chip label={loader.opportunite.client} color="primary" />
+          <Chip label={demande.client} color="primary" />
         </Grid>
         <Grid size={6} sx={{ textAlign: 'right' }}>
-          <Chip label={getStatut(loader.statut)} />
+          <Chip label={getStatut(demande.statut)} />
         </Grid>
       </Grid>
       <Typography variant="caption">
-        {`Créée le ${loader.createdAt.toLocaleDateString()} par ${loader.createur.nom} ${loader.createur.prenom}`}
+        {`Créée le ${demande.createdAt?.toLocaleDateString()} par ${demande.createur.nom} ${demande.createur.prenom}`}
       </Typography>
       <br />
       <Typography variant="caption">
-        {`Modifiée le ${loader.updatedAt.toLocaleDateString()} par ${loader.gestionnaire.nom} ${loader.gestionnaire.prenom}`}
+        {`Modifiée le ${demande.updatedAt?.toLocaleDateString()} par ${demande.gestionnaire.nom} ${demande.gestionnaire.prenom}`}
       </Typography>
       <Grid container spacing={2} mb={3} alignItems="flex-start">
         <Button color="primary" onClick={onLoadInstrument}>
@@ -132,7 +127,7 @@ const DemandeId = () => {
               info="client"
               label="Client"
               value={data.client}
-              error={data.client !== loader.opportunite.client}
+              error={data.client !== demande.client}
             />
             <DisplayInfo
               info="contact"
@@ -162,12 +157,19 @@ const DemandeId = () => {
 }
 
 export const Route = createFileRoute('/demande/$id')({
-  loader: async ({ params }): Promise<Demande> => {
-    if (Number.isNaN(parseInt(params.id))) redirect({ to: '/demande' })
-    const demande = await window.electron.ipcRenderer.invoke('demande.find', params.id)
-    if (demande === null) redirect({ to: '/demande' })
-    console.log(demande)
-    return demande as Demande
+  loader: async ({ params }): Promise<{ demande: Demande; opportunite: Opportunite | null }> => {
+    try {
+      if (Number.isNaN(parseInt(params.id))) redirect({ to: '/demande' })
+      const demande = await ipcRendererService.invoke('demande.find', params.id)
+      if (demande === null) redirect({ to: '/demande' })
+      const opportunite = await ipcRendererService.invoke(
+        'opportunite.search',
+        demande.refOpportunite
+      )
+      return new Promise((resolve) => resolve({ demande, opportunite }))
+    } catch (error) {
+      return new Promise((_, reject) => reject(error))
+    }
   },
   component: () => <DemandeId />
 })

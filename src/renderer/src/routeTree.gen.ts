@@ -18,15 +18,18 @@ import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as DemandeNouvelleImport } from './routes/demande/nouvelle'
 import { Route as DemandeIdImport } from './routes/demande/$id'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
-import { Route as AdminLieuxIndexImport } from './routes/admin/lieux/index'
+import { Route as AdminSitesIndexImport } from './routes/admin/sites/index'
+import { Route as AdminSectionsIndexImport } from './routes/admin/sections/index'
 import { Route as AdminGrandeursIndexImport } from './routes/admin/grandeurs/index'
 import { Route as AdminFamilleInstrumentsIndexImport } from './routes/admin/famille-instruments/index'
 import { Route as AdminContactsIndexImport } from './routes/admin/contacts/index'
 import { Route as AdminAccreditationsIndexImport } from './routes/admin/accreditations/index'
 import { Route as AdminUsersNewImport } from './routes/admin/users/new'
 import { Route as AdminUsersIdImport } from './routes/admin/users/$id'
-import { Route as AdminLieuxNewImport } from './routes/admin/lieux/new'
-import { Route as AdminLieuxIdImport } from './routes/admin/lieux/$id'
+import { Route as AdminSitesNewImport } from './routes/admin/sites/new'
+import { Route as AdminSitesIdImport } from './routes/admin/sites/$id'
+import { Route as AdminSectionsNewImport } from './routes/admin/sections/new'
+import { Route as AdminSectionsIdImport } from './routes/admin/sections/$id'
 import { Route as AdminGrandeursNewImport } from './routes/admin/grandeurs/new'
 import { Route as AdminGrandeursIdImport } from './routes/admin/grandeurs/$id'
 import { Route as AdminFamilleInstrumentsNewImport } from './routes/admin/famille-instruments/new'
@@ -73,8 +76,13 @@ const AdminUsersIndexRoute = AdminUsersIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminLieuxIndexRoute = AdminLieuxIndexImport.update({
-  path: '/lieux/',
+const AdminSitesIndexRoute = AdminSitesIndexImport.update({
+  path: '/sites/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminSectionsIndexRoute = AdminSectionsIndexImport.update({
+  path: '/sections/',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -109,13 +117,23 @@ const AdminUsersIdRoute = AdminUsersIdImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminLieuxNewRoute = AdminLieuxNewImport.update({
-  path: '/lieux/new',
+const AdminSitesNewRoute = AdminSitesNewImport.update({
+  path: '/sites/new',
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminLieuxIdRoute = AdminLieuxIdImport.update({
-  path: '/lieux/$id',
+const AdminSitesIdRoute = AdminSitesIdImport.update({
+  path: '/sites/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminSectionsNewRoute = AdminSectionsNewImport.update({
+  path: '/sections/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminSectionsIdRoute = AdminSectionsIdImport.update({
+  path: '/sections/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -263,18 +281,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGrandeursNewImport
       parentRoute: typeof AdminImport
     }
-    '/admin/lieux/$id': {
-      id: '/admin/lieux/$id'
-      path: '/lieux/$id'
-      fullPath: '/admin/lieux/$id'
-      preLoaderRoute: typeof AdminLieuxIdImport
+    '/admin/sections/$id': {
+      id: '/admin/sections/$id'
+      path: '/sections/$id'
+      fullPath: '/admin/sections/$id'
+      preLoaderRoute: typeof AdminSectionsIdImport
       parentRoute: typeof AdminImport
     }
-    '/admin/lieux/new': {
-      id: '/admin/lieux/new'
-      path: '/lieux/new'
-      fullPath: '/admin/lieux/new'
-      preLoaderRoute: typeof AdminLieuxNewImport
+    '/admin/sections/new': {
+      id: '/admin/sections/new'
+      path: '/sections/new'
+      fullPath: '/admin/sections/new'
+      preLoaderRoute: typeof AdminSectionsNewImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/sites/$id': {
+      id: '/admin/sites/$id'
+      path: '/sites/$id'
+      fullPath: '/admin/sites/$id'
+      preLoaderRoute: typeof AdminSitesIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/sites/new': {
+      id: '/admin/sites/new'
+      path: '/sites/new'
+      fullPath: '/admin/sites/new'
+      preLoaderRoute: typeof AdminSitesNewImport
       parentRoute: typeof AdminImport
     }
     '/admin/users/$id': {
@@ -319,11 +351,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGrandeursIndexImport
       parentRoute: typeof AdminImport
     }
-    '/admin/lieux/': {
-      id: '/admin/lieux/'
-      path: '/lieux'
-      fullPath: '/admin/lieux'
-      preLoaderRoute: typeof AdminLieuxIndexImport
+    '/admin/sections/': {
+      id: '/admin/sections/'
+      path: '/sections'
+      fullPath: '/admin/sections'
+      preLoaderRoute: typeof AdminSectionsIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/sites/': {
+      id: '/admin/sites/'
+      path: '/sites'
+      fullPath: '/admin/sites'
+      preLoaderRoute: typeof AdminSitesIndexImport
       parentRoute: typeof AdminImport
     }
     '/admin/users/': {
@@ -348,15 +387,18 @@ interface AdminRouteChildren {
   AdminFamilleInstrumentsNewRoute: typeof AdminFamilleInstrumentsNewRoute
   AdminGrandeursIdRoute: typeof AdminGrandeursIdRoute
   AdminGrandeursNewRoute: typeof AdminGrandeursNewRoute
-  AdminLieuxIdRoute: typeof AdminLieuxIdRoute
-  AdminLieuxNewRoute: typeof AdminLieuxNewRoute
+  AdminSectionsIdRoute: typeof AdminSectionsIdRoute
+  AdminSectionsNewRoute: typeof AdminSectionsNewRoute
+  AdminSitesIdRoute: typeof AdminSitesIdRoute
+  AdminSitesNewRoute: typeof AdminSitesNewRoute
   AdminUsersIdRoute: typeof AdminUsersIdRoute
   AdminUsersNewRoute: typeof AdminUsersNewRoute
   AdminAccreditationsIndexRoute: typeof AdminAccreditationsIndexRoute
   AdminContactsIndexRoute: typeof AdminContactsIndexRoute
   AdminFamilleInstrumentsIndexRoute: typeof AdminFamilleInstrumentsIndexRoute
   AdminGrandeursIndexRoute: typeof AdminGrandeursIndexRoute
-  AdminLieuxIndexRoute: typeof AdminLieuxIndexRoute
+  AdminSectionsIndexRoute: typeof AdminSectionsIndexRoute
+  AdminSitesIndexRoute: typeof AdminSitesIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
@@ -370,15 +412,18 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFamilleInstrumentsNewRoute: AdminFamilleInstrumentsNewRoute,
   AdminGrandeursIdRoute: AdminGrandeursIdRoute,
   AdminGrandeursNewRoute: AdminGrandeursNewRoute,
-  AdminLieuxIdRoute: AdminLieuxIdRoute,
-  AdminLieuxNewRoute: AdminLieuxNewRoute,
+  AdminSectionsIdRoute: AdminSectionsIdRoute,
+  AdminSectionsNewRoute: AdminSectionsNewRoute,
+  AdminSitesIdRoute: AdminSitesIdRoute,
+  AdminSitesNewRoute: AdminSitesNewRoute,
   AdminUsersIdRoute: AdminUsersIdRoute,
   AdminUsersNewRoute: AdminUsersNewRoute,
   AdminAccreditationsIndexRoute: AdminAccreditationsIndexRoute,
   AdminContactsIndexRoute: AdminContactsIndexRoute,
   AdminFamilleInstrumentsIndexRoute: AdminFamilleInstrumentsIndexRoute,
   AdminGrandeursIndexRoute: AdminGrandeursIndexRoute,
-  AdminLieuxIndexRoute: AdminLieuxIndexRoute,
+  AdminSectionsIndexRoute: AdminSectionsIndexRoute,
+  AdminSitesIndexRoute: AdminSitesIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
@@ -399,15 +444,18 @@ export interface FileRoutesByFullPath {
   '/admin/famille-instruments/new': typeof AdminFamilleInstrumentsNewRoute
   '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
-  '/admin/lieux/$id': typeof AdminLieuxIdRoute
-  '/admin/lieux/new': typeof AdminLieuxNewRoute
+  '/admin/sections/$id': typeof AdminSectionsIdRoute
+  '/admin/sections/new': typeof AdminSectionsNewRoute
+  '/admin/sites/$id': typeof AdminSitesIdRoute
+  '/admin/sites/new': typeof AdminSitesNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations': typeof AdminAccreditationsIndexRoute
   '/admin/contacts': typeof AdminContactsIndexRoute
   '/admin/famille-instruments': typeof AdminFamilleInstrumentsIndexRoute
   '/admin/grandeurs': typeof AdminGrandeursIndexRoute
-  '/admin/lieux': typeof AdminLieuxIndexRoute
+  '/admin/sections': typeof AdminSectionsIndexRoute
+  '/admin/sites': typeof AdminSitesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
 
@@ -425,15 +473,18 @@ export interface FileRoutesByTo {
   '/admin/famille-instruments/new': typeof AdminFamilleInstrumentsNewRoute
   '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
-  '/admin/lieux/$id': typeof AdminLieuxIdRoute
-  '/admin/lieux/new': typeof AdminLieuxNewRoute
+  '/admin/sections/$id': typeof AdminSectionsIdRoute
+  '/admin/sections/new': typeof AdminSectionsNewRoute
+  '/admin/sites/$id': typeof AdminSitesIdRoute
+  '/admin/sites/new': typeof AdminSitesNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations': typeof AdminAccreditationsIndexRoute
   '/admin/contacts': typeof AdminContactsIndexRoute
   '/admin/famille-instruments': typeof AdminFamilleInstrumentsIndexRoute
   '/admin/grandeurs': typeof AdminGrandeursIndexRoute
-  '/admin/lieux': typeof AdminLieuxIndexRoute
+  '/admin/sections': typeof AdminSectionsIndexRoute
+  '/admin/sites': typeof AdminSitesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
 
@@ -453,15 +504,18 @@ export interface FileRoutesById {
   '/admin/famille-instruments/new': typeof AdminFamilleInstrumentsNewRoute
   '/admin/grandeurs/$id': typeof AdminGrandeursIdRoute
   '/admin/grandeurs/new': typeof AdminGrandeursNewRoute
-  '/admin/lieux/$id': typeof AdminLieuxIdRoute
-  '/admin/lieux/new': typeof AdminLieuxNewRoute
+  '/admin/sections/$id': typeof AdminSectionsIdRoute
+  '/admin/sections/new': typeof AdminSectionsNewRoute
+  '/admin/sites/$id': typeof AdminSitesIdRoute
+  '/admin/sites/new': typeof AdminSitesNewRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/admin/users/new': typeof AdminUsersNewRoute
   '/admin/accreditations/': typeof AdminAccreditationsIndexRoute
   '/admin/contacts/': typeof AdminContactsIndexRoute
   '/admin/famille-instruments/': typeof AdminFamilleInstrumentsIndexRoute
   '/admin/grandeurs/': typeof AdminGrandeursIndexRoute
-  '/admin/lieux/': typeof AdminLieuxIndexRoute
+  '/admin/sections/': typeof AdminSectionsIndexRoute
+  '/admin/sites/': typeof AdminSitesIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
 }
 
@@ -482,15 +536,18 @@ export interface FileRouteTypes {
     | '/admin/famille-instruments/new'
     | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
-    | '/admin/lieux/$id'
-    | '/admin/lieux/new'
+    | '/admin/sections/$id'
+    | '/admin/sections/new'
+    | '/admin/sites/$id'
+    | '/admin/sites/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations'
     | '/admin/contacts'
     | '/admin/famille-instruments'
     | '/admin/grandeurs'
-    | '/admin/lieux'
+    | '/admin/sections'
+    | '/admin/sites'
     | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -507,15 +564,18 @@ export interface FileRouteTypes {
     | '/admin/famille-instruments/new'
     | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
-    | '/admin/lieux/$id'
-    | '/admin/lieux/new'
+    | '/admin/sections/$id'
+    | '/admin/sections/new'
+    | '/admin/sites/$id'
+    | '/admin/sites/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations'
     | '/admin/contacts'
     | '/admin/famille-instruments'
     | '/admin/grandeurs'
-    | '/admin/lieux'
+    | '/admin/sections'
+    | '/admin/sites'
     | '/admin/users'
   id:
     | '__root__'
@@ -533,15 +593,18 @@ export interface FileRouteTypes {
     | '/admin/famille-instruments/new'
     | '/admin/grandeurs/$id'
     | '/admin/grandeurs/new'
-    | '/admin/lieux/$id'
-    | '/admin/lieux/new'
+    | '/admin/sections/$id'
+    | '/admin/sections/new'
+    | '/admin/sites/$id'
+    | '/admin/sites/new'
     | '/admin/users/$id'
     | '/admin/users/new'
     | '/admin/accreditations/'
     | '/admin/contacts/'
     | '/admin/famille-instruments/'
     | '/admin/grandeurs/'
-    | '/admin/lieux/'
+    | '/admin/sections/'
+    | '/admin/sites/'
     | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
@@ -596,15 +659,18 @@ export const routeTree = rootRoute
         "/admin/famille-instruments/new",
         "/admin/grandeurs/$id",
         "/admin/grandeurs/new",
-        "/admin/lieux/$id",
-        "/admin/lieux/new",
+        "/admin/sections/$id",
+        "/admin/sections/new",
+        "/admin/sites/$id",
+        "/admin/sites/new",
         "/admin/users/$id",
         "/admin/users/new",
         "/admin/accreditations/",
         "/admin/contacts/",
         "/admin/famille-instruments/",
         "/admin/grandeurs/",
-        "/admin/lieux/",
+        "/admin/sections/",
+        "/admin/sites/",
         "/admin/users/"
       ]
     },
@@ -653,12 +719,20 @@ export const routeTree = rootRoute
       "filePath": "admin/grandeurs/new.tsx",
       "parent": "/admin"
     },
-    "/admin/lieux/$id": {
-      "filePath": "admin/lieux/$id.tsx",
+    "/admin/sections/$id": {
+      "filePath": "admin/sections/$id.tsx",
       "parent": "/admin"
     },
-    "/admin/lieux/new": {
-      "filePath": "admin/lieux/new.tsx",
+    "/admin/sections/new": {
+      "filePath": "admin/sections/new.tsx",
+      "parent": "/admin"
+    },
+    "/admin/sites/$id": {
+      "filePath": "admin/sites/$id.tsx",
+      "parent": "/admin"
+    },
+    "/admin/sites/new": {
+      "filePath": "admin/sites/new.tsx",
       "parent": "/admin"
     },
     "/admin/users/$id": {
@@ -685,8 +759,12 @@ export const routeTree = rootRoute
       "filePath": "admin/grandeurs/index.tsx",
       "parent": "/admin"
     },
-    "/admin/lieux/": {
-      "filePath": "admin/lieux/index.tsx",
+    "/admin/sections/": {
+      "filePath": "admin/sections/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/sites/": {
+      "filePath": "admin/sites/index.tsx",
       "parent": "/admin"
     },
     "/admin/users/": {

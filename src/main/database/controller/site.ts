@@ -1,55 +1,55 @@
 import { FindManyOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
-import { Lieu } from '../entity/lieu.entity'
+import { Site } from '../entity/site.entity'
 import { loggedUser } from './login'
 
-// Repository d'accès aux lieux
-const lieuRepository = AppDataSource.getRepository(Lieu)
+// Repository d'accès aux sites
+const siteRepository = AppDataSource.getRepository(Site)
 
 /**
- * Liste d'lieux
+ * Liste des sites
  * @param filter FindManyOptions objet définissant les paramètres de la requête
- * @returns Promise<Lieu[]> tableau d'lieux
+ * @returns Promise<Site[]> tableau de sites
  */
-const findAll = (filter: FindManyOptions<Lieu>) => {
+const findAll = (filter: FindManyOptions<Site>) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
-  return lieuRepository.findAndCount(filter)
+  return siteRepository.findAndCount(filter)
 }
 
 /**
- * Recherche de lieux
+ * Recherche de sites
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @param search string chaine à rechercher
- * @returns Promise<Lieu[]> tableau d'lieux
+ * @returns Promise<Site[]> tableau de sites
  */
-const search = (filter: FindManyOptions<Lieu>, search: string) => {
+const search = (filter: FindManyOptions<Site>, search: string) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
-  filter.where = [{ site: ILike(`%${search}%`) }, { section: ILike(`%${search}%`) }]
-  return lieuRepository.findAndCount(filter)
+  filter.where = { nom: ILike(`%${search}%`) }
+  return siteRepository.findAndCount(filter)
 }
 
 /**
- * Recherche d'un lieu retourne null si lieu non trouvé
- * @param id identifiant de l'lieu recherché
- * @returns Promise<Lieu> lieu
+ * Recherche d'un site retourne null si site non trouvé
+ * @param id identifiant du site recherché
+ * @returns Promise<Site> site
  */
 const findById = (id: number) => {
-  return lieuRepository.findOneBy({ id })
+  return siteRepository.findOneBy({ id })
 }
 
 /**
- * Mise à jour d'un lieu
- * @param lieu identifiant du lieu à mettre à jour
- * @returns Promise<Lieu>
+ * Mise à jour d'un site
+ * @param site Site à mettre à jour
+ * @returns Promise<Site>
  */
-const update = async (lieu: Lieu) => {
+const update = async (accreditation: Site) => {
   return new Promise((resolve, reject) => {
     try {
       if (loggedUser?.role !== 'ADMIN')
         throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
           cause: 'operation denied'
         })
-      return resolve(lieuRepository.update({ id: lieu.id }, lieu))
+      return resolve(siteRepository.update({ id: accreditation.id }, accreditation))
     } catch (error) {
       return reject(error)
     }
@@ -57,18 +57,18 @@ const update = async (lieu: Lieu) => {
 }
 
 /**
- * Sauvegarde d'un nouvel lieu
- * @param lieu identifiant du lieu à enregistrer
- * @returns Promise<Lieu>
+ * Sauvegarde d'un nouveau site
+ * @param site Site à enregistrer
+ * @returns Promise<Site>
  */
-const save = async (lieu: Lieu) => {
+const save = async (site: Site) => {
   return new Promise((resolve, reject) => {
     try {
       if (loggedUser?.role !== 'ADMIN')
         throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
           cause: 'operation denied'
         })
-      return resolve(lieuRepository.save(lieu))
+      return resolve(siteRepository.save(site))
     } catch (error) {
       return reject(error)
     }

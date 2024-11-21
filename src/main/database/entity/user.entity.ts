@@ -1,12 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  COMMERCIAL = 'COMMERCIAL',
-  CHEF_PROJET = 'CHEF PROJET',
-  ADV = 'ADV',
-  READER = 'READER'
-}
+import { UserRole } from '@apptypes/'
 
 @Entity()
 export class User {
@@ -35,9 +28,9 @@ export class User {
   valide!: boolean
 
   @Column({
-    type: 'varchar',
+    type: 'enum',
     enum: UserRole,
-    default: 'READER'
+    default: UserRole.READER
   })
   role!: UserRole
 }

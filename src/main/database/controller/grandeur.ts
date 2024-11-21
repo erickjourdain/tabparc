@@ -11,8 +11,14 @@ const grandeurRepository = AppDataSource.getRepository(Grandeur)
  * @param filter FindManyOptions objet définissant les paramètres de la requête
  * @returns Promise<Grandeurs[]> tableau des grandeurs
  */
-const findAll = (filter: FindManyOptions<Grandeur>) => {
+const findAll = (filter: FindManyOptions<Grandeur>, relations?: string[]) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
+  if (relations) {
+    filter.relations = {}
+    for (let i = 0; i < relations.length; i++) {
+      filter.relations[relations[i]] = true
+    }
+  }
   return grandeurRepository.findAndCount(filter)
 }
 
@@ -22,9 +28,15 @@ const findAll = (filter: FindManyOptions<Grandeur>) => {
  * @param search string chaine à rechercher
  * @returns Promise<Grandeur[]> tableau de grandeurs
  */
-const search = (filter: FindManyOptions<Grandeur>, search: string) => {
+const search = (filter: FindManyOptions<Grandeur>, search: string, relations?: string[]) => {
   filter.take = filter.take || import.meta.env.MAIN_VITE_MAX_ITEMS
   filter.where = [{ nom: ILike(`%${search}%`) }, { nom: ILike(`%${search}%`) }]
+  if (relations) {
+    filter.relations = {}
+    for (let i = 0; i < relations.length; i++) {
+      filter.relations[relations[i]] = true
+    }
+  }
   return grandeurRepository.findAndCount(filter)
 }
 
@@ -33,8 +45,17 @@ const search = (filter: FindManyOptions<Grandeur>, search: string) => {
  * @param id identifiant de le grandeur recherché
  * @returns Promise<Grandeur>
  */
-const findById = (id: number) => {
-  return grandeurRepository.findOneBy({ id })
+const findById = (id: number, relations?: string[]) => {
+  const filter = {
+    where: { id },
+    relations: {}
+  }
+  if (relations) {
+    for (let i = 0; i < relations.length; i++) {
+      filter.relations[relations[i]] = true
+    }
+  }
+  return grandeurRepository.findOne(filter)
 }
 
 /**

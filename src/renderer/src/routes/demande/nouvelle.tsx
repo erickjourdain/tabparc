@@ -5,8 +5,11 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import InputForm from '@renderer/components/form/InputForm'
-import { Demande, Opportunite } from '@renderer/type'
 import DemandeForm from '@renderer/components/demande/DemandeForm'
+import { Demande, Opportunite } from '@apptypes/index'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
+import { useSetAtom } from 'jotai'
+import { alertAtom } from '@renderer/store'
 
 type IOppForm = {
   opportunite: string
@@ -20,12 +23,12 @@ const DemandeNouvelle = () => {
   const [opportunite, setOpportunite] = useState<Opportunite | null | undefined>(undefined)
   const [creationDemande, setCreationDemande] = useState<boolean>(false)
   const [demande, setDemande] = useState<Demande | null>(null)
+  const setAlerte = useSetAtom(alertAtom)
 
   // Hook de gestion du formulaire de recherche de l'opportunité
   const { control, handleSubmit, reset } = useForm<IOppForm>({
     defaultValues: {
-      //opportunite: 'OPP2117077'
-      opportunite: 'OPP2414055'
+      opportunite: 'OPP2415002'
     }
   })
 
@@ -41,7 +44,7 @@ const DemandeNouvelle = () => {
       data.opportunite.trim()
     )
     // recherche demande existante dans la base de données
-    const demande: Demande | null = await window.electron.ipcRenderer.invoke(
+    const { demande }: { demande: Demande | null } = await window.electron.ipcRenderer.invoke(
       'demande.findOpp',
       opportunite?.reference,
       false
@@ -61,10 +64,18 @@ const DemandeNouvelle = () => {
     reset()
   }
 
-  // Génératiopn d'une nouvelle demande
+  // Génération d'une nouvelle demande
   const onNewDemande = async () => {
     // création de la demande
-    const message = await window.electron.ipcRenderer.invoke('demande.new', opportunite?.reference)
+    ipcRendererService
+      .invoke('demande.new', opportunite?.reference)
+      .then((demande: Demande) => {
+        setAlerte({ message: 'Demande enregistrée', color: 'success' })
+        navigate({ to: `/demande/${demande.id}` })
+      })
+      .catch((error) => {
+        setAlerte({ message: error.error.message, color: 'error' })
+      })
   }
 
   return (
@@ -78,7 +89,7 @@ const DemandeNouvelle = () => {
       >
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2} mb={3} alignItems="flex-start">
-            <Grid size={4}>
+            <Grid size={{ xs: 12, sm: 4, md: 2 }}>
               <InputForm
                 control={control}
                 name="opportunite"
@@ -91,7 +102,7 @@ const DemandeNouvelle = () => {
                 }}
               />
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 8 }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -132,7 +143,9 @@ const DemandeNouvelle = () => {
         </Alert>
       )}
       {opportunite && !creationDemande && demande === null && (
-        <Alert color="warning">L&apos;opportunité est close</Alert>
+        <Alert color="warning" sx={{ mb: 2 }}>
+          L&apos;opportunité est close
+        </Alert>
       )}
       {opportunite && (
         <Paper>

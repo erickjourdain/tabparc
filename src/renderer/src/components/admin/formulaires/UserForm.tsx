@@ -4,7 +4,7 @@ import InputForm from '@renderer/components/form/InputForm'
 import SelectForm from '@renderer/components/form/SelectForm'
 import SwitchForm from '@renderer/components/form/SwitchForm'
 import { alertAtom } from '@renderer/store'
-import { User, UserRole } from '@renderer/type'
+import { User, UserRole } from '@apptypes/index'
 import { wordLetterUpperCase } from '@renderer/utils/format'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
@@ -49,7 +49,7 @@ const UserForm = ({ user }: UserFormProps) => {
         prenom: user?.prenom || '',
         login: user?.login || '',
         email: user?.email || '',
-        role: user?.role || UserRole.USER,
+        role: user?.role || UserRole.READER,
         titre: user?.titre || '',
         telephone: user?.telephone || '',
         valide: user?.valide || true

@@ -1,5 +1,6 @@
+import { Accreditation } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
-import { Accreditation, FindAndCount } from '@renderer/type'
+import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
@@ -55,7 +56,7 @@ const ListAccreditations = () => {
  * Création de la route
  */
 export const Route = createFileRoute('/admin/accreditations/')({
-  // Validation des paramètres de recherhce
+  // Validation des paramètres de recherche
   validateSearch: (search: Record<string, unknown>): FormSearchSchema =>
     formSearchSchema.parse(search),
   // Définition des paramètres de recherche

@@ -9,15 +9,7 @@ import {
 } from 'typeorm'
 import { User } from './user.entity'
 import { Instrument } from './instrument.entity'
-
-export enum Statut {
-  BROUILLON = 0,
-  ATTENTE_INFO_CLIENT = 1,
-  TRAITEMENT = 2,
-  ATTENTE_COMMANDE = 3,
-  PERDU = 4,
-  GAGNE = 5
-}
+import { Statut } from '@apptypes/'
 
 @Entity()
 export class Demande {
@@ -27,7 +19,7 @@ export class Demande {
   @Column('varchar', { nullable: false, unique: true })
   refOpportunite!: string
 
-  @Column('varchar')
+  @Column('varchar', { default: null })
   refProjet?: string
 
   @Column('int', { nullable: false })
@@ -36,14 +28,14 @@ export class Demande {
   @Column('varchar', { nullable: false })
   client!: string
 
-  @Column('date', { default: null })
+  @Column('date', { nullable: true, default: null })
   dateRetour?: Date
 
-  @Column('date', { default: null })
+  @Column('date', { nullable: true, default: null })
   dateSouhaitee?: Date
 
-  @Column({ type: 'int8', enum: Statut, default: Statut.BROUILLON, nullable: false })
-  statut!: Statut
+  @Column({ type: 'enum', enum: Statut, default: Statut.BROUILLON, nullable: false })
+  statut?: Statut
 
   @ManyToOne(() => User, { eager: true })
   createur!: User

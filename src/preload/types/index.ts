@@ -1,8 +1,27 @@
-import { UserRole, Statut, TypePrestation } from '@entity/*'
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  COMMERCIAL = 'COMMERCIAL',
+  CHEF_PROJET = 'CHEF PROJET',
+  ADV = 'ADV',
+  READER = 'READER'
+}
 
-export { Statut, TypePrestation, UserRole }
+export enum Statut {
+  BROUILLON = 0,
+  ATTENTE_INFO_CLIENT = 1,
+  TRAITEMENT = 2,
+  ATTENTE_COMMANDE = 3,
+  PERDU = 4,
+  GAGNE = 5
+}
 
-export interface user {
+export enum TypePrestation {
+  ETALONNAGE = 0,
+  VERIFICATION = 1,
+  ETALONNAGE_VERIFICATOION = 2
+}
+
+export interface User {
   id?: number
   nom: string
   prenom: string
@@ -38,13 +57,6 @@ export interface Site {
   valide: boolean
 }
 
-export interface Lieu {
-  id?: number
-  site: Site
-  section: Section
-  valide: boolean
-}
-
 export interface Accreditation {
   id?: number
   reference: string
@@ -61,8 +73,10 @@ export interface Grandeur {
   id?: number
   nom: string
   accreditation: Accreditation | null
+  valide: boolean
   contacts: Contact[]
-  lieu: Lieu
+  section: Section
+  site: Site
   instruments: FamilleInstrument[]
 }
 
@@ -121,6 +135,22 @@ export interface Prestation {
   libelleUBW: string
   quantite: number
   prixUnitaire: number
+}
+
+export interface Opportunite {
+  code: number
+  reference: string
+  titre: string
+  dateCreation: Date
+  client: string
+  codeClient: number
+  contactNom: string
+  contactPrenom: string
+  contactTelephone: string
+  contactVille: string
+  contactPays: string
+  contactEmail: string
+  statut: string
 }
 
 export interface DataInstrument {

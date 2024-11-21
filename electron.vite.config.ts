@@ -2,7 +2,7 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import { resolve } from 'path'
-import { fileURLToPath, URL } from 'url'
+//import { fileURLToPath, URL } from 'url'
 
 export default defineConfig({
   main: {
@@ -11,7 +11,8 @@ export default defineConfig({
       alias: {
         '@main': resolve('src/main'),
         '@controller': resolve('src/main/database/controller'),
-        '@entity': resolve('src/main/database/entity')
+        '@entity': resolve('src/main/database/entity'),
+        '@apptypes': resolve('src/preload/types')
       }
     }
   },
@@ -19,14 +20,17 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     resolve: {
       alias: {
-        '@main': resolve('src/main'),
-        '@entity': resolve('src/main/database/entity')
+        '@main': resolve('src/main')
       }
     }
   },
   renderer: {
     resolve: {
-      alias: [
+      alias: {
+        '@renderer': resolve('src/renderer/src'),
+        '@apptypes': resolve('src/preload/types')
+      }
+      /*[
         {
           find: '@renderer',
           replacement: fileURLToPath(new URL('./src/renderer/src', import.meta.url))
@@ -36,6 +40,7 @@ export default defineConfig({
           replacement: fileURLToPath(new URL('./src/preload', import.meta.url))
         }
       ]
+      */
     },
     plugins: [
       TanStackRouterVite({

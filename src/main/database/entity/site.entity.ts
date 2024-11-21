@@ -8,10 +8,10 @@ export class Site {
   @Column('varchar', { nullable: false, unique: true })
   nom!: string
 
-  @Column('text')
+  @Column('text', { nullable: true })
   adresse?: string
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   telephone?: string
 
   @Column('boolean', { nullable: false, default: true })

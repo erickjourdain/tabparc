@@ -46,7 +46,7 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
     const emailFile = fs.createWriteStream(`${dirOpp}/liste instrument.eml`)
     stream.pipe(emailFile)
 
-    // créatione de la demande
+    // création de la demande
     const demande = await demandeController.save({
       refOpportunite: opp.reference,
       client: opp.client,
@@ -55,10 +55,12 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
       gestionnaire: loggedUser,
       instruments: []
     })
-
     return demande
   } catch (error) {
-    return error
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
   }
 })
 
@@ -92,7 +94,16 @@ ipcMain.handle('demande.search', (_event, filter: FindManyOptions<Demande>, sear
 ipcMain.handle('demande.update', (_event, demande: Demande) => demandeController.update(demande))
 
 // Recherche d'une demande via son id
-ipcMain.handle('demande.find', (_event, id: number) => demandeController.findById(id))
+ipcMain.handle('demande.find', (_event, id: number) => {
+  try {
+    return demandeController.findById(id)
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
+})
 
 // Recherche d'une demande via son opportunité
 ipcMain.handle('demande.findOpp', (_event, refOpp: string, withOpp: boolean) =>

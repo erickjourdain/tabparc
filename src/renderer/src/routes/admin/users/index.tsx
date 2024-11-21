@@ -1,5 +1,6 @@
+import { User } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
-import { FindAndCount, User } from '@renderer/type'
+import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'

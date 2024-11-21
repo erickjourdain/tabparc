@@ -1,7 +1,7 @@
+import { FamilleInstrument } from '@apptypes/index'
 import { Alert, Box, Paper } from '@mui/material'
 import InstrumentForm from '@renderer/components/admin/formulaires/FamilleInstrumentForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
-import { FamilleInstrument } from '@renderer/type'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**

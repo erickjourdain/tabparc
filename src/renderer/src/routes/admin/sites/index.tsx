@@ -1,4 +1,4 @@
-import { Contact } from '@apptypes/index'
+import { Site } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
 import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
@@ -25,9 +25,9 @@ interface Data {
  * Composants de présentation des données
  * @returns JSX
  */
-const ListContacts = () => {
+const ListSites = () => {
   // Hook du loader de la route
-  const loader: FindAndCount<Contact> = useLoaderData({ from: '/admin/contacts/' })
+  const loader: FindAndCount<Site> = useLoaderData({ from: '/admin/sites/' })
 
   const [data, setData] = useState<Data[]>([])
 
@@ -35,23 +35,21 @@ const ListContacts = () => {
     const values = loader.data.map((val) => {
       return {
         id: val.id,
-        nom: `${val.prenom} ${val.nom}`,
+        nom: val.nom,
         valide: val.valide
       }
     })
     setData(values)
   }, [loader])
 
-  return (
-    <ListParamsData route="/admin/contacts" type="contacts" data={data} nbData={loader.nbData} />
-  )
+  return <ListParamsData route="/admin/sites" type="sites" data={data} nbData={loader.nbData} />
 }
 
 /**
  * Création de la route
  */
-export const Route = createFileRoute('/admin/contacts/')({
-  // Validation des paramètres de recherhce
+export const Route = createFileRoute('/admin/sites/')({
+  // Validation des paramètres de recherche
   validateSearch: (search: Record<string, unknown>): FormSearchSchema =>
     formSearchSchema.parse(search),
   // Définition des paramètres de recherche
@@ -61,8 +59,7 @@ export const Route = createFileRoute('/admin/contacts/')({
   }),
   // Chargement des données correspondant aux paramètres de recherche
   loader: async ({ deps }) => {
-    return await loadData({ page: deps.page, search: deps.search, route: 'contact' })
+    return await loadData({ page: deps.page, search: deps.search, route: 'site' })
   },
-  // Composant à afficher
-  component: () => <ListContacts />
+  component: () => <ListSites />
 })

@@ -8,7 +8,7 @@ export class Section {
   @Column('int', { nullable: false })
   reference!: number
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   label?: string
 
   @Column('boolean', { nullable: false, default: true })

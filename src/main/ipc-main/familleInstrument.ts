@@ -7,7 +7,7 @@ ipcMain.handle('famille-instrument.all', (_event, filter: FindManyOptions<Famill
   familleInstrument.findAll(filter)
 )
 ipcMain.handle(
-  'instrument.search',
+  'famille-instrument.search',
   (_event, filter: FindManyOptions<FamilleInstrument>, search: string) =>
     familleInstrument.search(filter, search)
 )

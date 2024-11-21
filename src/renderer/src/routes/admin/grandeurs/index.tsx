@@ -1,5 +1,6 @@
+import { Grandeur } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
-import { FindAndCount, Grandeur } from '@renderer/type'
+import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
@@ -35,8 +36,7 @@ const ListGrandeurs = () => {
       return {
         id: val.id,
         nom: val.nom,
-        accreditation: val.accreditation?.reference,
-        lieu: `${val.lieu?.section} ${val.lieu?.site}`
+        valide: val.valide
       }
     })
     setData(values)

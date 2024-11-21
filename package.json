@@ -19,12 +19,7 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
-    "rebuild": "electron-rebuild -f -w better-sqlite3",
-    "typeorm": "ts-node --project ./tsconfig.json ./node_modules/typeorm/cli",
-    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
-    "typeorm:generate-migration": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./src/main/database/migrations/${npm_config_name}",
-    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/main/database/migrations/${npm_config_name}",
-    "typeorm:revert-migration": "npm run typeorm -- -d ./config/typeorm.config.ts migration:revert"
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -38,6 +33,7 @@
     "exceljs": "^4.4.0",
     "jotai": "^2.10.0",
     "mssql": "^10.0.4",
+    "mysql": "^2.18.1",
     "nodemailer": "^6.9.16",
     "react-hook-form": "^7.53.0",
     "reflect-metadata": "^0.2.2",

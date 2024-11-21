@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, Typography } from '@mui/material'
-import { Instrumnent } from '@preload/types'
+import { Instrument } from '@apptypes/index'
 
 interface InstrumentCarteProps {
-  instrument: Instrumnent
+  instrument: Instrument
 }
 
 const InstrumentCarte = ({ instrument }: InstrumentCarteProps) => {
@@ -16,15 +16,6 @@ const InstrumentCarte = ({ instrument }: InstrumentCarteProps) => {
       <CardContent>
         <Typography variant="body2">
           {instrument.refClient} {instrument.numSerie} <br />
-          {instrument.grandeur} <br />
-          {instrument.pointsMesures} <br />
-          {instrument.periodicite} {instrument.idemCE} <br />
-          {instrument.prestation} <br />
-          {instrument.prestation !== 'Etalonnage' && (
-            <>
-              emt: {instrument.emt} <br />
-            </>
-          )}
           {instrument.contact} {instrument.email} {instrument.telephone}
         </Typography>
       </CardContent>

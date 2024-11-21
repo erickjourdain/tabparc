@@ -4,6 +4,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
 import {
+  Alert,
   Box,
   Fab,
   IconButton,
@@ -25,12 +26,14 @@ import SousTitre from './SousTitre'
 interface ListDataProps {
   type: string
   route:
-  | '/admin/accreditations'
-  | '/admin/users'
-  | '/admin/contacts'
-  | '/admin/famille-instruments'
-  | '/admin/lieux'
-  | '/admin/grandeurs'
+    | '/admin/accreditations'
+    | '/admin/users'
+    | '/admin/contacts'
+    | '/admin/famille-instruments'
+    | '/admin/lieux'
+    | '/admin/grandeurs'
+    | '/admin/sites'
+    | '/admin/sections'
   data: {
     id: number | undefined
     [key: string]: string | number | boolean | undefined
@@ -75,7 +78,7 @@ const ListParamsData = ({ route, type, data, nbData }: ListDataProps) => {
         >
           <AddIcon />
         </Fab>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
           <TextField
             id="input-search"
             label="Recherche"
@@ -98,7 +101,8 @@ const ListParamsData = ({ route, type, data, nbData }: ListDataProps) => {
             variant="standard"
           />
         </Box>
-        {data.length && (
+        {data.length === 0 && <Alert severity="warning">Aucun élément trouvé</Alert>}
+        {data.length > 0 && (
           <>
             <Table aria-label="table accreditations">
               <TableHead>

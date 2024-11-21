@@ -20,6 +20,9 @@
       ],
       "@entity/*": [
         "src/main/database/entity"
+      ],
+      "@apptypes/*": [
+        "src/preload/types"
       ]
     },
     "declaration": true,

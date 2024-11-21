@@ -1,16 +1,29 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique
+} from 'typeorm'
 import { Accreditation } from './accreditation.entity'
 import { Contact } from './contact.entity'
 import { FamilleInstrument } from './familleInstrument.entity'
-import { Lieu } from './lieu.entity'
+import { Section } from './section.entity'
+import { Site } from './site.entity'
 
 @Entity()
+@Unique('nom_lieu', ['nom', 'section', 'site'])
 export class Grandeur {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('varchar', { nullable: false, unique: true })
+  @Column('varchar', { nullable: false })
   nom!: string
+
+  @Column('boolean', { nullable: false, default: true })
+  valide!: true
 
   @ManyToOne(() => Accreditation)
   accreditation!: Accreditation
@@ -19,8 +32,11 @@ export class Grandeur {
   @JoinTable()
   contacts!: Contact[]
 
-  @ManyToOne(() => Lieu, { nullable: false })
-  lieu!: Lieu
+  @ManyToOne(() => Section, { nullable: false })
+  section!: Section
+
+  @ManyToOne(() => Site, { nullable: false })
+  site!: Site
 
   @ManyToMany(() => FamilleInstrument)
   @JoinTable()

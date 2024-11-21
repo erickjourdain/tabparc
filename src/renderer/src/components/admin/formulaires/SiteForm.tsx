@@ -2,22 +2,25 @@ import { Box, Button, FormControlLabel, Stack, Switch } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import InputForm from '@renderer/components/form/InputForm'
 import { alertAtom } from '@renderer/store'
-import { Accreditation } from '@apptypes/index'
+import { Site } from '@apptypes/index'
 import { useNavigate } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { wordLetterUpperCase } from '@renderer/utils/format'
 
-type IAccreditationForm = {
-  reference: string
+type ISiteForm = {
+  nom: string
+  adresse?: string
+  telephone?: string
   valide: boolean
 }
 
-type AccreditationFormProps = {
-  accreditation: Accreditation | null
+type SiteFormProps = {
+  site: Site | null
 }
 
-const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
+const SiteForm = ({ site }: SiteFormProps) => {
   // Hook de navigation
   const navigate = useNavigate()
   // Etat local de gestion de la sauvegarde
@@ -25,25 +28,27 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
   const setAlerte = useSetAtom(alertAtom)
 
   // Hook de définition du formulaire de gestion des utilisateurs
-  const { control, handleSubmit, reset } = useForm<IAccreditationForm>({
+  const { control, handleSubmit, reset } = useForm<ISiteForm>({
     defaultValues: useMemo(() => {
       return {
-        reference: accreditation?.reference || '',
-        valide: accreditation?.valide || true
+        nom: site?.nom || '',
+        adresse: site?.adresse || '',
+        telephone: site?.telephone || '',
+        valide: site?.valide || true
       }
-    }, [accreditation])
+    }, [site])
   })
 
-  // Suivi de la mise à jour de l'accréditation
+  // Suivi de la mise à jour du site
   useEffect(() => {
-    if (accreditation) reset(accreditation)
-  }, [accreditation])
+    if (site) reset(site)
+  }, [site])
 
   // Enregistrement réalisé
   const afterSave = useCallback(() => {
-    setAlerte({ message: 'Accréditation enregistrée', color: 'success' })
+    setAlerte({ message: 'Site enregistré', color: 'success' })
     setIsPending(false)
-    navigate({ to: '/admin/accreditations' })
+    navigate({ to: '/admin/sites' })
   }, [])
 
   // Enregistrement erreur
@@ -54,25 +59,21 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
   }, [])
 
   // Soumission du formulaire
-  const onSubmit = async (data: IAccreditationForm) => {
+  const onSubmit = async (data: ISiteForm) => {
     setIsPending(true)
     const value = {
       ...data,
-      reference: data.reference.trim().toUpperCase()
+      nom: wordLetterUpperCase(data.nom.trim())
     }
-    if (accreditation?.id)
+    if (site?.id)
       await window.electron.ipcRenderer
-        .invoke('accreditation.update', {
+        .invoke('site.update', {
           ...value,
-          id: accreditation.id
+          id: site.id
         })
         .then(afterSave)
         .catch(errorSave)
-    else
-      window.electron.ipcRenderer
-        .invoke('accreditation.save', value)
-        .then(afterSave)
-        .catch(errorSave)
+    else window.electron.ipcRenderer.invoke('site.save', value).then(afterSave).catch(errorSave)
   }
 
   return (
@@ -87,16 +88,44 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
           <Grid size={6}>
             <InputForm
               control={control}
-              name="reference"
+              name="nom"
               rules={{
-                required: 'La référence est obligatoire',
+                required: 'Le nom est obligatoire',
                 minLength: {
                   value: 3,
-                  message: 'La référence doit contenir au moins 3 caractères'
+                  message: 'Le nom doit contenir au moins 3 caractères'
                 },
                 maxLength: {
                   value: 55,
-                  message: 'La référence ne peut contenir plus de 55 caractères.'
+                  message: 'Le nom ne peut contenir plus de 55 caractères.'
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={6}>
+            <InputForm
+              control={control}
+              name="telephone"
+              rules={{
+                pattern: {
+                  value: /^(?:\+33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
+                  message: 'Le numéro de téléphone est invalide'
+                }
+              }}
+            />
+          </Grid>
+          <Grid size={12}>
+            <InputForm
+              control={control}
+              name="adresse"
+              rules={{
+                minLength: {
+                  value: 25,
+                  message: "L'adresse doit contenir au moins 25 caractères"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "L'adresse ne peut contenir plus de 255 caractères."
                 }
               }}
             />
@@ -118,7 +147,7 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
       <Box mt={3} m={1} display="flex" alignItems="flex-start">
         <Stack spacing={2} direction="row">
           <Button variant="contained" color="primary" type="submit" disabled={isPending}>
-            {accreditation?.id ? 'Mettre à jour' : 'Enregistrer'}
+            {site?.id ? 'Mettre à jour' : 'Enregistrer'}
           </Button>
           <Button variant="contained" color="warning" onClick={() => reset()} disabled={isPending}>
             Reset
@@ -129,4 +158,4 @@ const AccreditationForm = ({ accreditation }: AccreditationFormProps) => {
   )
 }
 
-export default AccreditationForm
+export default SiteForm

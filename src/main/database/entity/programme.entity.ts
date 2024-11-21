@@ -9,40 +9,35 @@ import {
 } from 'typeorm'
 import { Instrument } from './instrument.entity'
 import { Prestation } from './prestation.entity'
-
-export enum TypePrestation {
-  ETALONNAGE = 0,
-  VERIFICATION = 1,
-  ETALONNAGE_VERIFICATOION = 2
-}
+import { TypePrestation } from '@apptypes/'
 
 @Entity()
 export class Programme {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('text')
-  precedenCE!: string
+  @Column('text', { nullable: true })
+  precedentCE?: string
 
-  @Column('text')
-  ptsMesures!: string
+  @Column('text', { nullable: true })
+  ptsMesures?: string
 
   @Column({
-    type: 'int8',
+    type: 'enum',
     enum: TypePrestation,
     default: TypePrestation.ETALONNAGE,
     nullable: false
   })
   typePrestation!: number
 
-  @Column('text')
+  @Column('text', { nullable: true })
   emt!: string
 
-  @Column('text')
-  periodicite!: string
+  @Column('text', { nullable: true })
+  periodicite?: string
 
-  @Column('date')
-  dateSouhaite!: Date
+  @Column('date', { nullable: true })
+  dateSouhaite?: Date
 
   @OneToOne(() => Prestation)
   prestion!: Prestation

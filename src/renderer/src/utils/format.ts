@@ -1,4 +1,4 @@
-import { Statut } from '@renderer/type'
+import { Statut } from '@apptypes/index'
 
 /**
  * Première lettre de chaque mot en majuscule

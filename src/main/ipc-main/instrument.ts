@@ -6,6 +6,7 @@ import { DataInstrument, ErrorType } from '../type'
 import { getDatevalue, getStringValue } from '../utils/excel'
 import demandeController from '../database/controller/demande'
 import { Demande } from '@entity/*'
+import { AppError } from '../utils/appError'
 
 ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
   try {
@@ -17,7 +18,7 @@ ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
       return new AppError(ErrorType.DB_NOT_ALLOWED, "L'opportunité est close")
 
     // recherche de la demande correspondante
-    const demande = (await demandeController.findByOpportunite(opp.reference, false)) as Demande
+    const { demande } = await demandeController.findByOpportunite(opp.reference, false)
     if (demande === null)
       return new AppError(ErrorType.DB_NOT_FOUND, "Aucune demande associée à l'opportunité")
 

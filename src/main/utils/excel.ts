@@ -1,5 +1,6 @@
 import Exceljs from 'exceljs'
 import { ErrorType } from '../type'
+import { AppError } from './appError'
 
 /**
  * Détermination de la valeur d'une cellule au format date

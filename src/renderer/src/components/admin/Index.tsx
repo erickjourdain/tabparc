@@ -18,10 +18,11 @@ interface Type {
 const DONNEES = [
   { label: 'utilisateurs', route: '/admin/users' },
   { label: 'contacts', route: '/admin/contacts' },
-  { label: 'lieux', route: '/admin/lieux' },
   { label: 'accreditations', route: '/admin/accreditations' },
   { label: 'famille instruments', route: '/admin/famille-instruments' },
-  { label: 'grandeurs', route: '/admin/grandeurs' }
+  { label: 'grandeurs', route: '/admin/grandeurs' },
+  { label: 'sites', route: '/admin/sites' },
+  { label: 'sections', route: '/admin/sections' }
 ]
 
 const Admin = () => {
