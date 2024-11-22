@@ -44,15 +44,16 @@ const findById = (id: number) => {
  */
 const update = async (accreditation: Accreditation) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(accreditationRepository.update({ id: accreditation.id }, accreditation))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    accreditationRepository
+      .update({ id: accreditation.id }, accreditation)
+      .then((newAccreditation) => {
+        return resolve(newAccreditation)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -63,15 +64,16 @@ const update = async (accreditation: Accreditation) => {
  */
 const save = async (accreditation: Accreditation) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(accreditationRepository.save(accreditation))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    accreditationRepository
+      .save(accreditation)
+      .then((newAccreditation) => {
+        return resolve(newAccreditation)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

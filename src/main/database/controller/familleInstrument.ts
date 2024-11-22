@@ -44,17 +44,16 @@ const findById = (id: number) => {
  */
 const update = async (familleInstrument: FamilleInstrument) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(
-        familleInstrumentRepository.update({ id: familleInstrument.id }, familleInstrument)
-      )
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    familleInstrumentRepository
+      .update({ id: familleInstrument.id }, familleInstrument)
+      .then((newFamilleInstrument) => {
+        return resolve(newFamilleInstrument)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -65,15 +64,16 @@ const update = async (familleInstrument: FamilleInstrument) => {
  */
 const save = async (familleInstrument: FamilleInstrument) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(familleInstrumentRepository.save(familleInstrument))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    familleInstrumentRepository
+      .save(familleInstrument)
+      .then((newFamilleInstrument) => {
+        return resolve(newFamilleInstrument)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

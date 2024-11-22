@@ -57,15 +57,16 @@ const findByLogin = (login: string) => {
  */
 const update = async (user: User) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(userRepository.update({ id: user.id }, user))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    userRepository
+      .update({ id: user.id }, user)
+      .then((newAccreditation) => {
+        return resolve(newAccreditation)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -76,15 +77,16 @@ const update = async (user: User) => {
  */
 const save = async (user: User) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(userRepository.save(user))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    userRepository
+      .save(user)
+      .then((newAccreditation) => {
+        return resolve(newAccreditation)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

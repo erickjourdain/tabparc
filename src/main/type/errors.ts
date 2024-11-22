@@ -1,8 +1,0 @@
-export enum ErrorType {
-  GENERIC = 100,
-  PARSE_EXCEL_CELL = 110,
-  FILE_IO = 120,
-  DB_SAVE = 130,
-  DB_NOT_FOUND = 131,
-  DB_NOT_ALLOWED = 132
-}

@@ -76,22 +76,16 @@ const findById = async (id: number) => {
  */
 const save = async (demande: Demande) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN' && loggedUser?.role !== 'COMMERCIAL')
-        throw new Error('vous ne disposez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      demandeRepository
-        .save(demande)
-        .then((newDemande) => {
-          resolve(newDemande)
-        })
-        .catch((err) => {
-          return reject(err)
-        })
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN' && loggedUser?.role !== 'COMMERCIAL')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    demandeRepository
+      .save(demande)
+      .then((newDemande) => {
+        return resolve(newDemande)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -102,15 +96,16 @@ const save = async (demande: Demande) => {
  */
 const update = async (demande: Demande) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN' && loggedUser?.role !== 'COMMERCIAL')
-        throw new Error('vous ne disposez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(demandeRepository.save(demande))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN' && loggedUser?.role !== 'COMMERCIAL')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    demandeRepository
+      .save(demande)
+      .then((newDemande) => {
+        return resolve(newDemande)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

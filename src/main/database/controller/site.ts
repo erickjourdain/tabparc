@@ -42,17 +42,18 @@ const findById = (id: number) => {
  * @param site Site à mettre à jour
  * @returns Promise<Site>
  */
-const update = async (accreditation: Site) => {
+const update = async (site: Site) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(siteRepository.update({ id: accreditation.id }, accreditation))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    siteRepository
+      .update({ id: site.id }, site)
+      .then((newite) => {
+        return resolve(newite)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -63,15 +64,16 @@ const update = async (accreditation: Site) => {
  */
 const save = async (site: Site) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(siteRepository.save(site))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    siteRepository
+      .save(site)
+      .then((newite) => {
+        return resolve(newite)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

@@ -1,6 +1,4 @@
 import Exceljs from 'exceljs'
-import { ErrorType } from '../type'
-import { AppError } from './appError'
 
 /**
  * Détermination de la valeur d'une cellule au format date
@@ -10,18 +8,14 @@ import { AppError } from './appError'
 const getDatevalue = (cell: Exceljs.Cell): Promise<Date> => {
   return new Promise((resolve, reject) => {
     if (cell.style.numFmt !== 'mm-dd-yy')
-      return reject(
-        new AppError(ErrorType.PARSE_EXCEL_CELL, `cellule ${cell.address} format inconnu`)
-      )
+      return reject(new Error(`cellule ${cell.address} format inconnu`))
     switch (cell.type) {
       case 4:
         return resolve(cell.value as Date)
       case 6:
         return resolve(cell.result as Date)
       default:
-        return reject(
-          new AppError(ErrorType.PARSE_EXCEL_CELL, `cellule ${cell.address} format inconnu`)
-        )
+        return reject(new Error(`cellule ${cell.address} format inconnu`))
     }
   })
 }
@@ -43,9 +37,7 @@ const getStringValue = (cell: Exceljs.Cell): Promise<string | null> => {
       case 6:
         return resolve(cell.result as string)
       default:
-        return reject(
-          new AppError(ErrorType.PARSE_EXCEL_CELL, `cellule ${cell.address} format inconnu`)
-        )
+        return reject(new Error(`cellule ${cell.address} format inconnu`))
     }
   })
 }

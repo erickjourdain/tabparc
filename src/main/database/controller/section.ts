@@ -44,15 +44,16 @@ const findById = (id: number) => {
  */
 const update = async (section: Section) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(sectionRepository.update({ id: section.id }, section))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    sectionRepository
+      .update({ id: section.id }, section)
+      .then((newSection) => {
+        return resolve(newSection)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -63,15 +64,16 @@ const update = async (section: Section) => {
  */
 const save = async (section: Section) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(sectionRepository.save(section))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    sectionRepository
+      .save(section)
+      .then((newSection) => {
+        return resolve(newSection)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

@@ -23,6 +23,7 @@ import { z } from 'zod'
 import { useCallback, useRef, useState } from 'react'
 import { getStatut } from '@renderer/utils/format'
 import { Demande, Statut } from '@apptypes/index'
+import ErrorComponent from '@renderer/components/ErrorComponent'
 
 // Schema des paramètres de la recherche
 const formSearchSchema = z.object({
@@ -158,6 +159,10 @@ export const Route = createFileRoute('/demande/')({
   }),
   loader: async ({ deps }) => {
     return await loadData({ page: deps.page, search: deps.search, route: 'demande' })
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="demande" />
   },
   component: () => <DemandeIndex />
 })

@@ -2,6 +2,8 @@ import { Site } from '@apptypes/index'
 import { Alert, Box, Paper } from '@mui/material'
 import SiteForm from '@renderer/components/admin/formulaires/SiteForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
+import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
@@ -31,8 +33,12 @@ const ShowSite = () => {
 export const Route = createFileRoute('/admin/sites/$id')({
   loader: async ({ params }): Promise<Site | null> => {
     if (Number.isNaN(parseInt(params.id))) return null
-    const user = await window.electron.ipcRenderer.invoke('site.find', params.id)
+    const user = await ipcRendererService.invoke('site.find', params.id)
     return user
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/sites/$id" />
   },
   component: () => <ShowSite />
 })

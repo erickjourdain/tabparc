@@ -1,5 +1,6 @@
 import { Accreditation } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
+import ErrorComponent from '@renderer/components/ErrorComponent'
 import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
@@ -67,6 +68,10 @@ export const Route = createFileRoute('/admin/accreditations/')({
   // Chargement des données correspondant aux paramètres de recherche
   loader: async ({ deps }) => {
     return await loadData({ page: deps.page, search: deps.search, route: 'accreditation' })
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/accreditations" />
   },
   // Composant à afficher
   component: () => <ListAccreditations />

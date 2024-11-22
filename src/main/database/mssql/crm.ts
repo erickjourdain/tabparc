@@ -89,8 +89,7 @@ const recherchePresta = async (
       return [resData.recordset, resCount.recordset[0].NBVAL]
     } else return null
   } catch (error) {
-    console.log(error)
-    return null
+    return new Promise((_, reject) => reject(error))
   }
 }
 
@@ -146,8 +145,7 @@ const rechercheClient = async (
       return [resData.recordset, resCount.recordset[0].NBVAL]
     } else return null
   } catch (error) {
-    console.log(error)
-    return null
+    return new Promise((_, reject) => reject(error))
   }
 }
 

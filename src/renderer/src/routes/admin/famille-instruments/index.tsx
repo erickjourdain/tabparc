@@ -1,5 +1,6 @@
 import { FamilleInstrument } from '@apptypes/index'
 import ListParamsData from '@renderer/components/admin/ListParamsData'
+import ErrorComponent from '@renderer/components/ErrorComponent'
 import { FindAndCount } from '@renderer/type'
 import loadData from '@renderer/utils/loader/admin'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
@@ -73,6 +74,10 @@ export const Route = createFileRoute('/admin/famille-instruments/')({
       search: deps.search,
       route: 'famille-instrument'
     })
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/famille-instruments" />
   },
   // Composant à afficher
   component: () => <ListFamilleInstruments />

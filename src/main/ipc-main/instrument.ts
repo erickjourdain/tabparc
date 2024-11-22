@@ -2,25 +2,21 @@ import { dialog, ipcMain } from 'electron'
 import Exceljs from 'exceljs'
 import crm from '../database/mssql/crm'
 import stockage from '../utils/stockage'
-import { DataInstrument, ErrorType } from '../type'
+import { DataInstrument } from '../type'
 import { getDatevalue, getStringValue } from '../utils/excel'
 import demandeController from '../database/controller/demande'
 import { Demande } from '@entity/*'
-import { AppError } from '../utils/appError'
 
 ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
   try {
     // vérification état opportunité
     const opp = await crm.rechercheOpportunite(refOpp)
-    if (opp === null)
-      return new AppError(ErrorType.DB_NOT_FOUND, "L'Opportunité recherchée n'existe pas")
-    if (opp.statut.indexOf('Close)') >= 0)
-      return new AppError(ErrorType.DB_NOT_ALLOWED, "L'opportunité est close")
+    if (opp === null) throw new Error("L'Opportunité recherchée n'existe pas")
+    if (opp.statut.indexOf('Close)') >= 0) throw new Error("L'opportunité est close")
 
     // recherche de la demande correspondante
     const { demande } = await demandeController.findByOpportunite(opp.reference, false)
-    if (demande === null)
-      return new AppError(ErrorType.DB_NOT_FOUND, "Aucune demande associée à l'opportunité")
+    if (demande === null) throw new Error("Aucune demande associée à l'opportunité")
 
     // chemin du stockage des données de l'opportunité
     const dirOpp = stockage.oppPath(opp)
@@ -34,7 +30,7 @@ ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
     })
 
     // Ouverture du fichier
-    if (file.canceled) throw new AppError(ErrorType.FILE_IO, 'Aucun fichier sélectionné')
+    if (file.canceled) throw new Error('Aucun fichier sélectionné')
     const workbook = new Exceljs.Workbook()
     await workbook.xlsx.readFile(file.filePaths[0])
     const worksheet = workbook.worksheets[0]
@@ -75,7 +71,10 @@ ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
     // retour vers la fenêtre d'appel
     return data
   } catch (error) {
-    return error
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
   }
 })
 
@@ -91,8 +90,7 @@ ipcMain.handle('instrument.save', async (_event, demande: Demande) => {
     await queryRunner.manager.save(demande)
   } catch (err) {
     await queryRunner.rollbackTransaction()
-    return new AppError(
-      ErrorType.DB_SAVE,
+    throw new Error(VE,
       "impossible d'enregistrer la liste des instruments dans la base de données"
     )
   } finally {

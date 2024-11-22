@@ -44,15 +44,16 @@ const findById = (id: number) => {
  */
 const update = async (contact: Contact) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(contactRepository.update({ id: contact.id }, contact))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    contactRepository
+      .update({ id: contact.id }, contact)
+      .then((newContact) => {
+        return resolve(newContact)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -63,15 +64,16 @@ const update = async (contact: Contact) => {
  */
 const save = async (contact: Contact) => {
   return new Promise((resolve, reject) => {
-    try {
-      if (loggedUser?.role !== 'ADMIN')
-        throw new Error('vous ne disposeez pas des droits pour réaliser cette opération', {
-          cause: 'operation denied'
-        })
-      return resolve(contactRepository.save(contact))
-    } catch (error) {
-      return reject(error)
-    }
+    if (loggedUser?.role !== 'ADMIN')
+      return reject(new Error('vous ne disposez pas des droits pour réaliser cette opération'))
+    contactRepository
+      .save(contact)
+      .then((newContact) => {
+        return resolve(newContact)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
   })
 }
 

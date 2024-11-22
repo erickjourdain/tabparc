@@ -1,9 +1,9 @@
 import { ipcMain } from 'electron'
 import crm from '../database/mssql/crm'
 
-ipcMain.handle('opportunite.search', (_event, opp: string) => {
+ipcMain.handle('opportunite.search', (_event, args: [string]) => {
   try {
-    return crm.rechercheOpportunite(opp)
+    return crm.rechercheOpportunite(args[0])
   } catch (error) {
     return {
       error,

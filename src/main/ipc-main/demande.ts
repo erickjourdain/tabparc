@@ -12,13 +12,13 @@ import { FindManyOptions } from 'typeorm'
 import { Demande } from '@entity/*'
 
 // création d'une nouvelle demande
-ipcMain.handle('demande.new', async (_event, refOpp: string) => {
+ipcMain.handle('demande.new', async (_event, args: [string]) => {
   try {
     // vérification que l'utilisateur est loggé
     if (loggedUser === null) return new Error('Vous devez être loggé pour réaliser cette opération')
 
     // vérification état opportunité
-    const opp = await crm.rechercheOpportunite(refOpp)
+    const opp = await crm.rechercheOpportunite(args[0])
     if (opp === null) return new Error("L'Opportunité recherchée n'existe pas")
     if (opp.statut.indexOf('Close)') >= 0) return new Error("L'opportunité est close")
 
@@ -67,36 +67,66 @@ ipcMain.handle('demande.new', async (_event, refOpp: string) => {
 /**
  * Ouverture du message d'envoi de la demande au client
  */
-ipcMain.handle('demande.openEmail', async (_event, refOpp: string) => {
-  // vérification état opportunité
-  const opp = await crm.rechercheOpportunite(refOpp)
-  if (opp === null) return new Error("L'Opportunité recherché n'existe pas")
-  // chemin du stockage des données de l'opportunité
-  const dirOpp = stockage.oppPath(opp)
+ipcMain.handle('demande.openEmail', async (_event, args: [string]) => {
+  try {
+    // vérification état opportunité
+    const opp = await crm.rechercheOpportunite(args[0])
+    if (opp === null) throw new Error("L'Opportunité recherché n'existe pas")
+    // chemin du stockage des données de l'opportunité
+    const dirOpp = stockage.oppPath(opp)
 
-  // ouverture du message pour envoi
-  shell.openPath(`${dirOpp}/liste instrument.eml`)
+    // ouverture du message pour envoi
+    shell.openPath(`${dirOpp}/liste instrument.eml`)
 
-  return true
+    return true
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
 })
 
 // Recherche de toutes les demandes
-ipcMain.handle('demande.all', (_event, filter: FindManyOptions<Demande>) =>
-  demandeController.findAll(filter)
-)
+ipcMain.handle('demande.all', (_event, args: [FindManyOptions<Demande>]) => {
+  try {
+    return demandeController.findAll(args[0])
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
+})
 
 //Recherhce de demandes en fonction de la référence de l'opportunité ou du client
-ipcMain.handle('demande.search', (_event, filter: FindManyOptions<Demande>, search: string) =>
-  demandeController.search(filter, search)
-)
+ipcMain.handle('demande.search', (_event, args: [FindManyOptions<Demande>, string]) => {
+  try {
+    return demandeController.search(args[0], args[1])
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
+})
 
 // Mise à jour d'une demande
-ipcMain.handle('demande.update', (_event, demande: Demande) => demandeController.update(demande))
+ipcMain.handle('demande.update', (_event, args: [Demande]) => {
+  try {
+    return demandeController.update(args[0])
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
+})
 
 // Recherche d'une demande via son id
-ipcMain.handle('demande.find', (_event, id: number) => {
+ipcMain.handle('demande.find', (_event, args: [number]) => {
   try {
-    return demandeController.findById(id)
+    return demandeController.findById(args[0])
   } catch (error) {
     return {
       error,
@@ -106,6 +136,13 @@ ipcMain.handle('demande.find', (_event, id: number) => {
 })
 
 // Recherche d'une demande via son opportunité
-ipcMain.handle('demande.findOpp', (_event, refOpp: string, withOpp: boolean) =>
-  demandeController.findByOpportunite(refOpp, withOpp)
-)
+ipcMain.handle('demande.findOpp', (_event, args: [string, boolean]) => {
+  try {
+    return demandeController.findByOpportunite(args[0], args[1])
+  } catch (error) {
+    return {
+      error,
+      handle_as_rejected_promise: true
+    }
+  }
+})

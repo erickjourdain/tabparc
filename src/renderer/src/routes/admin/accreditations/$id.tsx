@@ -3,6 +3,8 @@ import { Accreditation } from '@apptypes/index'
 import AccreditationForm from '@renderer/components/admin/formulaires/AccreditationForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
 import { createFileRoute } from '@tanstack/react-router'
+import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 
 /**
  * Composant de visualisation
@@ -31,8 +33,12 @@ const ShowAccreditation = () => {
 export const Route = createFileRoute('/admin/accreditations/$id')({
   loader: async ({ params }): Promise<Accreditation | null> => {
     if (Number.isNaN(parseInt(params.id))) return null
-    const user = await window.electron.ipcRenderer.invoke('accreditation.find', params.id)
+    const user = await ipcRendererService.invoke('accreditation.find', params.id)
     return user
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/accreditations/$id" />
   },
   component: () => <ShowAccreditation />
 })

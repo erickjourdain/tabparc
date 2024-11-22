@@ -2,6 +2,8 @@ import { FamilleInstrument } from '@apptypes/index'
 import { Alert, Box, Paper } from '@mui/material'
 import InstrumentForm from '@renderer/components/admin/formulaires/FamilleInstrumentForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
+import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
@@ -32,8 +34,12 @@ const ShowInstrument = () => {
 export const Route = createFileRoute('/admin/famille-instruments/$id')({
   loader: async ({ params }): Promise<FamilleInstrument | null> => {
     if (Number.isNaN(parseInt(params.id))) return null
-    const user = await window.electron.ipcRenderer.invoke('famille-instrument.find', params.id)
+    const user = await ipcRendererService.invoke('famille-instrument.find', params.id)
     return user
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/famille-instruments/$id" />
   },
   component: () => <ShowInstrument />
 })

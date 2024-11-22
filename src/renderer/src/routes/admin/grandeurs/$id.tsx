@@ -2,6 +2,8 @@ import { Grandeur } from '@apptypes/index'
 import { Alert, Box, Paper } from '@mui/material'
 import GrandeurForm from '@renderer/components/admin/formulaires/GrandeurForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
+import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 import { createFileRoute } from '@tanstack/react-router'
 
 /**
@@ -31,7 +33,7 @@ const ShowGrandeur = () => {
 export const Route = createFileRoute('/admin/grandeurs/$id')({
   loader: async ({ params }): Promise<Grandeur | null> => {
     if (Number.isNaN(parseInt(params.id))) return null
-    const user = await window.electron.ipcRenderer.invoke('grandeur.find', params.id, [
+    const user = await ipcRendererService.invoke('grandeur.find', params.id, [
       'accreditation',
       'contacts',
       'section',
@@ -39,6 +41,10 @@ export const Route = createFileRoute('/admin/grandeurs/$id')({
       'instruments'
     ])
     return user
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/grandeurs/$id" />
   },
   component: () => <ShowGrandeur />
 })

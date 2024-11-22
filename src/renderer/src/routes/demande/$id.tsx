@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { DataInstrument, Demande, Opportunite } from '@apptypes/index'
 import InstrumentCarte from '@renderer/components/instrument/Carte'
 import ipcRendererService from '@renderer/utils/ipcRendererService'
+import ErrorComponent from '@renderer/components/ErrorComponent'
 
 interface DisplayInfoProps {
   info: string
@@ -162,6 +163,7 @@ export const Route = createFileRoute('/demande/$id')({
       if (Number.isNaN(parseInt(params.id))) redirect({ to: '/demande' })
       const demande = await ipcRendererService.invoke('demande.find', params.id)
       if (demande === null) redirect({ to: '/demande' })
+      console.log(demande.refOpportunite)
       const opportunite = await ipcRendererService.invoke(
         'opportunite.search',
         demande.refOpportunite
@@ -170,6 +172,10 @@ export const Route = createFileRoute('/demande/$id')({
     } catch (error) {
       return new Promise((_, reject) => reject(error))
     }
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="demande/$id" />
   },
   component: () => <DemandeId />
 })

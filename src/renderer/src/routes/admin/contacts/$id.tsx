@@ -3,6 +3,8 @@ import { Contact } from '@apptypes/index'
 import ContactForm from '@renderer/components/admin/formulaires/ContactForm'
 import SousTitre from '@renderer/components/admin/SousTitre'
 import { createFileRoute } from '@tanstack/react-router'
+import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 
 /**
  * Composant de visualisation
@@ -31,8 +33,12 @@ const ShowContact = () => {
 export const Route = createFileRoute('/admin/contacts/$id')({
   loader: async ({ params }): Promise<Contact | null> => {
     if (Number.isNaN(parseInt(params.id))) return null
-    const user = await window.electron.ipcRenderer.invoke('contact.find', params.id)
+    const user = await ipcRendererService.invoke('contact.find', params.id)
     return user
+  },
+  // Affichage du composant d'erreur de chargement
+  errorComponent: ({ error }) => {
+    return <ErrorComponent message={error.message} component="admin/contacts/$id" />
   },
   component: () => <ShowContact />
 })
