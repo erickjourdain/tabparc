@@ -38,7 +38,7 @@ export const Route = createFileRoute('/admin/contacts/$id')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/contacts/$id" />
+    return <ErrorComponent error={error} message="Impossible de charger le contact demandé" />
   },
   component: () => <ShowContact />
 })

@@ -84,7 +84,7 @@ export interface Instrument {
   id?: number
   designation: string
   fabricant: string | null
-  type: string | null
+  modele: string | null
   numSerie: string | null
   refClient: string | null
   contact: string | null
@@ -93,10 +93,11 @@ export interface Instrument {
   valide: boolean
   createdAt: Date | null
   updatedAt: Date | null
-  demandes: Demande[]
+  programmes: Programme[]
+  demandes: Opportunite[]
 }
 
-export interface Demande {
+export interface Opportunite {
   id?: number
   refOpportunite: string
   refProjet: string | null
@@ -122,7 +123,7 @@ export interface Programme {
   dateSouhaitee: string | null
   instrument: Instrument
   grandeur: Grandeur
-  demande: Demande
+  demande: Opportunite
   prestation: Prestation
   createdAt: Date
   updatedAt: Date
@@ -137,7 +138,7 @@ export interface Prestation {
   prixUnitaire: number
 }
 
-export interface Opportunite {
+export interface OpportuniteCRM {
   code: number
   reference: string
   titre: string
@@ -153,12 +154,29 @@ export interface Opportunite {
   statut: string
 }
 
-export interface DataInstrument {
+export interface DemandeClient {
+  fichier: string
   date: Date | null
   client: string | null
   contact: string | null
   email: string | null
   telephone: string | null
-  delaiDemande: Date | null
-  instruments: Instrument[]
+  dateSouhaitee: Date | null
+  instruments: {
+    designation: string
+    fabricant: string | null
+    modele: string | null
+    numSerie: string | null
+    refClient: string | null
+    grandeur: string | null
+    precedentCE: string | null
+    ptsMesures: string | null
+    typePrestation: string | null
+    emt: string | null
+    periodicite: string | null
+    dateSouhaitee: Date | null
+    contact: string | null
+    email: string | null
+    telephone: string | null
+  }[]
 }

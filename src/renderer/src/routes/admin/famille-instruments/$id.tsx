@@ -39,7 +39,12 @@ export const Route = createFileRoute('/admin/famille-instruments/$id')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/famille-instruments/$id" />
+    return (
+      <ErrorComponent
+        error={error}
+        message="Impossible de charger la famille d'instruments recherchée"
+      />
+    )
   },
   component: () => <ShowInstrument />
 })

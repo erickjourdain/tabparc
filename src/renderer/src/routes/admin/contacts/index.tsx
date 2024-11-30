@@ -66,7 +66,7 @@ export const Route = createFileRoute('/admin/contacts/')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/contacts" />
+    return <ErrorComponent error={error} message="Impossible de charger l'index des contacts" />
   },
   // Composant à afficher
   component: () => <ListContacts />

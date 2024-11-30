@@ -38,7 +38,7 @@ export const Route = createFileRoute('/admin/accreditations/$id')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/accreditations/$id" />
+    return <ErrorComponent error={error} message="Impossible de charger l'accréditation demandée" />
   },
   component: () => <ShowAccreditation />
 })

@@ -68,7 +68,7 @@ export const Route = createFileRoute('/admin/users/')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/users" />
+    return <ErrorComponent error={error} message="Impossible de charger l'index des utilisateurs" />
   },
   // Composant à afficher
   component: () => <ListUsers />

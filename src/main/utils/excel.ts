@@ -30,6 +30,8 @@ const getStringValue = (cell: Exceljs.Cell): Promise<string | null> => {
     switch (cell.type) {
       case 0:
         return resolve(null)
+      case 2:
+        return resolve(parseFloat(cell.value as string).toLocaleString())
       case 3:
         return resolve(cell.value as string)
       case 5:

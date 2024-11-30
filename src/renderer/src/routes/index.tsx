@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  loader: () => redirect({ to: '/demande' }),
+  loader: () => redirect({ to: '/opportunites' }),
   component: () => <>Home</>
 })

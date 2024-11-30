@@ -1,4 +1,4 @@
-import { Opportunite } from '@apptypes/*'
+import { OpportuniteCRM } from '@apptypes/*'
 import mssql, { ConnectionPool } from 'mssql'
 import { Client, DataCRM, Prestation } from 'src/main/type'
 
@@ -149,9 +149,10 @@ const rechercheClient = async (
   }
 }
 
-const rechercheOpportunite = async (opp: string): Promise<Opportunite | null> => {
+const rechercheOpportunite = async (opp: string): Promise<OpportuniteCRM | null> => {
   try {
     if (pool) {
+      console.log(opp)
       const queryData = `select
         aff.AF_CODE code,
         aff.AF_IDENT_PROP reference,
@@ -178,10 +179,11 @@ const rechercheOpportunite = async (opp: string): Promise<Opportunite | null> =>
         where aff.UN_CODE = -307
         and aff.AF_IDENT_PROP = @opp;
       `
-      const resData: mssql.IResult<Opportunite> = await pool
+      const resData: mssql.IResult<OpportuniteCRM> = await pool
         .request()
         .input('opp', mssql.VarChar(50), opp)
         .query(queryData)
+      console.log(resData)
       return resData.rowsAffected[0] === 1 ? resData.recordset[0] : null
     } else return null
   } catch (error) {

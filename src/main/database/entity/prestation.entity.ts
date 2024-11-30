@@ -12,7 +12,7 @@ export class Prestation {
   libelle!: string
 
   @Column('varchar', { nullable: false })
-  lebelleUBW!: string
+  libelleUBW!: string
 
   @Column('int', { nullable: false, default: 1 })
   quantite?: number

@@ -66,7 +66,7 @@ export const Route = createFileRoute('/admin/sections/')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/sections" />
+    return <ErrorComponent error={error} message="Impossible de charger l'index des sections" />
   },
   component: () => <ListSections />
 })

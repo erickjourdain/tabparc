@@ -2,21 +2,21 @@ import { dialog, ipcMain } from 'electron'
 import Exceljs from 'exceljs'
 import crm from '../database/mssql/crm'
 import stockage from '../utils/stockage'
-import { DataInstrument } from '../type'
 import { getDatevalue, getStringValue } from '../utils/excel'
-import demandeController from '../database/controller/demande'
-import { Demande } from '@entity/*'
+import opportuniteController from '../database/controller/opportunite'
+import { Opportunite } from '@entity/*'
+import { DemandeClient } from '@apptypes/*'
 
-ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
+ipcMain.handle('instrument.load', async (_event, args: [string]) => {
   try {
-    // vérification état opportunité
-    const opp = await crm.rechercheOpportunite(refOpp)
+    // vérification état opportunité CM
+    const opp = await crm.rechercheOpportunite(args[0])
     if (opp === null) throw new Error("L'Opportunité recherchée n'existe pas")
     if (opp.statut.indexOf('Close)') >= 0) throw new Error("L'opportunité est close")
 
     // recherche de la demande correspondante
-    const { demande } = await demandeController.findByOpportunite(opp.reference, false)
-    if (demande === null) throw new Error("Aucune demande associée à l'opportunité")
+    const { opportunite } = await opportuniteController.findByOpportunite(opp.reference, false)
+    if (opportunite === null) throw new Error('Aucune opportunité associée à cette référence')
 
     // chemin du stockage des données de l'opportunité
     const dirOpp = stockage.oppPath(opp)
@@ -36,36 +36,38 @@ ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
     const worksheet = workbook.worksheets[0]
     // Lecture du fichier client
     // entête
-    const data: DataInstrument = {
+    const data: DemandeClient = {
+      fichier: file.filePaths[0],
       date: await getDatevalue(worksheet.getCell('B2')),
       client: await getStringValue(worksheet.getCell('B4')),
       contact: await getStringValue(worksheet.getCell('B5')),
       email: await getStringValue(worksheet.getCell('F5')),
       telephone: await getStringValue(worksheet.getCell('F6')),
-      delaiDemande: await getDatevalue(worksheet.getCell('J5')),
+      dateSouhaitee: await getDatevalue(worksheet.getCell('J5')),
       instruments: []
     }
 
     // instruments
     for (let i = 10; i < worksheet.actualRowCount; i++) {
-      if (worksheet.getCell(i, 1).value)
-        data.instruments.push({
-          designation: await getStringValue(worksheet.getCell(i, 1)),
-          fabricant: await getStringValue(worksheet.getCell(i, 2)),
-          type: await getStringValue(worksheet.getCell(i, 3)),
-          numSerie: await getStringValue(worksheet.getCell(i, 4)),
-          refClient: await getStringValue(worksheet.getCell(i, 5)),
-          grandeur: await getStringValue(worksheet.getCell(i, 6)),
-          idemCE: await getStringValue(worksheet.getCell(i, 7)),
-          pointsMesures: await getStringValue(worksheet.getCell(i, 8)),
-          prestation: await getStringValue(worksheet.getCell(i, 9)),
-          emt: await getStringValue(worksheet.getCell(i, 10)),
-          periodicite: await getStringValue(worksheet.getCell(i, 11)),
-          datePlanif: await getDatevalue(worksheet.getCell(i, 12)),
-          contact: await getStringValue(worksheet.getCell(i, 13)),
-          email: await getStringValue(worksheet.getCell(i, 14)),
-          telephone: await getStringValue(worksheet.getCell(i, 15))
-        })
+      const designation = await getStringValue(worksheet.getCell(i, 1))
+      if (designation === null) continue
+      data.instruments.push({
+        designation,
+        fabricant: await getStringValue(worksheet.getCell(i, 2)),
+        modele: await getStringValue(worksheet.getCell(i, 3)),
+        numSerie: await getStringValue(worksheet.getCell(i, 4)),
+        refClient: await getStringValue(worksheet.getCell(i, 5)),
+        grandeur: await getStringValue(worksheet.getCell(i, 6)),
+        precedentCE: await getStringValue(worksheet.getCell(i, 7)),
+        ptsMesures: await getStringValue(worksheet.getCell(i, 8)),
+        typePrestation: await getStringValue(worksheet.getCell(i, 9)),
+        emt: await getStringValue(worksheet.getCell(i, 10)),
+        periodicite: await getStringValue(worksheet.getCell(i, 11)),
+        dateSouhaitee: await getDatevalue(worksheet.getCell(i, 12)),
+        contact: await getStringValue(worksheet.getCell(i, 13)),
+        email: await getStringValue(worksheet.getCell(i, 14)),
+        telephone: await getStringValue(worksheet.getCell(i, 15))
+      })
     }
 
     // retour vers la fenêtre d'appel
@@ -78,7 +80,7 @@ ipcMain.handle('instrument.load', async (_event, refOpp: string) => {
   }
 })
 
-ipcMain.handle('instrument.save', async (_event, demande: Demande) => {
+ipcMain.handle('instrument.save', async (_event, opportunite: Opportunite) => {
   /*
   // Lancement des enregsitrements
   const queryRunner = AppDataSource.createQueryRunner()
@@ -97,6 +99,6 @@ ipcMain.handle('instrument.save', async (_event, demande: Demande) => {
     await queryRunner.release()
   }
   */
-  console.log(demande)
+  console.log(opportunite)
   return true
 })

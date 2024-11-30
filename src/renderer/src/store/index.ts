@@ -4,5 +4,6 @@ import { atom } from 'jotai'
 
 const userAtom = atom<User | null>(null)
 const alertAtom = atom<Alerte | null>(null)
+const drawerAtom = atom<boolean>(false)
 
-export { alertAtom, userAtom }
+export { alertAtom, drawerAtom, userAtom }

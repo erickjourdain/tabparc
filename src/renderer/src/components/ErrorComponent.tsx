@@ -1,24 +1,20 @@
-import { Alert } from '@mui/material'
-import { alertAtom } from '@renderer/store'
-import { useSetAtom } from 'jotai'
-import { useEffect } from 'react'
+import { Alert, Box, Typography } from '@mui/material'
 
 interface ErrorComponentProps {
+  error: Error
   message: string
-  component: string
 }
 
-const ErrorComponent = ({ message, component }: ErrorComponentProps) => {
-  const setAlerte = useSetAtom(alertAtom)
-
-  useEffect(() => {
-    setAlerte({ message, color: 'error' })
-  }, [message])
-
+const ErrorComponent = ({ error, message }: ErrorComponentProps) => {
   return (
-    <Alert variant="filled" color="error">
-      Erreur durant le chargement du composant {component}
-    </Alert>
+    <Box>
+      <Alert variant="filled" color="error">
+        {message}
+      </Alert>
+      <Typography mt={2} variant="overline" color="error">
+        {error.message}
+      </Typography>
+    </Box>
   )
 }
 

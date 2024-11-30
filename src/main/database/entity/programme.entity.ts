@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 import { Instrument } from './instrument.entity'
 import { Prestation } from './prestation.entity'
+import { Opportunite } from './opportunite.entity'
 import { TypePrestation } from '@apptypes/'
 
 @Entity()
@@ -44,6 +45,9 @@ export class Programme {
 
   @ManyToOne(() => Instrument)
   instrument!: Instrument
+
+  @ManyToOne(() => Opportunite)
+  Opportunite!: Opportunite
 
   @CreateDateColumn()
   createdAt?: Date

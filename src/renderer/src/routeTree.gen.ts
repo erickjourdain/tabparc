@@ -13,10 +13,10 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
-import { Route as DemandeIndexImport } from './routes/demande/index'
+import { Route as OpportunitesIndexImport } from './routes/opportunites/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
-import { Route as DemandeNouvelleImport } from './routes/demande/nouvelle'
-import { Route as DemandeIdImport } from './routes/demande/$id'
+import { Route as OpportunitesNouvelleImport } from './routes/opportunites/nouvelle'
+import { Route as OpportunitesIdImport } from './routes/opportunites/$id'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminSitesIndexImport } from './routes/admin/sites/index'
 import { Route as AdminSectionsIndexImport } from './routes/admin/sections/index'
@@ -51,8 +51,8 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const DemandeIndexRoute = DemandeIndexImport.update({
-  path: '/demande/',
+const OpportunitesIndexRoute = OpportunitesIndexImport.update({
+  path: '/opportunites/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -61,13 +61,13 @@ const AdminIndexRoute = AdminIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const DemandeNouvelleRoute = DemandeNouvelleImport.update({
-  path: '/demande/nouvelle',
+const OpportunitesNouvelleRoute = OpportunitesNouvelleImport.update({
+  path: '/opportunites/nouvelle',
   getParentRoute: () => rootRoute,
 } as any)
 
-const DemandeIdRoute = DemandeIdImport.update({
-  path: '/demande/$id',
+const OpportunitesIdRoute = OpportunitesIdImport.update({
+  path: '/opportunites/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -197,18 +197,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
-    '/demande/$id': {
-      id: '/demande/$id'
-      path: '/demande/$id'
-      fullPath: '/demande/$id'
-      preLoaderRoute: typeof DemandeIdImport
+    '/opportunites/$id': {
+      id: '/opportunites/$id'
+      path: '/opportunites/$id'
+      fullPath: '/opportunites/$id'
+      preLoaderRoute: typeof OpportunitesIdImport
       parentRoute: typeof rootRoute
     }
-    '/demande/nouvelle': {
-      id: '/demande/nouvelle'
-      path: '/demande/nouvelle'
-      fullPath: '/demande/nouvelle'
-      preLoaderRoute: typeof DemandeNouvelleImport
+    '/opportunites/nouvelle': {
+      id: '/opportunites/nouvelle'
+      path: '/opportunites/nouvelle'
+      fullPath: '/opportunites/nouvelle'
+      preLoaderRoute: typeof OpportunitesNouvelleImport
       parentRoute: typeof rootRoute
     }
     '/admin/': {
@@ -218,11 +218,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof AdminImport
     }
-    '/demande/': {
-      id: '/demande/'
-      path: '/demande'
-      fullPath: '/demande'
-      preLoaderRoute: typeof DemandeIndexImport
+    '/opportunites/': {
+      id: '/opportunites/'
+      path: '/opportunites'
+      fullPath: '/opportunites'
+      preLoaderRoute: typeof OpportunitesIndexImport
       parentRoute: typeof rootRoute
     }
     '/admin/accreditations/$id': {
@@ -432,10 +432,10 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/demande/$id': typeof DemandeIdRoute
-  '/demande/nouvelle': typeof DemandeNouvelleRoute
+  '/opportunites/$id': typeof OpportunitesIdRoute
+  '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin/': typeof AdminIndexRoute
-  '/demande': typeof DemandeIndexRoute
+  '/opportunites': typeof OpportunitesIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -461,10 +461,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/demande/$id': typeof DemandeIdRoute
-  '/demande/nouvelle': typeof DemandeNouvelleRoute
+  '/opportunites/$id': typeof OpportunitesIdRoute
+  '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin': typeof AdminIndexRoute
-  '/demande': typeof DemandeIndexRoute
+  '/opportunites': typeof OpportunitesIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -492,10 +492,10 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/demande/$id': typeof DemandeIdRoute
-  '/demande/nouvelle': typeof DemandeNouvelleRoute
+  '/opportunites/$id': typeof OpportunitesIdRoute
+  '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin/': typeof AdminIndexRoute
-  '/demande/': typeof DemandeIndexRoute
+  '/opportunites/': typeof OpportunitesIndexRoute
   '/admin/accreditations/$id': typeof AdminAccreditationsIdRoute
   '/admin/accreditations/new': typeof AdminAccreditationsNewRoute
   '/admin/contacts/$id': typeof AdminContactsIdRoute
@@ -524,10 +524,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/demande/$id'
-    | '/demande/nouvelle'
+    | '/opportunites/$id'
+    | '/opportunites/nouvelle'
     | '/admin/'
-    | '/demande'
+    | '/opportunites'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -552,10 +552,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/demande/$id'
-    | '/demande/nouvelle'
+    | '/opportunites/$id'
+    | '/opportunites/nouvelle'
     | '/admin'
-    | '/demande'
+    | '/opportunites'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -581,10 +581,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/demande/$id'
-    | '/demande/nouvelle'
+    | '/opportunites/$id'
+    | '/opportunites/nouvelle'
     | '/admin/'
-    | '/demande/'
+    | '/opportunites/'
     | '/admin/accreditations/$id'
     | '/admin/accreditations/new'
     | '/admin/contacts/$id'
@@ -612,17 +612,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  DemandeIdRoute: typeof DemandeIdRoute
-  DemandeNouvelleRoute: typeof DemandeNouvelleRoute
-  DemandeIndexRoute: typeof DemandeIndexRoute
+  OpportunitesIdRoute: typeof OpportunitesIdRoute
+  OpportunitesNouvelleRoute: typeof OpportunitesNouvelleRoute
+  OpportunitesIndexRoute: typeof OpportunitesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  DemandeIdRoute: DemandeIdRoute,
-  DemandeNouvelleRoute: DemandeNouvelleRoute,
-  DemandeIndexRoute: DemandeIndexRoute,
+  OpportunitesIdRoute: OpportunitesIdRoute,
+  OpportunitesNouvelleRoute: OpportunitesNouvelleRoute,
+  OpportunitesIndexRoute: OpportunitesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -639,9 +639,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/admin",
-        "/demande/$id",
-        "/demande/nouvelle",
-        "/demande/"
+        "/opportunites/$id",
+        "/opportunites/nouvelle",
+        "/opportunites/"
       ]
     },
     "/": {
@@ -674,18 +674,18 @@ export const routeTree = rootRoute
         "/admin/users/"
       ]
     },
-    "/demande/$id": {
-      "filePath": "demande/$id.tsx"
+    "/opportunites/$id": {
+      "filePath": "opportunites/$id.tsx"
     },
-    "/demande/nouvelle": {
-      "filePath": "demande/nouvelle.tsx"
+    "/opportunites/nouvelle": {
+      "filePath": "opportunites/nouvelle.tsx"
     },
     "/admin/": {
       "filePath": "admin/index.tsx",
       "parent": "/admin"
     },
-    "/demande/": {
-      "filePath": "demande/index.tsx"
+    "/opportunites/": {
+      "filePath": "opportunites/index.tsx"
     },
     "/admin/accreditations/$id": {
       "filePath": "admin/accreditations/$id.tsx",

@@ -5,8 +5,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import InputForm from '@renderer/components/form/InputForm'
-import DemandeForm from '@renderer/components/demande/DemandeForm'
-import { Demande, Opportunite } from '@apptypes/index'
+import OpportuniteForm from '@renderer/components/opportunite/OpportuniteForm'
+import { Opportunite, OpportuniteCRM } from '@apptypes/index'
 import ipcRendererService from '@renderer/utils/ipcRendererService'
 import { useSetAtom } from 'jotai'
 import { alertAtom } from '@renderer/store'
@@ -15,14 +15,14 @@ type IOppForm = {
   opportunite: string
 }
 
-const DemandeNouvelle = () => {
+const OpportuniteNouvelle = () => {
   // Hook de navigation
   const navigate = useNavigate()
   // Etat local de gestion de la sauvegarde
   const [isPending, setIsPending] = useState<boolean>(false)
-  const [opportunite, setOpportunite] = useState<Opportunite | null | undefined>(undefined)
-  const [creationDemande, setCreationDemande] = useState<boolean>(false)
-  const [demande, setDemande] = useState<Demande | null>(null)
+  const [opportuniteCRM, setOpportuniteCRM] = useState<OpportuniteCRM | null | undefined>(undefined)
+  const [creationOpportunite, setCreationOpportunite] = useState<boolean>(false)
+  const [opportunite, setOpportunite] = useState<Opportunite | null>(null)
   const setAlerte = useSetAtom(alertAtom)
 
   // Hook de gestion du formulaire de recherche de l'opportunité
@@ -34,44 +34,49 @@ const DemandeNouvelle = () => {
 
   // Soumission du formulaire de recherche de l'opportunité
   const onSubmit = async (data: IOppForm) => {
-    // reset des états locaux du composant
-    setOpportunite(undefined)
-    setCreationDemande(false)
-    // lancement de la requête de recherche de l'opportunité
-    setIsPending(true)
-    const opportunite: Opportunite | null = await window.electron.ipcRenderer.invoke(
-      'opportunite.search',
-      data.opportunite.trim()
-    )
-    // recherche demande existante dans la base de données
-    const { demande }: { demande: Demande | null } = await window.electron.ipcRenderer.invoke(
-      'demande.findOpp',
-      opportunite?.reference,
-      false
-    )
-    setDemande(demande)
-    // mise à jour des états locaux du composant
-    setOpportunite(opportunite)
-    if (opportunite && opportunite.statut.indexOf('Close') === -1 && demande === null)
-      setCreationDemande(true)
-    setIsPending(false)
+    try {
+      // reset des états locaux du composant
+      setOpportuniteCRM(undefined)
+      setCreationOpportunite(false)
+      // lancement de la requête de recherche de l'opportunité CRM
+      setIsPending(true)
+      const opportuniteCRM: OpportuniteCRM | null = await ipcRendererService.invoke(
+        'opportunite.searchCRM',
+        data.opportunite.trim()
+      )
+      // recherche demande existante dans la base de données
+      const { opportunite }: { opportunite: Opportunite | null } = await ipcRendererService.invoke(
+        'opportunite.findOpp',
+        opportuniteCRM?.reference,
+        false
+      )
+      setOpportunite(opportunite)
+      // mise à jour des états locaux du composant
+      setOpportuniteCRM(opportuniteCRM)
+      if (opportuniteCRM && opportuniteCRM.statut.indexOf('Close') === -1 && opportunite === null)
+        setCreationOpportunite(true)
+      setIsPending(false)
+    } catch (error) {
+      const err = error as Error
+      setAlerte({ message: err.message, color: 'error' })
+    }
   }
 
   // Remise à zéro du formulaire de recherche
   const onReset = () => {
-    setOpportunite(undefined)
-    setCreationDemande(false)
+    setOpportuniteCRM(undefined)
+    setCreationOpportunite(false)
     reset()
   }
 
-  // Génération d'une nouvelle demande
-  const onNewDemande = async () => {
-    // création de la demande
+  // Génération d'une nouvelle opportunité
+  const onNewOpp = async () => {
+    // création de l'opportunité
     ipcRendererService
-      .invoke('demande.new', opportunite?.reference)
-      .then((demande: Demande) => {
-        setAlerte({ message: 'Demande enregistrée', color: 'success' })
-        navigate({ to: `/demande/${demande.id}` })
+      .invoke('opportunite.new', opportuniteCRM?.reference)
+      .then((opportunite: Opportunite) => {
+        setAlerte({ message: 'Opportunité enregistrée', color: 'success' })
+        navigate({ to: `/opportunites/${opportunite.id}` })
       })
       .catch((error) => {
         setAlerte({ message: error.error.message, color: 'error' })
@@ -80,7 +85,7 @@ const DemandeNouvelle = () => {
 
   return (
     <>
-      <Titre titre="Nouvelle Demande" />
+      <Titre titre="Nouvelle Opportunité" />
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
@@ -124,8 +129,10 @@ const DemandeNouvelle = () => {
           </Grid>
         </Box>
       </Box>
-      {opportunite === null && <Alert color="warning">L&apos;opportunité n&apos;existe pas</Alert>}
-      {opportunite && !creationDemande && demande !== null && (
+      {opportuniteCRM === null && (
+        <Alert color="warning">L&apos;opportunité n&apos;existe pas</Alert>
+      )}
+      {opportuniteCRM && !creationOpportunite && opportunite !== null && (
         <Alert
           color="warning"
           sx={{ mb: 2 }}
@@ -133,7 +140,7 @@ const DemandeNouvelle = () => {
             <Button
               color="inherit"
               size="small"
-              onClick={() => navigate({ to: `/demande/${demande.id}` })}
+              onClick={() => navigate({ to: `/opportunites/${opportunite.id}` })}
             >
               VOIR
             </Button>
@@ -142,20 +149,20 @@ const DemandeNouvelle = () => {
           Il existe déjà une demande pour cette opportunité
         </Alert>
       )}
-      {opportunite && !creationDemande && demande === null && (
+      {opportuniteCRM && !creationOpportunite && opportunite === null && (
         <Alert color="warning" sx={{ mb: 2 }}>
           L&apos;opportunité est close
         </Alert>
       )}
-      {opportunite && (
+      {opportuniteCRM && (
         <Paper>
           <Box sx={{ flexGrow: 1 }} px={3} py={2}>
             <Grid container spacing={2} mb={3}>
-              <DemandeForm opportunite={opportunite} />
-              {creationDemande && (
+              <OpportuniteForm opportuniteCRM={opportuniteCRM} />
+              {creationOpportunite && (
                 <Grid size={6} display="flex" justifyContent="center" alignItems="center">
-                  <Button color="primary" variant="outlined" onClick={() => onNewDemande()}>
-                    Créer une nouvelle demande
+                  <Button color="primary" variant="outlined" onClick={() => onNewOpp()}>
+                    Créer une nouvelle opportunité
                   </Button>
                 </Grid>
               )}
@@ -167,6 +174,6 @@ const DemandeNouvelle = () => {
   )
 }
 
-export const Route = createFileRoute('/demande/nouvelle')({
-  component: () => <DemandeNouvelle />
+export const Route = createFileRoute('/opportunites/nouvelle')({
+  component: () => <OpportuniteNouvelle />
 })

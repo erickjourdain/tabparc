@@ -22,8 +22,9 @@ import { createFileRoute, useLoaderData, useNavigate } from '@tanstack/react-rou
 import { z } from 'zod'
 import { useCallback, useRef, useState } from 'react'
 import { getStatut } from '@renderer/utils/format'
-import { Demande, Statut } from '@apptypes/index'
+import { Opportunite, Statut } from '@apptypes/index'
 import ErrorComponent from '@renderer/components/ErrorComponent'
+import ipcRendererService from '@renderer/utils/ipcRendererService'
 
 // Schema des paramètres de la recherche
 const formSearchSchema = z.object({
@@ -34,8 +35,8 @@ const formSearchSchema = z.object({
 // Définition du Type des éléments de recherche
 type FormSearchSchema = z.infer<typeof formSearchSchema>
 
-const DemandeIndex = () => {
-  const demandes: FindAndCount<Demande> = useLoaderData({ from: '/demande/' })
+const OpportuniteIndex = () => {
+  const opportunites: FindAndCount<Opportunite> = useLoaderData({ from: '/opportunites/' })
   // Reférence pour l'ouverture du menu déroulant
   const anchorRef = useRef<HTMLDivElement>(null)
   // Hook navigation
@@ -44,18 +45,18 @@ const DemandeIndex = () => {
   const [open, setOpen] = useState(false)
   // Ouverture du message pour envoi au client
   const handleClick = useCallback((refOpp: string) => {
-    window.electron.ipcRenderer.invoke('demande.openEmail', refOpp)
+    ipcRendererService.invoke('opportunite.openEmail', refOpp)
   }, [])
-  // Mise à jour deu statut de la demande
-  const handleMenuItemClick = useCallback((demande: Demande, option: string) => {
-    if (demande.statut === Statut[option]) return
-    window.electron.ipcRenderer
-      .invoke('demande.update', {
-        ...demande,
+  // Mise à jour du statut de la demande
+  const handleMenuItemClick = useCallback((opportunite: Opportunite, option: string) => {
+    if (opportunite.statut === Statut[option]) return
+    ipcRendererService
+      .invoke('opportunite.update', {
+        ...opportunite,
         statut: Statut[option]
       })
       .then(() => {
-        demande.statut = Statut[option]
+        opportunite.statut = Statut[option]
         setOpen(false)
       })
   }, [])
@@ -73,29 +74,29 @@ const DemandeIndex = () => {
 
   return (
     <Grid container spacing={2} mb={3}>
-      {demandes.data.map((demande) => (
-        <Grid size={4} key={demande.id}>
+      {opportunites.data.map((opportunite) => (
+        <Grid size={4} key={opportunite.id}>
           <Card>
             <CardContent>
               <Typography gutterBottom sx={{ fontSize: 14 }} color="primary">
-                {demande.client}
+                {opportunite.client}
               </Typography>
               <Typography sx={{ color: 'text.secondary', mb: 1.5, fontSize: 12 }}>
-                {demande.createdAt?.toLocaleDateString()}
+                {opportunite.createdAt?.toLocaleDateString()}
               </Typography>
-              <Chip label={getStatut(demande.statut)} />
+              <Chip label={getStatut(opportunite.statut)} />
             </CardContent>
             <CardActions sx={{ justifyContent: 'space-between' }}>
               <IconButton
-                aria-label="voir demande"
-                onClick={() => navigate({ to: `/demande/${demande.id}` })}
+                aria-label="voir opportunite"
+                onClick={() => navigate({ to: `/opportunites/${opportunite.id}` })}
               >
                 <VisibilityIcon />
               </IconButton>
-              {demande.statut === Statut.BROUILLON && (
+              {opportunite.statut === Statut.BROUILLON && (
                 <IconButton
                   aria-label="envoyer demande"
-                  onClick={() => handleClick(demande.refOpportunite)}
+                  onClick={() => handleClick(opportunite.refOpportunite)}
                 >
                   <EmailIcon />
                 </IconButton>
@@ -126,7 +127,7 @@ const DemandeIndex = () => {
                           {Object.keys(Statut).map((option) => (
                             <MenuItem
                               key={option}
-                              onClick={() => handleMenuItemClick(demande, option)}
+                              onClick={() => handleMenuItemClick(opportunite, option)}
                             >
                               {option}
                             </MenuItem>
@@ -148,7 +149,7 @@ const DemandeIndex = () => {
 /**
  * Création de la route
  */
-export const Route = createFileRoute('/demande/')({
+export const Route = createFileRoute('/opportunites/')({
   // Validation des paramètres de recherhce
   validateSearch: (search: Record<string, unknown>): FormSearchSchema =>
     formSearchSchema.parse(search),
@@ -158,11 +159,11 @@ export const Route = createFileRoute('/demande/')({
     search: search.search || ''
   }),
   loader: async ({ deps }) => {
-    return await loadData({ page: deps.page, search: deps.search, route: 'demande' })
+    return await loadData({ page: deps.page, search: deps.search, route: 'opportunite' })
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="demande" />
+    return <ErrorComponent error={error} message="Impossible de charger l'index des opportunités" />
   },
-  component: () => <DemandeIndex />
+  component: () => <OpportuniteIndex />
 })

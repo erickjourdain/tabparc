@@ -4,12 +4,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn
 } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
-import { Demande } from './demande.entity'
+import { Opportunite } from './opportunite.entity'
+import { Programme } from './programme.entity'
 
 @Entity()
 @Unique('numSerie_refClient', ['numSerie', 'refClient'])
@@ -24,7 +26,7 @@ export class Instrument {
   fabricant?: string
 
   @Column('varchar', { nullable: true })
-  type?: string
+  modele?: string
 
   @Column('varchar', { nullable: false })
   numSerie?: string
@@ -50,12 +52,15 @@ export class Instrument {
   @UpdateDateColumn()
   updatedAt?: Date
 
-  @ManyToMany(() => Demande)
-  demandes!: Demande[]
+  @OneToMany(() => Programme, (programme) => programme.instrument)
+  programmes!: Programme[]
+
+  @ManyToMany(() => Opportunite)
+  Opportunites!: Opportunite[]
 
   @BeforeInsert()
   setClientKey() {
-    if (this.numSerie === null) this.numSerie = `LNE-${uuidv4()}`
-    if (this.refClient === null) this.refClient = `LNE-${uuidv4()}`
+    if (this.numSerie === null || this.numSerie === undefined) this.numSerie = `LNE-${uuidv4()}`
+    if (this.refClient === null || this.refClient === undefined) this.refClient = `LNE-${uuidv4()}`
   }
 }

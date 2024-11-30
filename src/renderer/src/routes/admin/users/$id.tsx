@@ -38,7 +38,7 @@ export const Route = createFileRoute('/admin/users/$id')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/users/$id" />
+    return <ErrorComponent error={error} message="Impossible de charger l'utilisateur demandé" />
   },
   component: () => <ShowUser />
 })

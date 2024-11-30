@@ -1,24 +1,24 @@
-import { Opportunite } from '@apptypes/index'
+import { OpportuniteCRM } from '@apptypes/index'
 import { Chip, TextField } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 
-interface DemandeFormProps {
-  opportunite: Opportunite
+interface OpportuniteFormProps {
+  opportuniteCRM: OpportuniteCRM
 }
 
-const DemandeForm = ({ opportunite }: DemandeFormProps) => {
+const OpportuniteForm = ({ opportuniteCRM }: OpportuniteFormProps) => {
   return (
     <>
       <Grid size={12}>
-        <Chip label={opportunite.statut} />
+        <Chip label={opportuniteCRM.statut} />
       </Grid>
       <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-        <TextField fullWidth value={opportunite.client} label="client" size="small" disabled />
+        <TextField fullWidth value={opportuniteCRM.client} label="client" size="small" disabled />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
         <TextField
           fullWidth
-          value={`${opportunite.contactNom} ${opportunite.contactPrenom}`}
+          value={`${opportuniteCRM.contactNom} ${opportuniteCRM.contactPrenom}`}
           label="contact"
           size="small"
           disabled
@@ -27,17 +27,17 @@ const DemandeForm = ({ opportunite }: DemandeFormProps) => {
       <Grid size={{ xs: 12, sm: 6, md: 2 }}>
         <TextField
           fullWidth
-          value={opportunite.dateCreation.toLocaleDateString()}
+          value={opportuniteCRM.dateCreation.toLocaleDateString()}
           label="date création"
           size="small"
           disabled
         />
       </Grid>
       <Grid size={12}>
-        <TextField fullWidth value={opportunite.titre} label="titre" size="small" disabled />
+        <TextField fullWidth value={opportuniteCRM.titre} label="titre" size="small" disabled />
       </Grid>
     </>
   )
 }
 
-export default DemandeForm
+export default OpportuniteForm

@@ -12,7 +12,7 @@ import { Instrument } from './instrument.entity'
 import { Statut } from '@apptypes/'
 
 @Entity()
-export class Demande {
+export class Opportunite {
   @PrimaryGeneratedColumn()
   id?: number
 

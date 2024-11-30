@@ -66,7 +66,7 @@ export const Route = createFileRoute('/admin/grandeurs/')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/grandeurs" />
+    return <ErrorComponent error={error} message="Imposssible de charger l'indes des grandeurs" />
   },
   // Composant à afficher
   component: () => <ListGrandeurs />

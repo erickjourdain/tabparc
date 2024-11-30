@@ -71,7 +71,9 @@ export const Route = createFileRoute('/admin/accreditations/')({
   },
   // Affichage du composant d'erreur de chargement
   errorComponent: ({ error }) => {
-    return <ErrorComponent message={error.message} component="admin/accreditations" />
+    return (
+      <ErrorComponent error={error} message="Imposssible de charger l'index des accréditations" />
+    )
   },
   // Composant à afficher
   component: () => <ListAccreditations />
