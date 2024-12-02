@@ -1,4 +1,4 @@
-import { FindManyOptions, ILike } from 'typeorm'
+import { FindManyOptions, FindOneOptions, ILike } from 'typeorm'
 import AppDataSource from '../data-source'
 import { loggedUser } from './login'
 import crm from '../mssql/crm'
@@ -65,8 +65,10 @@ const findByOpportunite = async (
  * @param id identifiant de la Opportunite recherchée
  * @returns Promise<Opportunite> Opportunite
  */
-const findById = async (id: number) => {
-  return opportuniteRepository.findOneByOrFail({ id })
+const findById = async (id: number, relations: string[] | undefined) => {
+  const filter: FindOneOptions<Opportunite> = { where: { id } }
+  if (relations) filter.relations = relations
+  return opportuniteRepository.findOneOrFail(filter)
 }
 
 /**

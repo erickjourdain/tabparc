@@ -48,7 +48,8 @@ const Root = () => {
           p: 3,
           width: !open
             ? `calc(100% - ${theme.spacing(8)} + 1px)`
-            : `calc(100% - ${settings.drawerWith}px)`
+            : `calc(100% - ${settings.drawerWith}px)`,
+          height: '100%'
         }}
       >
         <DrawerHeader />

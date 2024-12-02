@@ -53,7 +53,7 @@ ipcMain.handle('opportunite.new', async (_event, args: [string]) => {
       codeClient: opp.codeClient,
       createur: loggedUser,
       gestionnaire: loggedUser,
-      instruments: []
+      besoins: []
     })
     return opportunite
   } catch (error) {
@@ -124,9 +124,9 @@ ipcMain.handle('opportunite.update', (_event, args: [Opportunite]) => {
 })
 
 // Recherche d'une opportunite via son id
-ipcMain.handle('opportunite.find', (_event, args: [number]) => {
+ipcMain.handle('opportunite.find', (_event, args: [number, string[] | undefined]) => {
   try {
-    return opportuniteController.findById(args[0])
+    return opportuniteController.findById(args[0], args[1])
   } catch (error) {
     return {
       error,

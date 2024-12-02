@@ -1,44 +1,34 @@
-import { Box, Button, Chip, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, Tooltip } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { getStatut } from '@renderer/utils/format'
 import { createFileRoute, redirect, useLoaderData } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DemandeClient, Opportunite, OpportuniteCRM } from '@apptypes/index'
 import ipcRendererService from '@renderer/utils/ipcRendererService'
 import ErrorComponent from '@renderer/components/ErrorComponent'
 import { useSetAtom } from 'jotai'
 import { alertAtom } from '@renderer/store'
-import TableInstrument from '@renderer/components/instrument/TableInstruments'
+import EventIcon from '@mui/icons-material/Event'
+import PersonIcon from '@mui/icons-material/Person'
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
+import EventAvailableIcon from '@mui/icons-material/EventAvailable'
+import TableInstrument from '@renderer/components/instrument/DataGrid'
+import OpportuniteHeader from '@renderer/components/opportunite/OpportuniteHeader'
 
-interface DisplayInfoProps {
-  info: string
-  label: string
+interface DisplayChipProps {
   value: string | null | undefined
+  icon: React.ReactElement<unknown, string> | undefined
   error?: boolean
 }
 
-const DisplayInfo = ({ info, label, value, error = false }: DisplayInfoProps) => {
-  const [message, setMessage] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (error) setMessage("Incohérence avec l'opportunité")
-  }, [error, label])
-
-  return (
-    <Grid size={{ xs: 12, sm: 4, md: 3, lg: 2 }}>
-      <TextField
-        disabled
-        id={info}
-        size="small"
-        variant="filled"
-        fullWidth
-        label={label}
-        defaultValue={value}
-        error={error}
-        helperText={message}
-      />
-    </Grid>
-  )
+const DisplayChip = ({ value, icon, error = false }: DisplayChipProps) => {
+  if (error)
+    return (
+      <Tooltip title="Incohérence avec l'opportunité">
+        <Chip icon={icon} label={value} variant="outlined" color="warning" />
+      </Tooltip>
+    )
+  else return <Chip icon={icon} label={value} variant="outlined" color="default" />
 }
 
 const OpportuniteID = () => {
@@ -48,11 +38,6 @@ const OpportuniteID = () => {
   const [data, setData] = useState<DemandeClient>()
   const [modification, setModification] = useState<boolean>(false)
   const setAlerte = useSetAtom(alertAtom)
-
-  // Ouverture du répertoire de l'opportunité
-  const openOpportuniteCRM = () => {
-    ipcRendererService.invoke('directory.openOpportuniteCRM', opportuniteCRM?.reference)
-  }
 
   // Lancement chargement des instruments
   const onLoadInstrument = async () => {
@@ -96,31 +81,13 @@ const OpportuniteID = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Grid container>
-        <Grid size={6}>
-          <Chip
-            label={opportunite.refOpportunite}
-            color="primary"
-            sx={{ cursor: 'pointer', mr: 2 }}
-            onDoubleClick={openOpportuniteCRM}
-          />
-          <Chip label={opportunite.client} color="primary" />
-        </Grid>
-        <Grid size={6} sx={{ textAlign: 'right' }}>
-          <Chip label={getStatut(opportunite.statut)} />
-        </Grid>
-      </Grid>
-      <Typography variant="caption">
-        {`Créée le ${opportunite.createdAt?.toLocaleDateString()} par ${opportunite.createur.nom} ${opportunite.createur.prenom}`}
-      </Typography>
-      <br />
-      <Typography variant="caption">
-        {`Modifiée le ${opportunite.updatedAt?.toLocaleDateString()} par ${opportunite.gestionnaire.nom} ${opportunite.gestionnaire.prenom}`}
-      </Typography>
+      <OpportuniteHeader opportunite={opportunite} opportuniteCRM={opportuniteCRM} />
       <Grid container spacing={2} mb={3} alignItems="flex-start">
-        <Button color="primary" onClick={onLoadInstrument}>
-          Charger Fichier
-        </Button>
+        {opportunite.besoins.length === 0 && (
+          <Button color="primary" onClick={onLoadInstrument}>
+            Charger Fichier
+          </Button>
+        )}
         {modification && (
           <Button color="secondary" onClick={saveDemande}>
             Enregistrer
@@ -130,25 +97,13 @@ const OpportuniteID = () => {
       {data && (
         <Box>
           <Grid container spacing={2} mb={3} alignItems="flex-start">
-            <DisplayInfo info="date" label="Date demande" value={data.date?.toLocaleDateString()} />
-            <DisplayInfo
-              info="client"
-              label="Client"
-              value={data.client}
-              error={data.client !== opportunite.client}
-            />
-            <DisplayInfo
-              info="contact"
-              label="Contact"
-              value={data.contact}
-              error={testContact()}
-            />
-            <DisplayInfo info="email" label="Email" value={data.email} />
-            <DisplayInfo info="telephone" label="Télpéhone" value={data.telephone} />
-            <DisplayInfo
-              info="delaiDemande"
-              label="Date souhaitée"
+            <DisplayChip value={data.date?.toLocaleDateString()} icon={<EventIcon />} />
+            <DisplayChip value={data.contact} error={testContact()} icon={<PersonIcon />} />
+            <DisplayChip value={data.email} icon={<AlternateEmailIcon />} />
+            <DisplayChip value={data.telephone} icon={<LocalPhoneIcon />} />
+            <DisplayChip
               value={data.dateSouhaitee?.toLocaleDateString()}
+              icon={<EventAvailableIcon />}
             />
           </Grid>
           <TableInstrument data={data} />
@@ -166,7 +121,8 @@ export const Route = createFileRoute('/opportunites/$id')({
       if (Number.isNaN(parseInt(params.id))) redirect({ to: '/opportunites' })
       const opportunite: Opportunite = await ipcRendererService.invoke(
         'opportunite.find',
-        params.id
+        params.id,
+        ['besoins']
       )
       if (opportunite === null) redirect({ to: '/opportunites' })
       const opportuniteCRM: OpportuniteCRM = await ipcRendererService.invoke(

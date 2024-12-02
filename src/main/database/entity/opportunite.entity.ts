@@ -2,14 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { User } from './user.entity'
-import { Instrument } from './instrument.entity'
 import { Statut } from '@apptypes/'
+import { Besoin } from './besoin.entity'
 
 @Entity()
 export class Opportunite {
@@ -43,8 +43,8 @@ export class Opportunite {
   @ManyToOne(() => User, { eager: true })
   gestionnaire!: User
 
-  @ManyToMany(() => Instrument)
-  instruments!: Instrument[]
+  @OneToMany(() => Besoin, (besoin) => besoin.opportunite)
+  besoins!: Besoin[]
 
   @CreateDateColumn({ nullable: false })
   createdAt?: Date

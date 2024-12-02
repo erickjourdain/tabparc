@@ -75,7 +75,7 @@ const OpportuniteIndex = () => {
   return (
     <Grid container spacing={2} mb={3}>
       {opportunites.data.map((opportunite) => (
-        <Grid size={4} key={opportunite.id}>
+        <Grid size={{ sm: 6, md: 3, lg: 2 }} key={opportunite.id}>
           <Card>
             <CardContent>
               <Typography gutterBottom sx={{ fontSize: 14 }} color="primary">

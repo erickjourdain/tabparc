@@ -3,15 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn
 } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
-import { Opportunite } from './opportunite.entity'
-import { Programme } from './programme.entity'
+import { Besoin } from './besoin.entity'
 
 @Entity()
 @Unique('numSerie_refClient', ['numSerie', 'refClient'])
@@ -34,6 +32,12 @@ export class Instrument {
   @Column('varchar', { nullable: false })
   refClient?: string
 
+  @Column('varchar', { nullable: false, unique: true })
+  refLNE?: string
+
+  @Column('int', { nullable: false })
+  codeClient!: number
+
   @Column('varchar', { nullable: true })
   contact?: string
 
@@ -52,15 +56,12 @@ export class Instrument {
   @UpdateDateColumn()
   updatedAt?: Date
 
-  @OneToMany(() => Programme, (programme) => programme.instrument)
-  programmes!: Programme[]
-
-  @ManyToMany(() => Opportunite)
-  Opportunites!: Opportunite[]
+  @OneToMany(() => Besoin, (besoin) => besoin.instrument)
+  besoins!: Besoin[]
 
   @BeforeInsert()
   setClientKey() {
     if (this.numSerie === null || this.numSerie === undefined) this.numSerie = `LNE-${uuidv4()}`
-    if (this.refClient === null || this.refClient === undefined) this.refClient = `LNE-${uuidv4()}`
+    if (this.refClient === null || this.refClient === undefined) this.refLNE = `LNE-${uuidv4()}`
   }
 }

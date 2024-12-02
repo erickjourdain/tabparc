@@ -87,14 +87,15 @@ export interface Instrument {
   modele: string | null
   numSerie: string | null
   refClient: string | null
+  refLNE: string | null
+  codeClient: number
   contact: string | null
   email: string | null
   telephone: string | null
   valide: boolean
   createdAt: Date | null
   updatedAt: Date | null
-  programmes: Programme[]
-  demandes: Opportunite[]
+  besoins: Besoin[]
 }
 
 export interface Opportunite {
@@ -110,23 +111,31 @@ export interface Opportunite {
   gestionnaire: User
   createdAt: Date | null
   updatedAt: Date | null
-  instruments: Instrument[]
+  besoins: Besoin[]
 }
 
-export interface Programme {
+export interface Besoin {
   id?: number
+  designation: string
+  fabricant: string | null
+  modele: string | null
+  numSerie: string | null
+  refClient: string | null
+  grandeur: string | null
   precedentCE: string | null
   ptsMesures: string | null
-  typePrestation: TypePrestation
+  typePrestation: string | null
   emt: string | null
   periodicite: string | null
   dateSouhaitee: string | null
+  contact: string | null
+  email: string | null
+  telephone: string | null
+  opportunite: Opportunite
   instrument: Instrument
-  grandeur: Grandeur
-  demande: Opportunite
   prestation: Prestation
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export interface Prestation {

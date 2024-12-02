@@ -31,7 +31,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 }))
 
 const TableInstrument = ({ data }: TableProps) => {
-  const rowsPerPage = 10
+  const rowsPerPage = 5
   const [page, setPage] = useState(0)
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -45,7 +45,7 @@ const TableInstrument = ({ data }: TableProps) => {
           <TableHead>
             <TableRow>
               <TableCell style={{ width: 70 }}>ID</TableCell>
-              <TableCell style={{ width: 150 }}>Désignation</TableCell>
+              <TableCell style={{ width: 150 }}>Désignation2</TableCell>
               <TableCell style={{ width: 100 }}>Fabricant/Marque</TableCell>
               <TableCell style={{ width: 75 }}>Modèle</TableCell>
               <TableCell style={{ width: 50 }}>N° Série</TableCell>
