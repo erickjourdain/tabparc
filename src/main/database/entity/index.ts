@@ -9,11 +9,15 @@ import { Site } from './site.entity'
 import { Prestation } from './prestation.entity'
 import { Opportunite } from './opportunite.entity'
 import { Besoin } from './besoin.entity'
+import { EnteteDemande } from './enteteDemande.entity'
+import { Demande } from './demande.entity'
 
 export {
   Accreditation,
   Besoin,
   Contact,
+  Demande,
+  EnteteDemande,
   FamilleInstrument,
   Grandeur,
   Instrument,

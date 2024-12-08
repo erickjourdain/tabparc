@@ -111,6 +111,7 @@ export interface Opportunite {
   gestionnaire: User
   createdAt: Date | null
   updatedAt: Date | null
+  demande: EnteteDemande | null
   besoins: Besoin[]
 }
 
@@ -163,7 +164,28 @@ export interface OpportuniteCRM {
   statut: string
 }
 
-export interface DemandeClient {
+export interface Demande {
+  id?: number
+  numLigne: number
+  designation: string
+  fabricant: string | null
+  modele: string | null
+  numSerie: string | null
+  refClient: string | null
+  grandeur: string | null
+  precedentCE: string | null
+  ptsMesures: string | null
+  typePrestation: string | null
+  emt: string | null
+  periodicite: string | null
+  dateSouhaitee: Date | null
+  contact: string | null
+  email: string | null
+  telephone: string | null
+}
+
+export interface EnteteDemande {
+  id?: number
   fichier: string
   date: Date | null
   client: string | null
@@ -171,21 +193,5 @@ export interface DemandeClient {
   email: string | null
   telephone: string | null
   dateSouhaitee: Date | null
-  instruments: {
-    designation: string
-    fabricant: string | null
-    modele: string | null
-    numSerie: string | null
-    refClient: string | null
-    grandeur: string | null
-    precedentCE: string | null
-    ptsMesures: string | null
-    typePrestation: string | null
-    emt: string | null
-    periodicite: string | null
-    dateSouhaitee: Date | null
-    contact: string | null
-    email: string | null
-    telephone: string | null
-  }[]
+  demandes: Demande[]
 }

@@ -1,27 +1,16 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from 'typeorm'
-import { Opportunite } from './opportunite.entity'
-import { Instrument } from './instrument.entity'
-import { Prestation } from './prestation.entity'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { EnteteDemande } from './enteteDemande.entity'
 
 @Entity()
-export class Besoin {
+export class Demande {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('int', { nullable: false })
-  numLigne!: number
-
   @Column('varchar', { nullable: false })
   designation!: string
+
+  @Column('int', { nullable: false })
+  numLigne!: number
 
   @Column('varchar', { nullable: true })
   fabricant?: string | null
@@ -33,7 +22,7 @@ export class Besoin {
   numSerie?: string | null
 
   @Column('varchar', { nullable: true })
-  refCLient?: string | null
+  refClient?: string | null
 
   @Column('varchar', { nullable: true })
   grandeur?: string | null
@@ -65,19 +54,6 @@ export class Besoin {
   @Column('varchar', { nullable: true })
   telephone?: string | null
 
-  @ManyToOne(() => Opportunite)
-  opportunite!: Opportunite
-
-  @ManyToOne(() => Instrument)
-  instrument!: Instrument
-
-  @OneToOne(() => Prestation)
-  @JoinColumn()
-  prestation!: Prestation
-
-  @CreateDateColumn({ nullable: false })
-  createdAt?: Date
-
-  @UpdateDateColumn({ nullable: false })
-  updatedAt?: Date
+  @ManyToOne(() => EnteteDemande, { nullable: false })
+  entete?: EnteteDemande
 }

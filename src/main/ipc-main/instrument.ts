@@ -5,7 +5,7 @@ import stockage from '../utils/stockage'
 import { getDatevalue, getStringValue } from '../utils/excel'
 import opportuniteController from '../database/controller/opportunite'
 import { Opportunite } from '@entity/*'
-import { DemandeClient } from '@apptypes/*'
+import { EnteteDemande } from '@apptypes/*'
 
 ipcMain.handle('instrument.load', async (_event, args: [string]) => {
   try {
@@ -36,7 +36,7 @@ ipcMain.handle('instrument.load', async (_event, args: [string]) => {
     const worksheet = workbook.worksheets[0]
     // Lecture du fichier client
     // entête
-    const data: DemandeClient = {
+    const data: EnteteDemande = {
       fichier: file.filePaths[0],
       date: await getDatevalue(worksheet.getCell('B2')),
       client: await getStringValue(worksheet.getCell('B4')),
@@ -44,14 +44,15 @@ ipcMain.handle('instrument.load', async (_event, args: [string]) => {
       email: await getStringValue(worksheet.getCell('F5')),
       telephone: await getStringValue(worksheet.getCell('F6')),
       dateSouhaitee: await getDatevalue(worksheet.getCell('J5')),
-      instruments: []
+      demandes: []
     }
 
     // instruments
     for (let i = 10; i < worksheet.actualRowCount; i++) {
       const designation = await getStringValue(worksheet.getCell(i, 1))
       if (designation === null) continue
-      data.instruments.push({
+      data.demandes.push({
+        numLigne: i - 9,
         designation,
         fabricant: await getStringValue(worksheet.getCell(i, 2)),
         modele: await getStringValue(worksheet.getCell(i, 3)),

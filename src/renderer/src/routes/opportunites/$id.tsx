@@ -1,63 +1,22 @@
-import { Box, Button, Chip, Tooltip } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { createFileRoute, redirect, useLoaderData } from '@tanstack/react-router'
-import { useState } from 'react'
-import { DemandeClient, Opportunite, OpportuniteCRM } from '@apptypes/index'
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useLoaderData,
+  useNavigate
+} from '@tanstack/react-router'
+import { Opportunite, OpportuniteCRM } from '@apptypes/index'
 import ipcRendererService from '@renderer/utils/ipcRendererService'
 import ErrorComponent from '@renderer/components/ErrorComponent'
-import { useSetAtom } from 'jotai'
-import { alertAtom } from '@renderer/store'
-import EventIcon from '@mui/icons-material/Event'
-import PersonIcon from '@mui/icons-material/Person'
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
-import EventAvailableIcon from '@mui/icons-material/EventAvailable'
-import TableInstrument from '@renderer/components/instrument/DataGrid'
 import OpportuniteHeader from '@renderer/components/opportunite/OpportuniteHeader'
 
-interface DisplayChipProps {
-  value: string | null | undefined
-  icon: React.ReactElement<unknown, string> | undefined
-  error?: boolean
-}
-
-const DisplayChip = ({ value, icon, error = false }: DisplayChipProps) => {
-  if (error)
-    return (
-      <Tooltip title="Incohérence avec l'opportunité">
-        <Chip icon={icon} label={value} variant="outlined" color="warning" />
-      </Tooltip>
-    )
-  else return <Chip icon={icon} label={value} variant="outlined" color="default" />
-}
-
 const OpportuniteID = () => {
+  // Hook navigation
+  const navigate = useNavigate()
   // Récupération des données de la route
   const { opportunite, opportuniteCRM } = useLoaderData({ from: '/opportunites/$id' })
-
-  const [data, setData] = useState<DemandeClient>()
-  const [modification, setModification] = useState<boolean>(false)
-  const setAlerte = useSetAtom(alertAtom)
-
-  // Lancement chargement des instruments
-  const onLoadInstrument = async () => {
-    ipcRendererService
-      .invoke('instrument.load', opportuniteCRM?.reference)
-      .then((data: DemandeClient) => {
-        setData(data)
-        setModification(true)
-      })
-      .catch((error) => setAlerte({ message: error.message, color: 'error' }))
-  }
-
-  // Tester cohérence contact fichier et opportunité
-  const testContact = () => {
-    if (data === undefined || data.contact === null || opportuniteCRM === null) return true
-    else
-      return (
-        data.contact.toLocaleLowerCase().indexOf(opportuniteCRM.contactNom.toLocaleLowerCase()) < 0
-      )
-  }
 
   const saveDemande = () => {
     /*
@@ -84,31 +43,19 @@ const OpportuniteID = () => {
       <OpportuniteHeader opportunite={opportunite} opportuniteCRM={opportuniteCRM} />
       <Grid container spacing={2} mb={3} alignItems="flex-start">
         {opportunite.besoins.length === 0 && (
-          <Button color="primary" onClick={onLoadInstrument}>
+          <Button
+            color="primary"
+            onClick={() =>
+              navigate({
+                to: `/opportunites/${opportunite.id}/chargement/${opportuniteCRM?.reference}`
+              })
+            }
+          >
             Charger Fichier
           </Button>
         )}
-        {modification && (
-          <Button color="secondary" onClick={saveDemande}>
-            Enregistrer
-          </Button>
-        )}
       </Grid>
-      {data && (
-        <Box>
-          <Grid container spacing={2} mb={3} alignItems="flex-start">
-            <DisplayChip value={data.date?.toLocaleDateString()} icon={<EventIcon />} />
-            <DisplayChip value={data.contact} error={testContact()} icon={<PersonIcon />} />
-            <DisplayChip value={data.email} icon={<AlternateEmailIcon />} />
-            <DisplayChip value={data.telephone} icon={<LocalPhoneIcon />} />
-            <DisplayChip
-              value={data.dateSouhaitee?.toLocaleDateString()}
-              icon={<EventAvailableIcon />}
-            />
-          </Grid>
-          <TableInstrument data={data} />
-        </Box>
-      )}
+      <Outlet />
     </Box>
   )
 }
@@ -122,7 +69,7 @@ export const Route = createFileRoute('/opportunites/$id')({
       const opportunite: Opportunite = await ipcRendererService.invoke(
         'opportunite.find',
         params.id,
-        ['besoins']
+        ['besoins', 'demande']
       )
       if (opportunite === null) redirect({ to: '/opportunites' })
       const opportuniteCRM: OpportuniteCRM = await ipcRendererService.invoke(

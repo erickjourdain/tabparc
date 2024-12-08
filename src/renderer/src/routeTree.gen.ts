@@ -17,6 +17,7 @@ import { Route as OpportunitesIndexImport } from './routes/opportunites/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as OpportunitesNouvelleImport } from './routes/opportunites/nouvelle'
 import { Route as OpportunitesIdImport } from './routes/opportunites/$id'
+import { Route as OpportunitesIdIndexImport } from './routes/opportunites/$id/index'
 import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
 import { Route as AdminSitesIndexImport } from './routes/admin/sites/index'
 import { Route as AdminSectionsIndexImport } from './routes/admin/sections/index'
@@ -38,6 +39,7 @@ import { Route as AdminContactsNewImport } from './routes/admin/contacts/new'
 import { Route as AdminContactsIdImport } from './routes/admin/contacts/$id'
 import { Route as AdminAccreditationsNewImport } from './routes/admin/accreditations/new'
 import { Route as AdminAccreditationsIdImport } from './routes/admin/accreditations/$id'
+import { Route as OpportunitesIdChargementOppRefImport } from './routes/opportunites/$id/chargement/$oppRef'
 
 // Create/Update Routes
 
@@ -69,6 +71,11 @@ const OpportunitesNouvelleRoute = OpportunitesNouvelleImport.update({
 const OpportunitesIdRoute = OpportunitesIdImport.update({
   path: '/opportunites/$id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const OpportunitesIdIndexRoute = OpportunitesIdIndexImport.update({
+  path: '/',
+  getParentRoute: () => OpportunitesIdRoute,
 } as any)
 
 const AdminUsersIndexRoute = AdminUsersIndexImport.update({
@@ -178,6 +185,12 @@ const AdminAccreditationsIdRoute = AdminAccreditationsIdImport.update({
   path: '/accreditations/$id',
   getParentRoute: () => AdminRoute,
 } as any)
+
+const OpportunitesIdChargementOppRefRoute =
+  OpportunitesIdChargementOppRefImport.update({
+    path: '/chargement/$oppRef',
+    getParentRoute: () => OpportunitesIdRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -372,6 +385,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersIndexImport
       parentRoute: typeof AdminImport
     }
+    '/opportunites/$id/': {
+      id: '/opportunites/$id/'
+      path: '/'
+      fullPath: '/opportunites/$id/'
+      preLoaderRoute: typeof OpportunitesIdIndexImport
+      parentRoute: typeof OpportunitesIdImport
+    }
+    '/opportunites/$id/chargement/$oppRef': {
+      id: '/opportunites/$id/chargement/$oppRef'
+      path: '/chargement/$oppRef'
+      fullPath: '/opportunites/$id/chargement/$oppRef'
+      preLoaderRoute: typeof OpportunitesIdChargementOppRefImport
+      parentRoute: typeof OpportunitesIdImport
+    }
   }
 }
 
@@ -429,10 +456,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface OpportunitesIdRouteChildren {
+  OpportunitesIdIndexRoute: typeof OpportunitesIdIndexRoute
+  OpportunitesIdChargementOppRefRoute: typeof OpportunitesIdChargementOppRefRoute
+}
+
+const OpportunitesIdRouteChildren: OpportunitesIdRouteChildren = {
+  OpportunitesIdIndexRoute: OpportunitesIdIndexRoute,
+  OpportunitesIdChargementOppRefRoute: OpportunitesIdChargementOppRefRoute,
+}
+
+const OpportunitesIdRouteWithChildren = OpportunitesIdRoute._addFileChildren(
+  OpportunitesIdRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/opportunites/$id': typeof OpportunitesIdRoute
+  '/opportunites/$id': typeof OpportunitesIdRouteWithChildren
   '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin/': typeof AdminIndexRoute
   '/opportunites': typeof OpportunitesIndexRoute
@@ -457,11 +498,12 @@ export interface FileRoutesByFullPath {
   '/admin/sections': typeof AdminSectionsIndexRoute
   '/admin/sites': typeof AdminSitesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
+  '/opportunites/$id/': typeof OpportunitesIdIndexRoute
+  '/opportunites/$id/chargement/$oppRef': typeof OpportunitesIdChargementOppRefRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/opportunites/$id': typeof OpportunitesIdRoute
   '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin': typeof AdminIndexRoute
   '/opportunites': typeof OpportunitesIndexRoute
@@ -486,13 +528,15 @@ export interface FileRoutesByTo {
   '/admin/sections': typeof AdminSectionsIndexRoute
   '/admin/sites': typeof AdminSitesIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
+  '/opportunites/$id': typeof OpportunitesIdIndexRoute
+  '/opportunites/$id/chargement/$oppRef': typeof OpportunitesIdChargementOppRefRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/opportunites/$id': typeof OpportunitesIdRoute
+  '/opportunites/$id': typeof OpportunitesIdRouteWithChildren
   '/opportunites/nouvelle': typeof OpportunitesNouvelleRoute
   '/admin/': typeof AdminIndexRoute
   '/opportunites/': typeof OpportunitesIndexRoute
@@ -517,6 +561,8 @@ export interface FileRoutesById {
   '/admin/sections/': typeof AdminSectionsIndexRoute
   '/admin/sites/': typeof AdminSitesIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
+  '/opportunites/$id/': typeof OpportunitesIdIndexRoute
+  '/opportunites/$id/chargement/$oppRef': typeof OpportunitesIdChargementOppRefRoute
 }
 
 export interface FileRouteTypes {
@@ -549,10 +595,11 @@ export interface FileRouteTypes {
     | '/admin/sections'
     | '/admin/sites'
     | '/admin/users'
+    | '/opportunites/$id/'
+    | '/opportunites/$id/chargement/$oppRef'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/opportunites/$id'
     | '/opportunites/nouvelle'
     | '/admin'
     | '/opportunites'
@@ -577,6 +624,8 @@ export interface FileRouteTypes {
     | '/admin/sections'
     | '/admin/sites'
     | '/admin/users'
+    | '/opportunites/$id'
+    | '/opportunites/$id/chargement/$oppRef'
   id:
     | '__root__'
     | '/'
@@ -606,13 +655,15 @@ export interface FileRouteTypes {
     | '/admin/sections/'
     | '/admin/sites/'
     | '/admin/users/'
+    | '/opportunites/$id/'
+    | '/opportunites/$id/chargement/$oppRef'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  OpportunitesIdRoute: typeof OpportunitesIdRoute
+  OpportunitesIdRoute: typeof OpportunitesIdRouteWithChildren
   OpportunitesNouvelleRoute: typeof OpportunitesNouvelleRoute
   OpportunitesIndexRoute: typeof OpportunitesIndexRoute
 }
@@ -620,7 +671,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  OpportunitesIdRoute: OpportunitesIdRoute,
+  OpportunitesIdRoute: OpportunitesIdRouteWithChildren,
   OpportunitesNouvelleRoute: OpportunitesNouvelleRoute,
   OpportunitesIndexRoute: OpportunitesIndexRoute,
 }
@@ -675,7 +726,11 @@ export const routeTree = rootRoute
       ]
     },
     "/opportunites/$id": {
-      "filePath": "opportunites/$id.tsx"
+      "filePath": "opportunites/$id.tsx",
+      "children": [
+        "/opportunites/$id/",
+        "/opportunites/$id/chargement/$oppRef"
+      ]
     },
     "/opportunites/nouvelle": {
       "filePath": "opportunites/nouvelle.tsx"
@@ -770,6 +825,14 @@ export const routeTree = rootRoute
     "/admin/users/": {
       "filePath": "admin/users/index.tsx",
       "parent": "/admin"
+    },
+    "/opportunites/$id/": {
+      "filePath": "opportunites/$id/index.tsx",
+      "parent": "/opportunites/$id"
+    },
+    "/opportunites/$id/chargement/$oppRef": {
+      "filePath": "opportunites/$id/chargement/$oppRef.tsx",
+      "parent": "/opportunites/$id"
     }
   }
 }
